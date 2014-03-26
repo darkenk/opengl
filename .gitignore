@@ -1,0 +1,6 @@
+build
+*.config
+*.files
+*.includes
+*.creator*
+*.autosave
