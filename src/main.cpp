@@ -35,10 +35,13 @@
 
 #include "renderer.hpp"
 #include "shaderloader.hpp"
+#include "world.hpp"
 
 using namespace std;
 
 const char* WINDOW_TITLE = "OpenGL";
+const int INITIAL_WIDTH = 800;
+const int INITIAL_HEIGHT = 600;
 
 int main(int argc, char* argv[])
 {
@@ -58,7 +61,7 @@ int main(int argc, char* argv[])
         GLUT_ACTION_GLUTMAINLOOP_RETURNS
     );
 
-    glutInitWindowSize(800, 600);
+    glutInitWindowSize(INITIAL_WIDTH, INITIAL_HEIGHT);
 
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 
@@ -66,10 +69,15 @@ int main(int argc, char* argv[])
     glutDisplayFunc(IRenderer::sRender);
     glutCloseFunc(IRenderer::sCleanup);
     glutReshapeFunc(IRenderer::sResize);
+    glutKeyboardFunc(World::sKeyboard);
     glewExperimental = GL_TRUE;
     glewInit();
 
-    shared_ptr<IRenderer> renderer(new Renderer);
+    shared_ptr<Camera> camera(new Camera);
+    shared_ptr<IRenderer> renderer(new Renderer(camera));
+    renderer->resize(INITIAL_WIDTH, INITIAL_HEIGHT);
+    shared_ptr<World> world(new World);
+    world->setCamera(camera);
 
     glutMainLoop();
     return 0;

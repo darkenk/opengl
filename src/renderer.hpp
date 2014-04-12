@@ -29,20 +29,27 @@
  */
 #ifndef RENDERER_H
 #define RENDERER_H
+#include <glm/glm.hpp>
+#include <memory>
+#include "camera.hpp"
 #include "irenderer.hpp"
 #include "iobject.hpp"
+
+using namespace std;
 
 class Renderer : public IRenderer
 {
 public:
-    Renderer();
+    Renderer(shared_ptr<Camera> mCamera);
     virtual ~Renderer();
     virtual void render();
     virtual void cleanup();
     virtual void resize(int width, int height);
 
 private:
+    shared_ptr<Camera> mCamera;
     IObject* mObject;
+    glm::mat4 mProjection;
 };
 
 #endif // RENDERER_H

@@ -27,19 +27,42 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef IOBJECT_H
-#define IOBJECT_H
+#ifndef TERRAINOBJECT_H_
+#define TERRAINOBJECT_H_
 
+#include "iobject.hpp"
+#include "terrain.hpp"
+#include <GL/glew.h>
+#include <GL/glext.h>
+#include <memory>
 #include <glm/glm.hpp>
 
-class IObject
+class TerrainObject: public IObject
 {
 public:
-    virtual ~IObject() {}
-    virtual bool init() = 0;
-    virtual void render() = 0;
-    virtual bool release() = 0;
-    virtual void setVpMatrix(glm::mat4& matrix) {}
+    TerrainObject();
+    virtual ~TerrainObject();
+    virtual bool init();
+    virtual void render();
+    virtual bool release();
+    virtual void setVpMatrix(glm::mat4& matrix);
+
+private:
+    bool createShaders();
+    bool releaseShaders();
+    Terrain mTerrain;
+    GLuint mWidth;
+    GLuint mHeight;
+    GLuint mVertexShaderId;
+    GLuint mFragmentShaderId;
+    GLuint mProgramId;
+    GLuint mVertexArrayId;
+    GLuint mVertexBufferId;
+    GLuint mIndicesBufferId;
+    GLuint mModelId;
+
+    glm::mat4 mModel;
+    glm::mat4 mMVP;
 };
 
-#endif // IOBJECT_H
+#endif /* TERRAINOBJECT_H_ */

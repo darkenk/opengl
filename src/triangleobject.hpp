@@ -49,6 +49,8 @@ private:
     GLuint mVertexBufferId;
     GLuint mColorBufferId;
     
+    GLuint mIndicesBufferId;
+
     GLuint mProgramId;
     GLuint mVertexShaderId;
     GLuint mFragmentShaderId;

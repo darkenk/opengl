@@ -27,19 +27,11 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef IOBJECT_H
-#define IOBJECT_H
+#version 330
 
-#include <glm/glm.hpp>
+out vec4 out_Color;
 
-class IObject
+void main(void)
 {
-public:
-    virtual ~IObject() {}
-    virtual bool init() = 0;
-    virtual void render() = 0;
-    virtual bool release() = 0;
-    virtual void setVpMatrix(glm::mat4& matrix) {}
-};
-
-#endif // IOBJECT_H
+    out_Color = vec4(0.0f, 1.0f, 0.2f, 1.0f);
+}

@@ -30,3 +30,7 @@
 #include "irenderer.hpp"
 
 IRenderer* IRenderer::sRenderer = nullptr;
+
+IRenderer::~IRenderer()
+{
+}

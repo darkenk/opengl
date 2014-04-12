@@ -27,19 +27,13 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef IOBJECT_H
-#define IOBJECT_H
+#version 330
 
-#include <glm/glm.hpp>
+layout(location=0) in vec4 in_Position;
 
-class IObject
+uniform mat4 gWorld;
+
+void main(void)
 {
-public:
-    virtual ~IObject() {}
-    virtual bool init() = 0;
-    virtual void render() = 0;
-    virtual bool release() = 0;
-    virtual void setVpMatrix(glm::mat4& matrix) {}
-};
-
-#endif // IOBJECT_H
+   gl_Position = gWorld * in_Position;
+}

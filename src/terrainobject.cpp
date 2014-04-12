@@ -27,101 +27,127 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "triangleobject.hpp"
-#include "shaderloader.hpp"
-#include <GL/glu.h>
 #include <iostream>
+#include "terrainobject.hpp"
+#include "shaderloader.hpp"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
-TriangleObject::TriangleObject()
+TerrainObject::TerrainObject()
 {
 }
 
-bool TriangleObject::init()
+TerrainObject::~TerrainObject()
+{
+}
+
+bool TerrainObject::init()
 {
     createShaders();
 
-    GLfloat Vertices[] = {
-         0.0f,  0.0f, 0.0f, 1.0f,
-         1.0f,  0.0f, 0.0f, 1.0f,
-         0.0f,  1.0f, 0.0f, 1.0f,
-         1.0f,  1.0f, 0.0f, 1.0f
-    };
+    mWidth = 24;
+    mHeight = 24;
+    mTerrain.generate(mWidth, mHeight);
+    GLuint i = 0;
+    GLfloat vertices[mWidth * mHeight * 4];
+    for (GLuint y = 0; y < mHeight; y++) {
+        for (GLuint x = 0; x < mWidth; x++) {
+            vertices[i++] = (float) x;
+            vertices[i++] = 0.0f;
+            vertices[i++] = (float) y;
+            vertices[i++] = 1.0f;
+        }
+    }
 
     GLenum ErrorCheckValue = glGetError();
-     
+
+    mModelId = glGetUniformLocation(mProgramId, "gWorld");
+    mModel = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+
     glGenVertexArrays(1, &mVertexArrayId);
     glBindVertexArray(mVertexArrayId);
-
     glGenBuffers(1, &mVertexBufferId);
     glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferId);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(0);
 
-    GLuint indices[6];
-    int i = 0;
-    indices[i++] = 0;
-    indices[i++] = 1;
-    indices[i++] = 3;
-    indices[i++] = 0;
-    indices[i++] = 3;
-    indices[i++] = 2;
+    GLuint indices[3 * 2 * (mWidth - 1) * (mHeight - 1)];
+    i = 0;
+    GLuint upperLine;
+    GLuint lowerLine;
+    for (GLuint y = 1; y < mHeight; y++) {
+        upperLine = (y - 1) * mWidth;
+        lowerLine = y * mWidth;
+        for (GLuint x = 1; x < mWidth; x++) {
+            indices[i++] = upperLine + x - 1;
+            indices[i++] = upperLine + x;
+            indices[i++] = lowerLine + x;
 
+            indices[i++] = upperLine + x - 1;
+            indices[i++] = lowerLine + x;
+            indices[i++] = lowerLine + x - 1;
+        }
+    }
 
     glGenBuffers(1, &mIndicesBufferId);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndicesBufferId);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
- 
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
+            GL_STATIC_DRAW);
+
     ErrorCheckValue = glGetError();
     if (ErrorCheckValue != GL_NO_ERROR) {
-        std::cerr << "ERROR: Could not create a VBO: " <<
-            gluErrorString(ErrorCheckValue) << std::endl;
+        std::cerr << "ERROR: Could not create a VBO: "
+                << gluErrorString(ErrorCheckValue) << std::endl;
         return false;
     }
+
     return true;
 }
 
-void TriangleObject::render()
+void TerrainObject::render()
 {
     glUseProgram(mProgramId);
-//    glBindVertexArray(mVertexArrayId);
+    glUniformMatrix4fv(mModelId, 1, GL_FALSE, glm::value_ptr(mMVP));
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndicesBufferId);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, 3 * 2 * (mWidth - 1) * (mHeight - 1),
+            GL_UNSIGNED_INT, 0);
 }
 
-bool TriangleObject::release()
+bool TerrainObject::release()
 {
     releaseShaders();
     GLenum ErrorCheckValue = glGetError();
- 
-    glDisableVertexAttribArray(1);
+
     glDisableVertexAttribArray(0);
-     
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
- 
-    glDeleteBuffers(1, &mColorBufferId);
+
+    glDeleteBuffers(1, &mIndicesBufferId);
     glDeleteBuffers(1, &mVertexBufferId);
- 
+
     glBindVertexArray(0);
     glDeleteVertexArrays(1, &mVertexArrayId);
- 
+
     ErrorCheckValue = glGetError();
     if (ErrorCheckValue != GL_NO_ERROR) {
-        std::cerr << "ERROR: Could not destroy the VBO: " <<
-            gluErrorString(ErrorCheckValue) << std::endl;
- 
+        std::cerr << "ERROR: Could not destroy the VBO: "
+                << gluErrorString(ErrorCheckValue) << std::endl;
+
         return false;
     }
+
     return true;
 }
 
-bool TriangleObject::createShaders()
+bool TerrainObject::createShaders()
 {
     ShaderLoader sl;
     GLenum ErrorCheckValue = glGetError();
 
     sl.loadShader("./terrain_vert.glsl");
-    const char * v =  sl.getShader();
+    const char * v = sl.getShader();
     mVertexShaderId = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(mVertexShaderId, 1, &v, NULL);
     glCompileShader(mVertexShaderId);
@@ -135,23 +161,23 @@ bool TriangleObject::createShaders()
     glShaderSource(mFragmentShaderId, 1, &f, NULL);
     glCompileShader(mFragmentShaderId);
     sl.releaseShader();
- 
+
     mProgramId = glCreateProgram();
     glAttachShader(mProgramId, mVertexShaderId);
     glAttachShader(mProgramId, mFragmentShaderId);
     glLinkProgram(mProgramId);
- 
+
     ErrorCheckValue = glGetError();
     if (ErrorCheckValue != GL_NO_ERROR) {
-        std::cerr << "ERROR: Could not create the shaders: " <<
-            gluErrorString(ErrorCheckValue) << std::endl;
+        std::cerr << "ERROR: Could not create the shaders: "
+                << gluErrorString(ErrorCheckValue) << std::endl;
 
         return false;
     }
     return true;
 }
 
-bool TriangleObject::releaseShaders()
+bool TerrainObject::releaseShaders()
 {
     GLenum ErrorCheckValue = glGetError();
     glUseProgram(0);
@@ -164,10 +190,15 @@ bool TriangleObject::releaseShaders()
 
     ErrorCheckValue = glGetError();
     if (ErrorCheckValue != GL_NO_ERROR) {
-        std::cerr << "ERROR: Could not destroy the shaders8: " <<
-            gluErrorString(ErrorCheckValue);
- 
+        std::cerr << "ERROR: Could not destroy the shaders8: "
+                << gluErrorString(ErrorCheckValue);
+
         return false;
     }
     return true;
+}
+
+void TerrainObject::setVpMatrix(glm::mat4& matrix)
+{
+    mMVP = mModel * matrix;
 }

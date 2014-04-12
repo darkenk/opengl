@@ -27,19 +27,50 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef IOBJECT_H
-#define IOBJECT_H
+#include "world.hpp"
+#include <iostream>
 
-#include <glm/glm.hpp>
+World* World::sWorld = nullptr;
 
-class IObject
+World::World()
 {
-public:
-    virtual ~IObject() {}
-    virtual bool init() = 0;
-    virtual void render() = 0;
-    virtual bool release() = 0;
-    virtual void setVpMatrix(glm::mat4& matrix) {}
-};
+    if (!sWorld) {
+        sWorld = this;
+    }
+}
 
-#endif // IOBJECT_H
+void World::keyboard(unsigned char key, int x, int y)
+{
+    switch(key) {
+    case 'w':
+        mCamera->forward();
+        break;
+    case 's':
+        mCamera->backward();
+        break;
+    case 'a':
+        mCamera->left();
+        break;
+    case 'd':
+        mCamera->right();
+        break;
+    case 'q':
+        mCamera->rotateLeft(1.0f);
+        break;
+    case 'e':
+        mCamera->rotateRight(1.0f);
+        break;
+    case 'r':
+        mCamera->rotateUp(1.0f);
+        break;
+    case 'f':
+        mCamera->rotateDown(1.0f);
+        break;
+    }
+    std::cout << "You pressed : " << key << " at " << x << ", " << y << std::endl;
+}
+
+void World::setCamera(shared_ptr<Camera> camera)
+{
+    mCamera = camera;
+}

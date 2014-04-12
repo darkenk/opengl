@@ -27,19 +27,20 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef IOBJECT_H
-#define IOBJECT_H
+#include <gtest/gtest.h>
+#include "../src/terrain.hpp"
 
-#include <glm/glm.hpp>
-
-class IObject
+TEST(TerrainTest, generate_terrain_24x24)
 {
-public:
-    virtual ~IObject() {}
-    virtual bool init() = 0;
-    virtual void render() = 0;
-    virtual bool release() = 0;
-    virtual void setVpMatrix(glm::mat4& matrix) {}
-};
-
-#endif // IOBJECT_H
+    Terrain t;
+    EXPECT_EQ(0, t.getTerrain()->size());
+    t.generate(24, 24);
+    shared_ptr<vector< vector < int > > > terrain = t.getTerrain();
+    ASSERT_EQ(24, t.getTerrain()->size());
+    int h = 0;
+    for (int i = 0; i < 24; i++) {
+        for (int j = 0; j < 24; j++) {
+            h += (*terrain)[i][j];
+        }
+    }
+}

@@ -27,19 +27,30 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef IOBJECT_H
-#define IOBJECT_H
+#ifndef WORLD_HPP
+#define WORLD_HPP
 
-#include <glm/glm.hpp>
+#include <memory>
+#include "camera.hpp"
 
-class IObject
+using namespace std;
+
+class World
 {
 public:
-    virtual ~IObject() {}
-    virtual bool init() = 0;
-    virtual void render() = 0;
-    virtual bool release() = 0;
-    virtual void setVpMatrix(glm::mat4& matrix) {}
+    World();
+    void keyboard(unsigned char key, int x, int y);
+    static void sKeyboard(unsigned char key, int x, int y) {
+        if (sWorld) {
+            sWorld->keyboard(key, x, y);
+        }
+    }
+
+    void setCamera(shared_ptr<Camera> camera);
+
+private:
+    static World* sWorld;
+    shared_ptr<Camera> mCamera;
 };
 
-#endif // IOBJECT_H
+#endif // WORLD_HPP

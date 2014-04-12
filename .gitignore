@@ -4,3 +4,7 @@ build
 *.includes
 *.creator*
 *.autosave
+*.settings
+*.cproject
+*.project
+/Default

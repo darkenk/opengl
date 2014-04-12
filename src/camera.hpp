@@ -27,19 +27,43 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef IOBJECT_H
-#define IOBJECT_H
+#ifndef CAMERA_H_
+#define CAMERA_H_
 
+#include <memory>
 #include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
 
-class IObject
+using namespace std;
+
+class Camera
 {
 public:
-    virtual ~IObject() {}
-    virtual bool init() = 0;
-    virtual void render() = 0;
-    virtual bool release() = 0;
-    virtual void setVpMatrix(glm::mat4& matrix) {}
+    Camera(const glm::vec3& position = glm::vec3(12,2,12),
+        const glm::vec3& lookAt = glm::vec3(12,2,11),
+        const glm::vec3& up = glm::vec3(0,1,0));
+    virtual ~Camera();
+
+    const glm::mat4& getMatrix();
+    void left(float speed = 0.2f);
+    void right(float speed = 0.2f);
+    void forward(float speed = 0.2f);
+    void backward(float speed = 0.2f);
+    void rotateLeft(float angle = 0.2f);
+    void rotateRight(float angle = 0.2f);
+    void rotateUp(float angle = 0.2f);
+    void rotateDown(float angle = 0.2f);
+
+private:
+    glm::mat4 mMatrix;
+    glm::vec3 mUp;
+    glm::vec3 mPosition;
+    glm::vec3 mLookAt;
+    glm::vec3 mInitialDirection;
+    glm::quat mRotation;
+    glm::vec4 mDelta;
 };
 
-#endif // IOBJECT_H
+#endif /* CAMERA_H_ */

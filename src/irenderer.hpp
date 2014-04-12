@@ -36,6 +36,7 @@ public:
     virtual void render() = 0;
     virtual void cleanup() = 0;
     virtual void resize(int width, int height) = 0;
+    virtual ~IRenderer();
 
     static void sRender() {
         if (sRenderer) {

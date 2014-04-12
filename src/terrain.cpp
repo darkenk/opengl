@@ -27,19 +27,23 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef IOBJECT_H
-#define IOBJECT_H
+#include "terrain.hpp"
 
-#include <glm/glm.hpp>
-
-class IObject
+Terrain::Terrain() :
+        mTerrain(new vector<vector<int> >)
 {
-public:
-    virtual ~IObject() {}
-    virtual bool init() = 0;
-    virtual void render() = 0;
-    virtual bool release() = 0;
-    virtual void setVpMatrix(glm::mat4& matrix) {}
-};
+}
 
-#endif // IOBJECT_H
+void Terrain::generate(unsigned int w, unsigned int h)
+{
+    mTerrain->resize(h);
+    vector<vector<int> >::iterator iter = mTerrain->begin();
+    do {
+        (*iter).resize(w, 0);
+    } while (++iter != mTerrain->end());
+}
+
+shared_ptr<vector<vector<int> > > Terrain::getTerrain()
+{
+    return mTerrain;
+}

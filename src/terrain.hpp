@@ -27,19 +27,23 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef IOBJECT_H
-#define IOBJECT_H
+#ifndef TERRAIN_HPP
+#define TERRAIN_HPP
 
-#include <glm/glm.hpp>
+#include <vector>
+#include <memory>
 
-class IObject
+using namespace std;
+
+class Terrain
 {
 public:
-    virtual ~IObject() {}
-    virtual bool init() = 0;
-    virtual void render() = 0;
-    virtual bool release() = 0;
-    virtual void setVpMatrix(glm::mat4& matrix) {}
+    Terrain();
+    void generate(unsigned int w, unsigned int h);
+    shared_ptr<vector< vector < int > > > getTerrain();
+
+private:
+    shared_ptr< vector< vector< int > > > mTerrain;
 };
 
-#endif // IOBJECT_H
+#endif // TERRAIN_HPP

@@ -28,15 +28,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "renderer.hpp"
+#include "terrainobject.hpp"
 #include "triangleobject.hpp"
 #include <GL/freeglut.h>
 #include <iostream>
+#include <glm/gtc/matrix_transform.hpp>
 
-Renderer::Renderer()
+Renderer::Renderer(shared_ptr<Camera> camera)
 {
     sRenderer = this;
-    mObject = new TriangleObject();
+    mObject = new TerrainObject();
     mObject->init();
+    mCamera = camera;
 }
 
 Renderer::~Renderer()
@@ -52,6 +55,8 @@ void Renderer::render()
         std::cerr << "ERROR: Clear: " <<
             gluErrorString(ErrorCheckValue);
     }
+    glm::mat4 tmp = mProjection * mCamera->getMatrix();
+    mObject->setVpMatrix(tmp);
     mObject->render();
     ErrorCheckValue = glGetError();
     if (ErrorCheckValue != GL_NO_ERROR) {
@@ -64,6 +69,7 @@ void Renderer::render()
 
 void Renderer::resize(int width, int height)
 {
+    mProjection = glm::perspective(45.0f, float(width) / float(height), 0.1f, 100.0f);
     glViewport(0, 0, width, height);
 }
 
