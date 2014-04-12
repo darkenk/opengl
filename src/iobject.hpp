@@ -30,11 +30,10 @@
 #ifndef IOBJECT_H
 #define IOBJECT_H
 
-#include <GL/gl.h>
-
 class IObject
 {
 public:
+    virtual ~IObject() {}
     virtual bool init() = 0;
     virtual void render() = 0;
     virtual bool release() = 0;

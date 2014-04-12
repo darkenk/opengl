@@ -66,6 +66,7 @@ int main(int argc, char* argv[])
     glutDisplayFunc(IRenderer::sRender);
     glutCloseFunc(IRenderer::sCleanup);
     glutReshapeFunc(IRenderer::sResize);
+    glewExperimental = GL_TRUE;
     glewInit();
 
     shared_ptr<IRenderer> renderer(new Renderer);

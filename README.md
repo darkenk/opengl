@@ -1,7 +1,10 @@
 Opengl project for learning purpose
 
-For run execute:
+Build instructions:
+    mkdir build
+    cd build
+    cmake ../
     make run
 
-To run tests execute:
-    make tests
+To run only one test, eg.
+    make run_shaderloader_test

@@ -31,7 +31,7 @@
 #define TRIANGLEOBJECT_H
 
 #include "iobject.hpp"
-#include <GL/gl.h>
+#include <GL/glew.h>
 
 class TriangleObject : public IObject
 {

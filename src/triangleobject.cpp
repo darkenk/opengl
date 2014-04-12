@@ -29,9 +29,6 @@
  */
 #include "triangleobject.hpp"
 #include "shaderloader.hpp"
-#include <GL/gl.h>
-#include <GL/glext.h>
-#include <GL/glu.h>
 #include <iostream>
 
 TriangleObject::TriangleObject()

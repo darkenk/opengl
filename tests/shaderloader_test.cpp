@@ -33,7 +33,7 @@
 #include <fstream>
 
 const char* TEST_FILE = "/tmp/test_file_shaders";
-const char* TEST_SHADER = 
+const char* TEST_SHADER =
         "#version 330\n\n"
         "in vec4 ex_Color;\n"
         "out vec4 out_Color;\n\n"
@@ -74,9 +74,4 @@ TEST(ShaderLoaderTest, release_shader)
     sl.releaseShader();
     EXPECT_EQ(nullptr, sl.getShader());
     remove(TEST_FILE);
-}
-
-int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
 }
