@@ -30,6 +30,7 @@
 #include <iostream>
 #include "terrainobject.hpp"
 #include "shaderloader.hpp"
+#include "exceptions.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -43,7 +44,12 @@ TerrainObject::~TerrainObject()
 
 bool TerrainObject::init()
 {
-    createShaders();
+    try {
+        mShaderLoader = std::unique_ptr<ShaderLoader>(new ShaderLoader("./terrain_frag.glsl", "./terrain_vert.glsl"));
+    } catch (std::exception& e) {
+        std::cerr << "__FUNC__ " << e.what() << std::endl;
+        return false;
+    }
 
     mWidth = 24;
     mHeight = 24;
@@ -61,7 +67,7 @@ bool TerrainObject::init()
 
     GLenum ErrorCheckValue = glGetError();
 
-    mModelId = glGetUniformLocation(mProgramId, "gWorld");
+    mModelId = glGetUniformLocation(mShaderLoader->programId(), "gWorld");
     mModel = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 
     glGenVertexArrays(1, &mVertexArrayId);
@@ -107,7 +113,7 @@ bool TerrainObject::init()
 
 void TerrainObject::render()
 {
-    glUseProgram(mProgramId);
+    glUseProgram(mShaderLoader->programId());
     glUniformMatrix4fv(mModelId, 1, GL_FALSE, glm::value_ptr(mMVP));
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndicesBufferId);
@@ -117,7 +123,7 @@ void TerrainObject::render()
 
 bool TerrainObject::release()
 {
-    releaseShaders();
+    mShaderLoader.reset();
     GLenum ErrorCheckValue = glGetError();
 
     glDisableVertexAttribArray(0);
@@ -138,63 +144,6 @@ bool TerrainObject::release()
         return false;
     }
 
-    return true;
-}
-
-bool TerrainObject::createShaders()
-{
-    ShaderLoader sl;
-    GLenum ErrorCheckValue = glGetError();
-
-    sl.loadShader("./terrain_vert.glsl");
-    const char * v = sl.getShader();
-    mVertexShaderId = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(mVertexShaderId, 1, &v, NULL);
-    glCompileShader(mVertexShaderId);
-    sl.releaseShader();
-
-    if (!sl.loadShader("./terrain_frag.glsl")) {
-        std::cerr << "sl.loadShader failed" << std::endl;
-    }
-    const char * f = sl.getShader();
-    mFragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(mFragmentShaderId, 1, &f, NULL);
-    glCompileShader(mFragmentShaderId);
-    sl.releaseShader();
-
-    mProgramId = glCreateProgram();
-    glAttachShader(mProgramId, mVertexShaderId);
-    glAttachShader(mProgramId, mFragmentShaderId);
-    glLinkProgram(mProgramId);
-
-    ErrorCheckValue = glGetError();
-    if (ErrorCheckValue != GL_NO_ERROR) {
-        std::cerr << "ERROR: Could not create the shaders: "
-                << gluErrorString(ErrorCheckValue) << std::endl;
-
-        return false;
-    }
-    return true;
-}
-
-bool TerrainObject::releaseShaders()
-{
-    GLenum ErrorCheckValue = glGetError();
-    glUseProgram(0);
-
-    glDetachShader(mProgramId, mVertexShaderId);
-    glDetachShader(mProgramId, mFragmentShaderId);
-    glDeleteShader(mFragmentShaderId);
-    glDeleteShader(mVertexShaderId);
-    glDeleteProgram(mProgramId);
-
-    ErrorCheckValue = glGetError();
-    if (ErrorCheckValue != GL_NO_ERROR) {
-        std::cerr << "ERROR: Could not destroy the shaders8: "
-                << gluErrorString(ErrorCheckValue);
-
-        return false;
-    }
     return true;
 }
 

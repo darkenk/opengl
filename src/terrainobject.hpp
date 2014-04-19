@@ -32,6 +32,7 @@
 
 #include "iobject.hpp"
 #include "terrain.hpp"
+#include "shaderloader.hpp"
 #include <GL/glew.h>
 #include <GL/glext.h>
 #include <memory>
@@ -48,14 +49,10 @@ public:
     virtual void setVpMatrix(glm::mat4& matrix);
 
 private:
-    bool createShaders();
-    bool releaseShaders();
+    std::unique_ptr<ShaderLoader> mShaderLoader;
     Terrain mTerrain;
     GLuint mWidth;
     GLuint mHeight;
-    GLuint mVertexShaderId;
-    GLuint mFragmentShaderId;
-    GLuint mProgramId;
     GLuint mVertexArrayId;
     GLuint mVertexBufferId;
     GLuint mIndicesBufferId;

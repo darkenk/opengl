@@ -38,7 +38,12 @@ TriangleObject::TriangleObject()
 
 bool TriangleObject::init()
 {
-    createShaders();
+    try {
+            mShaderLoader = std::unique_ptr<ShaderLoader>(new ShaderLoader("./fragment.glsl", "./vertex.glsl"));
+    } catch (std::exception& e) {
+        std::cerr << e.what();
+        return false;
+    }
 
     GLfloat Vertices[] = {
          0.0f,  0.0f, 0.0f, 1.0f,
@@ -83,7 +88,7 @@ bool TriangleObject::init()
 
 void TriangleObject::render()
 {
-    glUseProgram(mProgramId);
+    glUseProgram(mShaderLoader->programId());
 //    glBindVertexArray(mVertexArrayId);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndicesBufferId);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -91,7 +96,7 @@ void TriangleObject::render()
 
 bool TriangleObject::release()
 {
-    releaseShaders();
+    mShaderLoader.reset();
     GLenum ErrorCheckValue = glGetError();
  
     glDisableVertexAttribArray(1);
@@ -109,63 +114,6 @@ bool TriangleObject::release()
     if (ErrorCheckValue != GL_NO_ERROR) {
         std::cerr << "ERROR: Could not destroy the VBO: " <<
             gluErrorString(ErrorCheckValue) << std::endl;
- 
-        return false;
-    }
-    return true;
-}
-
-bool TriangleObject::createShaders()
-{
-    ShaderLoader sl;
-    GLenum ErrorCheckValue = glGetError();
-
-    sl.loadShader("./terrain_vert.glsl");
-    const char * v =  sl.getShader();
-    mVertexShaderId = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(mVertexShaderId, 1, &v, NULL);
-    glCompileShader(mVertexShaderId);
-    sl.releaseShader();
-
-    if (!sl.loadShader("./terrain_frag.glsl")) {
-        std::cerr << "sl.loadShader failed" << std::endl;
-    }
-    const char * f = sl.getShader();
-    mFragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(mFragmentShaderId, 1, &f, NULL);
-    glCompileShader(mFragmentShaderId);
-    sl.releaseShader();
- 
-    mProgramId = glCreateProgram();
-    glAttachShader(mProgramId, mVertexShaderId);
-    glAttachShader(mProgramId, mFragmentShaderId);
-    glLinkProgram(mProgramId);
- 
-    ErrorCheckValue = glGetError();
-    if (ErrorCheckValue != GL_NO_ERROR) {
-        std::cerr << "ERROR: Could not create the shaders: " <<
-            gluErrorString(ErrorCheckValue) << std::endl;
-
-        return false;
-    }
-    return true;
-}
-
-bool TriangleObject::releaseShaders()
-{
-    GLenum ErrorCheckValue = glGetError();
-    glUseProgram(0);
-
-    glDetachShader(mProgramId, mVertexShaderId);
-    glDetachShader(mProgramId, mFragmentShaderId);
-    glDeleteShader(mFragmentShaderId);
-    glDeleteShader(mVertexShaderId);
-    glDeleteProgram(mProgramId);
-
-    ErrorCheckValue = glGetError();
-    if (ErrorCheckValue != GL_NO_ERROR) {
-        std::cerr << "ERROR: Could not destroy the shaders8: " <<
-            gluErrorString(ErrorCheckValue);
  
         return false;
     }

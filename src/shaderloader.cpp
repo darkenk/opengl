@@ -30,48 +30,80 @@
 #include "shaderloader.hpp"
 #include <fstream>
 #include <iomanip>
+#include "exceptions.hpp"
 
-std::string ShaderLoader::mLaunchedPath = "";
+using namespace std;
 
-ShaderLoader::ShaderLoader() :
-    mContent(nullptr)
+string ShaderLoader::mLaunchedPath = "";
+
+ShaderLoader::ShaderLoader(const char* fragmentShader, const char* vertexShader) :
+    mProgramId(0)
 {
+    glGetError();
+    mShaderIds.push_back(createShader(fragmentShader, GL_FRAGMENT_SHADER));
+    mShaderIds.push_back(createShader(vertexShader, GL_VERTEX_SHADER));
+    createProgram();
 }
 
 ShaderLoader::~ShaderLoader()
 {
-    delete mContent;
-    mContent = nullptr;
+    vector<GLuint>::iterator iter = mShaderIds.begin();
+    for( ; iter != mShaderIds.end(); iter++) {
+        glDetachShader(mProgramId, *iter);
+        glDeleteShader(*iter);
+    }
+    glDeleteProgram(mProgramId);
 }
 
-bool ShaderLoader::loadShader(const char *fileName)
+GLuint ShaderLoader::programId()
+{
+    return mProgramId;
+}
+
+char* ShaderLoader::loadShader(const char *fileName)
 {
     std::string s(mLaunchedPath);
     s.append(fileName);
     std::ifstream file(s);
     if (!file.good()) {
         file.close();
-        return false;
+        string msg = "No such file: ";
+        msg += fileName;
+        throw Exception(msg);
     }
     file.seekg (0, std::ios::end);
     int size = file.tellg();
     file.seekg(0, std::ios::beg);
-    mContent = new char[size+1];
-    mContent[size] = '\0';
-    file.read(mContent, size);
+    char* shader = new char[size+1];
+    shader[size] = '\0';
+    file.read(shader, size);
     file.close();
-    return true;
+    return shader;
 }
 
-const char* ShaderLoader::getShader()
+GLuint ShaderLoader::createShader(const char *fileName, GLuint shaderType)
 {
-    return mContent;
+    const GLchar* shader = loadShader(fileName);
+    GLuint shaderId = glCreateShader(shaderType);
+    glShaderSource(shaderId, 1, &shader, NULL);
+    glCompileShader(shaderId);
+    delete[] shader;
+    return shaderId;
 }
 
-void ShaderLoader::releaseShader()
+void ShaderLoader::createProgram()
 {
-    delete[] mContent;
-    mContent = nullptr;
+    mProgramId = glCreateProgram();
+    std::vector<GLuint>::iterator iter = mShaderIds.begin();
+    while(iter != mShaderIds.end()) {
+        glAttachShader(mProgramId, *iter);
+        iter++;
+    }
+    glLinkProgram(mProgramId);
+    GLuint error = glGetError();
+    if (error != GL_NO_ERROR) {
+        throw Exception(reinterpret_cast <const char*>(gluErrorString(error)));
+    }
 }
 
 void ShaderLoader::setLaunchedPath(std::string &s)

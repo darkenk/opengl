@@ -27,33 +27,15 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef TRIANGLEOBJECT_H
-#define TRIANGLEOBJECT_H
+#include "exceptions.hpp"
 
-#include "iobject.hpp"
-#include "shaderloader.hpp"
-#include <memory>
-#include <GL/glew.h>
 
-class TriangleObject : public IObject
+Exception::Exception(const std::string& msg) noexcept
 {
-public:
-    TriangleObject();
-    virtual bool init();
-    virtual void render();
-    virtual bool release();
+    mMessage = msg;
+}
 
-private:
-    bool createShaders();
-    bool releaseShaders();
-
-    std::unique_ptr<ShaderLoader> mShaderLoader;
-
-    GLuint mVertexArrayId;
-    GLuint mVertexBufferId;
-    GLuint mColorBufferId;
-
-    GLuint mIndicesBufferId;
-};
-
-#endif // TRIANGLEOBJECT_H
+const char* Exception::what() const noexcept
+{
+    return mMessage.c_str();
+}

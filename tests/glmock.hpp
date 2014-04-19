@@ -27,51 +27,45 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include <gtest/gtest.h>
-#include "../src/shaderloader.hpp"
-#include <cstdio>
-#include <fstream>
+#ifndef GLMOCK_H_
+#define GLMOCK_H_
 
-const char* TEST_FILE = "/tmp/test_file_shaders";
-const char* TEST_SHADER =
-        "#version 330\n\n"
-        "in vec4 ex_Color;\n"
-        "out vec4 out_Color;\n\n"
-        "void main(void)\n"
-        "{\n"
-        "    out_Color = ex_Color;\n"
-        "};";
+#include <gmock/gmock.h>
+#include <memory>
 
-static void createTestShader()
-{
-    remove(TEST_FILE);
-    std::ofstream test(TEST_FILE);
-    test << TEST_SHADER;
-    test.flush();
-}
+#if defined(_WIN32) || defined(__WIN32__)
+   #define WIN32_LEAN_AND_MEAN
+   #include <windows.h>
+   #include <GL/glew.h>
+   #include <GL/wglew.h>
+   #include <GL/glu.h>
+#elif defined(linux) || defined(__linux) || defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
+   #include <GL/glew.h>
+   #include <GL/glxew.h>
+   #include <GL/glu.h>
+#elif defined(__APPLE__) || defined(MACOSX) || defined(macintosh) || defined(Macintosh)
+   #include <OpenGL/glew.h>
+   #include <OpenGL/glxew.h>
+   #include <OpenGL/glu.h>
+#else
+    #error "WTF?, unsupported platform"
+#endif
 
-TEST(ShaderLoaderTest, return_false_when_there_is_no_file)
-{
-    remove(TEST_FILE);
-    ShaderLoader sl;
-    EXPECT_FALSE(sl.loadShader(TEST_FILE));
-}
+class GLMock {
+public:
+    GLMock();
+    ~GLMock();
+    MOCK_METHOD1( CompileShader, void  (GLuint shader) );
+    MOCK_METHOD0( CreateProgram, GLuint  (void) );
+    MOCK_METHOD1( CreateShader, GLuint  (GLenum type) );
+    MOCK_METHOD1( DeleteProgram, void  (GLuint program) );
+    MOCK_METHOD1( DeleteShader, void  (GLuint shader) );
+    MOCK_METHOD2( DetachShader, void  (GLuint program, GLuint shader) );
+    MOCK_METHOD2( AttachShader, void  (GLuint program, GLuint shader) );
+    MOCK_METHOD1( LinkProgram, void  (GLuint program) );
+    MOCK_METHOD4( ShaderSource, void  (GLuint shader, GLsizei count, const GLchar** strings, const GLint* lengths) );
+    MOCK_METHOD0( GetError, GLenum   (void) );
+    MOCK_METHOD1( ErrorString, GLubyte* (GLenum error) );
+};
 
-TEST(ShaderLoaderTest, load_shader_from_file)
-{
-    createTestShader();
-    ShaderLoader sl;
-    EXPECT_TRUE(sl.loadShader(TEST_FILE));
-    EXPECT_STREQ(TEST_SHADER, sl.getShader());
-    remove(TEST_FILE);
-}
-
-TEST(ShaderLoaderTest, release_shader)
-{
-    createTestShader();
-    ShaderLoader sl;
-    EXPECT_TRUE(sl.loadShader(TEST_FILE));
-    sl.releaseShader();
-    EXPECT_EQ(nullptr, sl.getShader());
-    remove(TEST_FILE);
-}
+#endif /* GLMOCK_H_ */

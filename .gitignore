@@ -8,3 +8,4 @@ build
 *.cproject
 *.project
 /Default
+*.user

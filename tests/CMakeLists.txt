@@ -1,14 +1,24 @@
 enable_testing()
+
+function(compile_tests test_sources additional_sources additional_libs file_postfix)
+    foreach(test_source ${test_sources})
+        string(REPLACE "${file_postfix}.cpp" "" test_name ${test_source})
+        set(test_name "${test_name}_test")
+        string(REPLACE ${file_postfix} "" source_file ${test_source})
+        add_executable(${test_name} ${test_source} ../src/${source_file} ${additional_sources})
+        message(${additional_libs})
+        target_link_libraries(${test_name} gtest ${additional_libs} pthread )
+        add_test(NAME ${test_name} COMMAND ${test_name})
+        set(target "run_${test_name}")
+        add_custom_target(${target}
+            COMMAND ${test_name}
+            COMMENT "Run with ${CMAKE_BUILD_TYPE} configuration"
+        )
+    endforeach()
+endfunction()
+
 file(GLOB test_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *_test.cpp)
-foreach(test_source ${test_SOURCES})
-	string(REPLACE ".cpp" "" test_name ${test_source})
-	string(REPLACE "_test" "" source_file ${test_source})
-	add_executable(${test_name} ${test_source} ../src/${source_file})
-	target_link_libraries(${test_name} gtest gtest_main pthread)
-	add_test(NAME ${test_name} COMMAND ${test_name})
-	set(target "run_${test_name}")
-	add_custom_target(${target}
-	        COMMAND ${test_name}
-	        COMMENT "Run with ${CMAKE_BUILD_TYPE} configuration"
-	)
-endforeach()
+compile_tests("${test_SOURCES}" "" "gtest_main" "_test")
+
+file(GLOB mock_test_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *_test_mock.cpp)
+compile_tests("${mock_test_SOURCES}" "glmock.cpp;../src/exceptions.cpp" "gmock;gmock_main" "_test_mock")

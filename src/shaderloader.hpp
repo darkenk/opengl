@@ -31,18 +31,22 @@
 #define SHADERLOADER_H
 
 #include <string>
+#include <vector>
+#include <GL/glew.h>
 
 class ShaderLoader
 {
 public:
-    ShaderLoader();
+    ShaderLoader(const char* fragmentShader, const char* vertexShader);
     ~ShaderLoader();
-    bool loadShader(const char* fileName);
-    const char* getShader();
-    void releaseShader();
+    GLuint programId();
     static void setLaunchedPath(std::string& s);
 private:
-    char* mContent;
+    char* loadShader(const char *fileName);
+    GLuint createShader(const char *fileName, GLuint shaderType);
+    void createProgram();
+    GLuint mProgramId;
+    std::vector<GLuint> mShaderIds;
     static std::string mLaunchedPath;
 };
 
