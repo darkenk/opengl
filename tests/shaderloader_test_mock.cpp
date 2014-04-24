@@ -32,11 +32,13 @@
 #include "glmock.hpp"
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <memory>
 #include <cstdio>
 #include <fstream>
 
 using ::testing::Return;
 using ::testing::_;
+using ::testing::NiceMock;
 
 const char* TEST_VERTEX_FILE = "/tmp/test_file_vertex_shader";
 const char* TEST_VERTEX_SHADER =
@@ -93,18 +95,18 @@ TEST(ShaderLoaderTest, load_shader_from_file)
     const GLuint vertexShaderId = 1;
     const GLuint fragmentShaderId = 2;
     const GLuint programId = 3;
-    GLMock gGLMock;
-    EXPECT_CALL(gGLMock, CreateShader(GL_VERTEX_SHADER)).WillOnce(Return(vertexShaderId));
-    EXPECT_CALL(gGLMock, CreateShader(GL_FRAGMENT_SHADER)).WillOnce(Return(fragmentShaderId));
-    EXPECT_CALL(gGLMock, ShaderSource(vertexShaderId, _, _, _));
-    EXPECT_CALL(gGLMock, ShaderSource(fragmentShaderId, _, _, _));
-    EXPECT_CALL(gGLMock, CompileShader(vertexShaderId));
-    EXPECT_CALL(gGLMock, CompileShader(fragmentShaderId));
-    EXPECT_CALL(gGLMock, CreateProgram()).WillOnce(Return(programId));
-    EXPECT_CALL(gGLMock, AttachShader(programId, vertexShaderId));
-    EXPECT_CALL(gGLMock, AttachShader(programId, fragmentShaderId));
-    EXPECT_CALL(gGLMock, LinkProgram(programId));
-    EXPECT_CALL(gGLMock, GetError()).WillRepeatedly(Return(GL_NO_ERROR));
+    NiceMock<GlMock> gGLMock;
+    EXPECT_CALL(gGLMock, gl_CreateShader(GL_VERTEX_SHADER)).WillOnce(Return(vertexShaderId));
+    EXPECT_CALL(gGLMock, gl_CreateShader(GL_FRAGMENT_SHADER)).WillOnce(Return(fragmentShaderId));
+    EXPECT_CALL(gGLMock, gl_ShaderSource(vertexShaderId, _, _, _));
+    EXPECT_CALL(gGLMock, gl_ShaderSource(fragmentShaderId, _, _, _));
+    EXPECT_CALL(gGLMock, gl_CompileShader(vertexShaderId));
+    EXPECT_CALL(gGLMock, gl_CompileShader(fragmentShaderId));
+    EXPECT_CALL(gGLMock, gl_CreateProgram()).WillOnce(Return(programId));
+    EXPECT_CALL(gGLMock, gl_AttachShader(programId, vertexShaderId));
+    EXPECT_CALL(gGLMock, gl_AttachShader(programId, fragmentShaderId));
+    EXPECT_CALL(gGLMock, gl_LinkProgram(programId));
+    EXPECT_CALL(gGLMock, gl_GetError()).WillRepeatedly(Return(GL_NO_ERROR));
     std::shared_ptr<ShaderLoader> sl = std::shared_ptr<ShaderLoader>(new ShaderLoader(TEST_VERTEX_FILE, TEST_FRAGMENT_FILE));
     EXPECT_EQ(programId, sl->programId());
     sl.reset();
@@ -114,19 +116,19 @@ TEST(ShaderLoaderTest, load_shader_from_file)
 TEST(ShaderLoaderTest, release_shader)
 {
     createTestShader();
-    GLMock gGLMock;
+    NiceMock<GlMock> gGLMock;
     const GLuint vertexShaderId = 1;
     const GLuint fragmentShaderId = 2;
     const GLuint programId = 3;
-    EXPECT_CALL(gGLMock, CreateShader(GL_VERTEX_SHADER)).WillOnce(Return(vertexShaderId));
-    EXPECT_CALL(gGLMock, CreateShader(GL_FRAGMENT_SHADER)).WillOnce(Return(fragmentShaderId));
-    EXPECT_CALL(gGLMock, CreateProgram()).WillOnce(Return(programId));
+    EXPECT_CALL(gGLMock, gl_CreateShader(GL_VERTEX_SHADER)).WillOnce(Return(vertexShaderId));
+    EXPECT_CALL(gGLMock, gl_CreateShader(GL_FRAGMENT_SHADER)).WillOnce(Return(fragmentShaderId));
+    EXPECT_CALL(gGLMock, gl_CreateProgram()).WillOnce(Return(programId));
     ShaderLoader* sl = new ShaderLoader(TEST_VERTEX_FILE, TEST_FRAGMENT_FILE);
-    EXPECT_CALL(gGLMock, DetachShader(programId, vertexShaderId));
-    EXPECT_CALL(gGLMock, DetachShader(programId, fragmentShaderId));
-    EXPECT_CALL(gGLMock, DeleteShader(vertexShaderId));
-    EXPECT_CALL(gGLMock, DeleteShader(fragmentShaderId));
-    EXPECT_CALL(gGLMock, DeleteProgram(programId));
+    EXPECT_CALL(gGLMock, gl_DetachShader(programId, vertexShaderId));
+    EXPECT_CALL(gGLMock, gl_DetachShader(programId, fragmentShaderId));
+    EXPECT_CALL(gGLMock, gl_DeleteShader(vertexShaderId));
+    EXPECT_CALL(gGLMock, gl_DeleteShader(fragmentShaderId));
+    EXPECT_CALL(gGLMock, gl_DeleteProgram(programId));
     delete sl;
     removeTestShaders();
 }
@@ -134,8 +136,8 @@ TEST(ShaderLoaderTest, release_shader)
 TEST(ShaderLoaderTest, exception_when_opengl_error)
 {
     createTestShader();
-    GLMock gGLMock;
-    EXPECT_CALL(gGLMock, GetError()).WillRepeatedly(Return(-11));
+    NiceMock<GlMock> gGLMock;
+    EXPECT_CALL(gGLMock, gl_GetError()).WillRepeatedly(Return(-11));
     EXPECT_ANY_THROW(ShaderLoader(TEST_VERTEX_FILE, TEST_FRAGMENT_FILE));
     removeTestShaders();
 }
