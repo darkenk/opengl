@@ -30,7 +30,7 @@
 #ifndef TERRAINOBJECT_H_
 #define TERRAINOBJECT_H_
 
-#include "iobject.hpp"
+#include "irenderableobject.hpp"
 #include "terrain.hpp"
 #include "shaderloader.hpp"
 #include <GL/glew.h>
@@ -38,14 +38,14 @@
 #include <memory>
 #include <glm/glm.hpp>
 
-class TerrainObject: public IObject
+class TerrainObject: public IRenderableObject
 {
 public:
     TerrainObject();
     virtual ~TerrainObject();
-    virtual bool init();
+    bool init();
     virtual void render();
-    virtual bool release();
+    bool release();
     virtual void setVpMatrix(glm::mat4& matrix);
 
 private:

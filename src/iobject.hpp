@@ -27,19 +27,17 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef IOBJECT_H
-#define IOBJECT_H
+#ifndef IOBJECT_HPP
+#define IOBJECT_HPP
 
-#include <glm/glm.hpp>
+#include "utils.hpp"
 
 class IObject
 {
 public:
     virtual ~IObject() {}
-    virtual bool init() = 0;
-    virtual void render() = 0;
-    virtual bool release() = 0;
-    virtual void setVpMatrix(glm::mat4& matrix) {}
+    virtual VertexVectorPtr getVertices() = 0;
+    virtual IndexVectorPtr getIndices() = 0;
 };
 
-#endif // IOBJECT_H
+#endif // IOBJECT_HPP

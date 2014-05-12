@@ -36,10 +36,12 @@
 
 TerrainObject::TerrainObject()
 {
+    init();
 }
 
 TerrainObject::~TerrainObject()
 {
+    release();
 }
 
 bool TerrainObject::init()

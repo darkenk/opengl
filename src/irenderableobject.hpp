@@ -27,11 +27,30 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#version 330
+#ifndef IRENDERABLEOBJECT_HPP
+#define IRENDERABLEOBJECT_HPP
 
-layout(location=0) in vec4 in_Position;
- 
-void main(void)
+#include <glm/glm.hpp>
+#include <string>
+#include <GL/glew.h>
+#include "exceptions.hpp"
+#include <iostream>
+
+class IRenderableObject
 {
-   gl_Position = in_Position;
-}
+public:
+    virtual ~IRenderableObject() {}
+    virtual void render() = 0;
+    virtual void setVpMatrix(glm::mat4& matrix) {}
+    void checkError(const char* funcName) {
+        GLenum error = glGetError();
+        if (error != GL_NO_ERROR) {
+            std::string msg = funcName;
+            msg.append(" ");
+            msg.append(reinterpret_cast<const char*>(gluErrorString(error)));
+            throw Exception(msg);
+        }
+    }
+};
+
+#endif // IRENDERABLEOBJECT_HPP

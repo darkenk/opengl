@@ -27,11 +27,24 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#version 330
+#ifndef UTILS_H
+#define UTILS_H
 
-layout(location=0) in vec4 in_Position;
- 
-void main(void)
+#include <GL/glew.h>
+
+#include <memory>
+#include <vector>
+#include <glm/glm.hpp>
+
+struct Vertex
 {
-   gl_Position = in_Position;
-}
+    Vertex() {}
+    Vertex(glm::vec4 pos) : position(pos) {}
+    glm::vec4 position;
+};
+
+typedef std::shared_ptr< std::vector<Vertex> > VertexVectorPtr;
+
+typedef std::shared_ptr< std::vector<unsigned int> > IndexVectorPtr;
+
+#endif // UTILS_H

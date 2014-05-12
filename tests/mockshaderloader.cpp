@@ -27,11 +27,40 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#version 330
 
-layout(location=0) in vec4 in_Position;
- 
-void main(void)
+#include "mockshaderloader.hpp"
+#include <pthread.h>
+#include <map>
+
+using namespace std;
+
+map<pthread_t, MockShaderLoader* > gMap;
+
+static MockShaderLoader* getMock()
 {
-   gl_Position = in_Position;
+    return gMap.at(pthread_self());
+}
+
+MockShaderLoader::MockShaderLoader()
+{
+    gMap.insert(std::pair<pthread_t, MockShaderLoader* >(pthread_self(), this));
+}
+
+MockShaderLoader::~MockShaderLoader()
+{
+    gMap.erase(pthread_self());
+}
+
+ShaderLoader::ShaderLoader(const char *fragmentShader, const char *vertexShader)
+{
+    getMock()->ctor(fragmentShader, vertexShader);
+}
+
+GLuint ShaderLoader::programId()
+{
+    return getMock()->programId();
+}
+
+ShaderLoader::~ShaderLoader()
+{
 }

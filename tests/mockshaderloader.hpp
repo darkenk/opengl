@@ -27,33 +27,19 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef TRIANGLEOBJECT_H
-#define TRIANGLEOBJECT_H
+#ifndef MOCKSHADERLOADER_HPP
+#define MOCKSHADERLOADER_HPP
 
-#include "iobject.hpp"
-#include "shaderloader.hpp"
-#include <memory>
-#include <GL/glew.h>
+#include "../src/shaderloader.hpp"
+#include <gmock/gmock.h>
 
-class TriangleObject : public IObject
+class MockShaderLoader
 {
 public:
-    TriangleObject();
-    virtual bool init();
-    virtual void render();
-    virtual bool release();
-
-private:
-    bool createShaders();
-    bool releaseShaders();
-
-    std::unique_ptr<ShaderLoader> mShaderLoader;
-
-    GLuint mVertexArrayId;
-    GLuint mVertexBufferId;
-    GLuint mColorBufferId;
-
-    GLuint mIndicesBufferId;
+    MockShaderLoader();
+    ~MockShaderLoader();
+    MOCK_METHOD2( ctor, void (const char* fragmentShader, const char* vertexShader) );
+    MOCK_METHOD0( programId, GLuint (void) );
 };
 
-#endif // TRIANGLEOBJECT_H
+#endif // MOCKSHADERLOADER_HPP

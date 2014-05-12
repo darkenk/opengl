@@ -33,7 +33,7 @@
 #include <memory>
 #include "camera.hpp"
 #include "irenderer.hpp"
-#include "iobject.hpp"
+#include "irenderableobject.hpp"
 
 using namespace std;
 
@@ -48,7 +48,7 @@ public:
 
 private:
     shared_ptr<Camera> mCamera;
-    IObject* mObject;
+    IRenderableObject* mObject;
     glm::mat4 mProjection;
 };
 

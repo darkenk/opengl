@@ -27,11 +27,52 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#version 330
+#include "simpleobject.hpp"
+#include "shaderloader.hpp"
+#include <GL/glu.h>
+#include <iostream>
+#include "exceptions.hpp"
 
-layout(location=0) in vec4 in_Position;
- 
-void main(void)
+using namespace std;
+
+SimpleObject::SimpleObject(std::shared_ptr<IObject> object)
 {
-   gl_Position = in_Position;
+    mShaderLoader = std::unique_ptr<ShaderLoader>(new ShaderLoader("./fragment.glsl", "./vertex.glsl"));
+    mObject = object;
+
+    glGetError();
+
+    //vao
+    glGenVertexArrays(1, &mVao);
+    glBindVertexArray(mVao);
+
+    //vertices
+    glGenBuffers(1, &mVertexBufferId);
+    glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferId);
+    glBufferData(GL_ARRAY_BUFFER, mObject->getVertices()->size() * sizeof(Vertex) , mObject->getVertices()->data(), GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
+
+    //indices;
+    glGenBuffers(1, &mIndicesBufferId);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndicesBufferId);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, mObject->getIndices()->size() * sizeof(unsigned int), mObject->getIndices()->data(), GL_STATIC_DRAW);
+
+    checkError(__FUNCTION__);
+}
+
+SimpleObject::~SimpleObject()
+{
+    glUseProgram(0);
+    mShaderLoader.release();
+    glDeleteBuffers(1, &mIndicesBufferId);
+    glDeleteBuffers(1, &mVertexBufferId);
+}
+
+void SimpleObject::render()
+{
+    glUseProgram(mShaderLoader->programId());
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glBindVertexArray(mVao);
+    glDrawElements(GL_TRIANGLES, mObject->getIndices()->size(), GL_UNSIGNED_INT, 0);
 }

@@ -27,11 +27,31 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#version 330
+#ifndef TRIANGLEOBJECT_H
+#define TRIANGLEOBJECT_H
 
-layout(location=0) in vec4 in_Position;
- 
-void main(void)
+#include "irenderableobject.hpp"
+#include "shaderloader.hpp"
+#include <memory>
+#include <GL/glew.h>
+#include "iobject.hpp"
+
+class SimpleObject : public IRenderableObject
 {
-   gl_Position = in_Position;
-}
+public:
+    SimpleObject(std::shared_ptr<IObject> object);
+    virtual ~SimpleObject();
+    virtual void render();
+
+private:
+    bool createShaders();
+    bool releaseShaders();
+
+    std::unique_ptr<ShaderLoader> mShaderLoader;
+    std::shared_ptr<IObject> mObject;
+    GLuint mVertexBufferId;
+    GLuint mIndicesBufferId;
+    GLuint mVao;
+};
+
+#endif // TRIANGLEOBJECT_H

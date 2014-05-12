@@ -85,6 +85,7 @@ static void removeTestShaders()
 
 TEST(ShaderLoaderTest, throw_exception_when_there_is_no_files)
 {
+    NiceMock<GlMock> gGLMock;
     removeTestShaders();
     EXPECT_ANY_THROW(ShaderLoader(TEST_VERTEX_FILE, TEST_FRAGMENT_FILE));
 }

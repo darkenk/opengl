@@ -29,16 +29,33 @@
  */
 #include "renderer.hpp"
 #include "terrainobject.hpp"
-#include "triangleobject.hpp"
+#include "simpleobject.hpp"
 #include <GL/freeglut.h>
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 
+using namespace std;
+
+class Triangle : public IObject {
+public:
+    VertexVectorPtr getVertices() {
+        VertexVectorPtr v = VertexVectorPtr(new vector<Vertex> ({
+            glm::vec4(-0.5, -0.5, 0.0, 1.0),
+            glm::vec4( 0.5, -0.5, 0.0, 1.0),
+            glm::vec4( 0.0,  0.5, 0.0, 1.0),
+        }));
+        return v;
+    }
+    IndexVectorPtr getIndices() {
+        IndexVectorPtr v = IndexVectorPtr(new vector<unsigned int>({0, 1, 2 }));
+        return v;
+    }
+};
+
 Renderer::Renderer(shared_ptr<Camera> camera)
 {
     sRenderer = this;
-    mObject = new TerrainObject();
-    mObject->init();
+    mObject = new SimpleObject(shared_ptr<Triangle>(new Triangle));
     mCamera = camera;
 }
 
@@ -75,7 +92,6 @@ void Renderer::resize(int width, int height)
 
 void Renderer::cleanup()
 {
-    mObject->release();
     delete mObject;
     mObject = 0;
 }
