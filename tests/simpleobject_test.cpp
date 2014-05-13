@@ -34,6 +34,7 @@
 #include "glmock.hpp"
 #include <pthread.h>
 #include <map>
+#include <glm/gtc/type_ptr.hpp>
 
 using testing::_;
 using testing::Return;
@@ -178,5 +179,19 @@ TEST_F(SimpleObjectTest, rendering_triangle)
     EXPECT_CALL(gl, gl_UseProgram(programId));
     EXPECT_CALL(gl, gl_DrawElements(GL_TRIANGLES, 3, _, _));
     SimpleObject so(to);
+    so.render();
+}
+
+TEST_F(SimpleObjectTest, set_simple_mvp_matrix)
+{
+    const int programId = 1;
+    const int modelId = 2;
+    glm::mat4 m = glm::mat4();
+    EXPECT_CALL(sl, programId()).WillRepeatedly(Return(programId));
+    EXPECT_CALL(gl, gl_GetUniformLocation(programId, "gWorld"))
+            .Times(AtLeast(1)).WillRepeatedly(Return(modelId));
+    EXPECT_CALL(gl, gl_UniformMatrix4fv(modelId, 1, GL_FALSE, VerifyArrayFloat(glm::value_ptr(m), 16)));
+    SimpleObject so(to);
+    so.setVpMatrix(m);
     so.render();
 }

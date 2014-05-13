@@ -27,36 +27,15 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef TRIANGLEOBJECT_H
-#define TRIANGLEOBJECT_H
+#ifndef CUBE_HPP
+#define CUBE_HPP
 
-#include "irenderableobject.hpp"
-#include "shaderloader.hpp"
-#include <memory>
-#include <GL/glew.h>
 #include "iobject.hpp"
 
-class SimpleObject : public IRenderableObject
-{
+class Cube : public IObject {
 public:
-    SimpleObject(std::shared_ptr<IObject> object);
-    virtual ~SimpleObject();
-    virtual void render();
-    virtual void setVpMatrix(glm::mat4& matrix);
-
-private:
-    bool createShaders();
-    bool releaseShaders();
-
-    std::unique_ptr<ShaderLoader> mShaderLoader;
-    std::shared_ptr<IObject> mObject;
-    GLuint mVertexBufferId;
-    GLuint mIndicesBufferId;
-    GLuint mVao;
-    GLuint mModelId;
-
-    glm::mat4 mModel;
-    glm::mat4 mMVP;
+    Cube();
+    VertexVectorPtr getVertices();
+    IndexVectorPtr getIndices();
 };
-
-#endif // TRIANGLEOBJECT_H
+#endif // CUBE_HPP

@@ -30,8 +30,10 @@
 #version 330
 
 layout(location=0) in vec4 in_Position;
+
+uniform mat4 gWorld;
  
 void main(void)
 {
-   gl_Position = in_Position;
+   gl_Position = gWorld * in_Position;
 }

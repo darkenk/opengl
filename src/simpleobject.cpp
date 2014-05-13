@@ -32,6 +32,8 @@
 #include <GL/glu.h>
 #include <iostream>
 #include "exceptions.hpp"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 using namespace std;
 
@@ -58,6 +60,10 @@ SimpleObject::SimpleObject(std::shared_ptr<IObject> object)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndicesBufferId);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, mObject->getIndices()->size() * sizeof(unsigned int), mObject->getIndices()->data(), GL_STATIC_DRAW);
 
+    //projection matrix
+    mModelId = glGetUniformLocation(mShaderLoader->programId(), "gWorld");
+    mModel = glm::mat4();
+
     checkError(__FUNCTION__);
 }
 
@@ -67,12 +73,19 @@ SimpleObject::~SimpleObject()
     mShaderLoader.release();
     glDeleteBuffers(1, &mIndicesBufferId);
     glDeleteBuffers(1, &mVertexBufferId);
+    glDeleteVertexArrays(1, &mVao);
 }
 
 void SimpleObject::render()
 {
     glUseProgram(mShaderLoader->programId());
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glUniformMatrix4fv(mModelId, 1, GL_FALSE, glm::value_ptr(mMVP));
     glBindVertexArray(mVao);
     glDrawElements(GL_TRIANGLES, mObject->getIndices()->size(), GL_UNSIGNED_INT, 0);
+}
+
+void SimpleObject::setVpMatrix(glm::mat4& matrix)
+{
+    mMVP = mModel * matrix;
 }

@@ -30,32 +30,17 @@
 #include "renderer.hpp"
 #include "terrainobject.hpp"
 #include "simpleobject.hpp"
+#include "cube.hpp"
 #include <GL/freeglut.h>
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace std;
 
-class Triangle : public IObject {
-public:
-    VertexVectorPtr getVertices() {
-        VertexVectorPtr v = VertexVectorPtr(new vector<Vertex> ({
-            glm::vec4(-0.5, -0.5, 0.0, 1.0),
-            glm::vec4( 0.5, -0.5, 0.0, 1.0),
-            glm::vec4( 0.0,  0.5, 0.0, 1.0),
-        }));
-        return v;
-    }
-    IndexVectorPtr getIndices() {
-        IndexVectorPtr v = IndexVectorPtr(new vector<unsigned int>({0, 1, 2 }));
-        return v;
-    }
-};
-
 Renderer::Renderer(shared_ptr<Camera> camera)
 {
     sRenderer = this;
-    mObject = new SimpleObject(shared_ptr<Triangle>(new Triangle));
+    mObject = new SimpleObject(shared_ptr<Cube>(new Cube));
     mCamera = camera;
 }
 

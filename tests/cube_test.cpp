@@ -27,36 +27,28 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef TRIANGLEOBJECT_H
-#define TRIANGLEOBJECT_H
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
+#include "../src/cube.hpp"
 
-#include "irenderableobject.hpp"
-#include "shaderloader.hpp"
-#include <memory>
-#include <GL/glew.h>
-#include "iobject.hpp"
+using testing::ElementsAreArray;
 
-class SimpleObject : public IRenderableObject
+TEST(CubeTest, check_cube_indices)
 {
-public:
-    SimpleObject(std::shared_ptr<IObject> object);
-    virtual ~SimpleObject();
-    virtual void render();
-    virtual void setVpMatrix(glm::mat4& matrix);
-
-private:
-    bool createShaders();
-    bool releaseShaders();
-
-    std::unique_ptr<ShaderLoader> mShaderLoader;
-    std::shared_ptr<IObject> mObject;
-    GLuint mVertexBufferId;
-    GLuint mIndicesBufferId;
-    GLuint mVao;
-    GLuint mModelId;
-
-    glm::mat4 mModel;
-    glm::mat4 mMVP;
-};
-
-#endif // TRIANGLEOBJECT_H
+    unsigned int indices[] = {  1, 0, 2,
+                                1, 2, 3,
+                                5, 4, 6,
+                                5, 6, 7,
+                                1, 5, 7,
+                                1, 7, 3,
+                                0, 4, 6,
+                                0, 6, 2,
+                                0, 4, 5,
+                                5, 1, 0,
+                                2, 6, 7,
+                                2, 7, 3};
+    int icount = sizeof(indices)/sizeof(*indices);
+    Cube cube;
+    ASSERT_EQ(icount, cube.getIndices()->size());
+    EXPECT_THAT(*cube.getIndices(), ElementsAreArray(indices));
+}

@@ -20,5 +20,6 @@ link_directories(${CMAKE_SOURCE_DIR}/../glmock)
 
 compile_test(camera_test.cpp "" "gtest_main")
 compile_test(shaderloader_test.cpp "../src/exceptions.cpp" "gmock;gmock_main;glmock")
-compile_test(simpleobject_test.cpp "../src/cube.cpp;mockshaderloader.cpp;../src/exceptions.cpp" "gmock;gmock_main;glmock")
+compile_test(simpleobject_test.cpp "mockshaderloader.cpp;../src/exceptions.cpp" "gmock;gmock_main;glmock")
 compile_test(terrain_test.cpp "" "gtest_main")
+compile_test(cube_test.cpp "" "gtest_main")
