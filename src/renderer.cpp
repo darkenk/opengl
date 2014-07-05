@@ -27,20 +27,38 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#include <GL/glew.h>
+#include <GL/freeglut.h>
+#include <iostream>
+#include <glm/gtc/matrix_transform.hpp>
 #include "renderer.hpp"
 #include "terrainobject.hpp"
 #include "simpleobject.hpp"
 #include "cube.hpp"
-#include <GL/freeglut.h>
-#include <iostream>
-#include <glm/gtc/matrix_transform.hpp>
+#include "logger.hpp"
 
 using namespace std;
+
+class TriangleObject : public IObject {
+public:
+    VertexVectorPtr getVertices() {
+        VertexVectorPtr v = VertexVectorPtr(new vector<Vertex> ({
+            glm::vec4(-0.5f, -0.5f, 0.0f, 1.0f),
+            glm::vec4( 0.5f, -0.5f, 0.0f, 1.0f),
+            glm::vec4( 0.0f,  0.5f, 0.0f, 1.0f),
+        }));
+        return v;
+    }
+    IndexVectorPtr getIndices() {
+        IndexVectorPtr v = IndexVectorPtr(new vector<unsigned int>({0, 1, 2 }));
+        return v;
+    }
+};
 
 Renderer::Renderer(shared_ptr<Camera> camera)
 {
     sRenderer = this;
-    mObject = new SimpleObject(shared_ptr<Cube>(new Cube));
+    mObject = new SimpleObject(shared_ptr<TriangleObject>(new TriangleObject));
     mCamera = camera;
 }
 
@@ -54,7 +72,7 @@ void Renderer::render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     GLenum ErrorCheckValue = glGetError();
     if (ErrorCheckValue != GL_NO_ERROR) {
-        std::cerr << "ERROR: Clear: " <<
+        LOGE << "ERROR: Clear: " <<
             gluErrorString(ErrorCheckValue);
     }
     glm::mat4 tmp = mProjection * mCamera->getMatrix();
@@ -62,7 +80,7 @@ void Renderer::render()
     mObject->render();
     ErrorCheckValue = glGetError();
     if (ErrorCheckValue != GL_NO_ERROR) {
-        std::cerr << "ERROR: Render: " <<
+        LOGE << "ERROR: Render: " <<
             gluErrorString(ErrorCheckValue);
     }
     glutSwapBuffers();

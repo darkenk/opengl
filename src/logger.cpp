@@ -27,51 +27,16 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include <iostream>
-#include "world.hpp"
 #include "logger.hpp"
 
-World* World::sWorld = nullptr;
-
-World::World()
+const char* Logger::getColor()
 {
-    if (!sWorld) {
-        sWorld = this;
+    switch(mLevel) {
+    case Level::Verbose:
+        return "\e[32m";
+    case Level::Debug:
+        return "\e[33m";
+    case Level::Error:
+        return "\e[31m";
     }
-}
-
-void World::keyboard(unsigned char key, int x, int y)
-{
-    switch(key) {
-    case 'w':
-        mCamera->forward();
-        break;
-    case 's':
-        mCamera->backward();
-        break;
-    case 'a':
-        mCamera->left();
-        break;
-    case 'd':
-        mCamera->right();
-        break;
-    case 'q':
-        mCamera->rotateLeft(1.0f);
-        break;
-    case 'e':
-        mCamera->rotateRight(1.0f);
-        break;
-    case 'r':
-        mCamera->rotateUp(1.0f);
-        break;
-    case 'f':
-        mCamera->rotateDown(1.0f);
-        break;
-    }
-    LOGV << "You pressed : " << key << " at " << x << ", " << y;
-}
-
-void World::setCamera(shared_ptr<Camera> camera)
-{
-    mCamera = camera;
 }

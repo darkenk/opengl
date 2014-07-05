@@ -36,6 +36,7 @@
 #include "renderer.hpp"
 #include "shaderloader.hpp"
 #include "world.hpp"
+#include "logger.hpp"
 
 using namespace std;
 

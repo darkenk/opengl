@@ -39,30 +39,32 @@ Cube::Cube()
 
 VertexVectorPtr Cube::getVertices() {
     VertexVectorPtr v = VertexVectorPtr(new vector<Vertex> ({
-                                                                glm::vec4(-0.5f, 0.5f, -0.5f, 1.0),
-                                                                glm::vec4( 0.5f, 0.5f, -0.5f, 1.0),
-                                                                glm::vec4(-0.5f, -0.5f,-0.5f, 1.0),
-                                                                glm::vec4( 0.5f, -0.5f,-0.5f, 1.0), //3
-                                                                glm::vec4(-0.5f, 0.5f,  0.5f, 1.0), //
-                                                                glm::vec4( 0.5f, 0.5f,  0.5f, 1.0),
-                                                                glm::vec4(-0.5f, -0.5f, 0.5f, 1.0),
-                                                                glm::vec4( 0.5f, -0.5f, 0.5f, 1.0), //7
-                                                            }));
+        glm::vec4(-0.5f, 0.5f, -0.5f, 1.0),
+        glm::vec4( 0.5f, 0.5f, -0.5f, 1.0),
+        glm::vec4(-0.5f, -0.5f,-0.5f, 1.0),
+        glm::vec4( 0.5f, -0.5f,-0.5f, 1.0), //3
+        glm::vec4(-0.5f, 0.5f,  0.5f, 1.0), //
+        glm::vec4( 0.5f, 0.5f,  0.5f, 1.0),
+        glm::vec4(-0.5f, -0.5f, 0.5f, 1.0),
+        glm::vec4( 0.5f, -0.5f, 0.5f, 1.0), //7
+    }));
     return v;
 }
 
 IndexVectorPtr Cube::getIndices() {
-    IndexVectorPtr v = IndexVectorPtr(new vector<unsigned int>({1, 0, 2,
-                                                                1, 2, 3,
-                                                                5, 4, 6,
-                                                                5, 6, 7,
-                                                                1, 5, 7,
-                                                                1, 7, 3,
-                                                                0, 4, 6,
-                                                                0, 6, 2,
-                                                                0, 4, 5,
-                                                                5, 1, 0,
-                                                                2, 6, 7,
-                                                                2, 7, 3}));
+    IndexVectorPtr v = IndexVectorPtr(new vector<unsigned int>({
+        1, 0, 2,
+        1, 2, 3,
+        5, 4, 6,
+        5, 6, 7,
+        1, 5, 7,
+        1, 7, 3,
+        0, 4, 6,
+        0, 6, 2,
+        0, 4, 5,
+        5, 1, 0,
+        2, 6, 7,
+        2, 7, 3
+    }));
     return v;
 }

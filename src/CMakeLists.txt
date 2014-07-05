@@ -11,8 +11,16 @@ find_path(FREEGLUT_INCLUDE_DIRS NAMES GL)
 # Look for the library.
 find_library(FREEGLUT_LIBRARIES NAMES glut)
 
-include_directories(${OPENGL_INCLUDE_DIRS} ${GLEW_INCLUDE_DIRS} ${FREEGLUT_INCLUDE_DIRS} ${GLM_INCLUDE_DIRS})
-target_link_libraries(opengl ${OPENGL_LIBRARIES} ${FREEGLUT_LIBRARIES} ${GLEW_LIBRARIES} ${GLUT_LIBRARIES} pthread)
+include_directories(
+        ${OPENGL_INCLUDE_DIRS}
+        ${GLEW_INCLUDE_DIRS}
+        ${FREEGLUT_INCLUDE_DIRS}
+        ${GLM_INCLUDE_DIRS})
+target_link_libraries(opengl
+        ${OPENGL_LIBRARIES}
+        ${FREEGLUT_LIBRARIES}
+        ${GLEW_LIBRARIES}
+        ${GLUT_LIBRARIES})
 
 file(GLOB shader_SOURCES shaders/*)
 

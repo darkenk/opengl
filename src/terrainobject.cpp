@@ -28,11 +28,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include <iostream>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include "terrainobject.hpp"
 #include "shaderloader.hpp"
 #include "exceptions.hpp"
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include "logger.hpp"
 
 TerrainObject::TerrainObject()
 {
@@ -49,7 +50,7 @@ bool TerrainObject::init()
     try {
         mShaderLoader = std::unique_ptr<ShaderLoader>(new ShaderLoader("./terrain_frag.glsl", "./terrain_vert.glsl"));
     } catch (std::exception& e) {
-        std::cerr << "__FUNC__ " << e.what() << std::endl;
+        LOGE << e.what();
         return false;
     }
 
@@ -105,8 +106,8 @@ bool TerrainObject::init()
 
     ErrorCheckValue = glGetError();
     if (ErrorCheckValue != GL_NO_ERROR) {
-        std::cerr << "ERROR: Could not create a VBO: "
-                << gluErrorString(ErrorCheckValue) << std::endl;
+        LOGE << "ERROR: Could not create a VBO: "
+                << gluErrorString(ErrorCheckValue);
         return false;
     }
 
@@ -140,8 +141,8 @@ bool TerrainObject::release()
 
     ErrorCheckValue = glGetError();
     if (ErrorCheckValue != GL_NO_ERROR) {
-        std::cerr << "ERROR: Could not destroy the VBO: "
-                << gluErrorString(ErrorCheckValue) << std::endl;
+        LOGE << "ERROR: Could not destroy the VBO: "
+                << gluErrorString(ErrorCheckValue);
 
         return false;
     }

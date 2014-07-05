@@ -27,51 +27,39 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#ifndef LOGGER_HPP
+#define LOGGER_HPP
+
+#include <string>
 #include <iostream>
-#include "world.hpp"
-#include "logger.hpp"
 
-World* World::sWorld = nullptr;
-
-World::World()
+class Logger
 {
-    if (!sWorld) {
-        sWorld = this;
+public:
+    enum Level {
+        Verbose,
+        Debug,
+        Error
+    };
+
+    Logger(Level level): mLevel(level) {}
+    ~Logger() { std::cerr << std::endl; }
+
+    template<class T>
+    Logger& operator<<(T var) {
+        std::cerr << getColor() << var << "\e[0m";
+        return *this;
     }
-}
 
-void World::keyboard(unsigned char key, int x, int y)
-{
-    switch(key) {
-    case 'w':
-        mCamera->forward();
-        break;
-    case 's':
-        mCamera->backward();
-        break;
-    case 'a':
-        mCamera->left();
-        break;
-    case 'd':
-        mCamera->right();
-        break;
-    case 'q':
-        mCamera->rotateLeft(1.0f);
-        break;
-    case 'e':
-        mCamera->rotateRight(1.0f);
-        break;
-    case 'r':
-        mCamera->rotateUp(1.0f);
-        break;
-    case 'f':
-        mCamera->rotateDown(1.0f);
-        break;
-    }
-    LOGV << "You pressed : " << key << " at " << x << ", " << y;
-}
+private:
+    Level mLevel;
+    const char* getColor();
+};
 
-void World::setCamera(shared_ptr<Camera> camera)
-{
-    mCamera = camera;
-}
+#define LOG(level) Logger(level) << __FILENAME__ << ":" << __LINE__ << " "
+
+#define LOGV LOG(Logger::Level::Verbose)
+#define LOGD LOG(Logger::Level::Debug)
+#define LOGE LOG(Logger::Level::Error)
+
+#endif // LOGGER_HPP
