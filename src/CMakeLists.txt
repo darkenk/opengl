@@ -3,6 +3,7 @@ file(GLOB opengl_SOURCES *.cpp)
 add_executable(opengl ${opengl_SOURCES})
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
+include(FindGLM)
 
 # Look for the header file.
 find_path(FREEGLUT_INCLUDE_DIRS NAMES GL)
@@ -10,7 +11,7 @@ find_path(FREEGLUT_INCLUDE_DIRS NAMES GL)
 # Look for the library.
 find_library(FREEGLUT_LIBRARIES NAMES glut)
 
-include_directories( ${OPENGL_INCLUDE_DIRS} ${GLEW_INCLUDE_DIRS} ${FREEGLUT_INCLUDE_DIRS})
+include_directories(${OPENGL_INCLUDE_DIRS} ${GLEW_INCLUDE_DIRS} ${FREEGLUT_INCLUDE_DIRS} ${GLM_INCLUDE_DIRS})
 target_link_libraries(opengl ${OPENGL_LIBRARIES} ${FREEGLUT_LIBRARIES} ${GLEW_LIBRARIES} ${GLUT_LIBRARIES} pthread)
 
 file(GLOB shader_SOURCES shaders/*)
