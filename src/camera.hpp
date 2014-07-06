@@ -31,18 +31,17 @@
 #define CAMERA_H_
 
 #include <memory>
+#include <string>
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
 
-using namespace std;
-
 class Camera
 {
 public:
-    Camera(const glm::vec3& position = glm::vec3(12,2,12),
-        const glm::vec3& lookAt = glm::vec3(12,2,11),
+    Camera(const glm::vec3& position = glm::vec3(0, 0, 2),
+        const glm::vec3& lookAt = glm::vec3(0, 0, 0),
         const glm::vec3& up = glm::vec3(0,1,0));
     virtual ~Camera();
 
@@ -55,6 +54,7 @@ public:
     void rotateRight(float angle = 0.2f);
     void rotateUp(float angle = 0.2f);
     void rotateDown(float angle = 0.2f);
+    std::string dump();
 
 private:
     glm::mat4 mMatrix;

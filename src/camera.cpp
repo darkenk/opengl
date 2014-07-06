@@ -27,10 +27,13 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "camera.hpp"
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <iostream>
+#include <sstream>
+#include "camera.hpp"
+
+using namespace std;
 
 Camera::Camera(const glm::vec3& position,
         const glm::vec3& lookAt,
@@ -95,4 +98,13 @@ void Camera::rotateUp(float angle)
 void Camera::rotateDown(float angle)
 {
     mRotation = glm::rotate(mRotation, angle, glm::vec3(1, 0, 0));
+}
+
+string Camera::dump()
+{
+    stringstream s;
+    s << "Position: (" << mPosition.x << ", " << mPosition.y << ", " <<
+         mPosition.z << "), LookAt: " << mLookAt.x << ", " << mLookAt.y <<
+         ", " << mLookAt.z << ")";
+    return s.str();
 }

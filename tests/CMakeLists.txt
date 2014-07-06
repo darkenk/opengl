@@ -4,6 +4,7 @@ include(PCH)
 
 include_directories(${CMAKE_SOURCE_DIR}/../glmock)
 link_directories(${CMAKE_SOURCE_DIR}/../glmock)
+add_definitions(-D__FILENAME__=__FILE__)
 
 add_pch(test_pch test_pch.hpp test_pch.cpp)
 

@@ -39,8 +39,10 @@
 struct Vertex
 {
     Vertex() {}
-    Vertex(glm::vec4 pos) : position(pos) {}
+    Vertex(glm::vec4 pos, glm::vec4 col = glm::vec4(1.0f, 1.0f, 0.2f, 1.0f)) :
+        position(pos), color(col) {}
     glm::vec4 position;
+    glm::vec4 color;
 };
 
 typedef std::shared_ptr< std::vector<Vertex> > VertexVectorPtr;

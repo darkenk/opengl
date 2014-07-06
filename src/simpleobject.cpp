@@ -52,8 +52,12 @@ SimpleObject::SimpleObject(std::shared_ptr<IObject> object)
     glGenBuffers(1, &mVertexBufferId);
     glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferId);
     glBufferData(GL_ARRAY_BUFFER, mObject->getVertices()->size() * sizeof(Vertex) , mObject->getVertices()->data(), GL_STATIC_DRAW);
+    // enable position
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+    // enable color
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*) (sizeof(Vertex::position)));
 
     //indices;
     glGenBuffers(1, &mIndicesBufferId);

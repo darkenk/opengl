@@ -39,26 +39,10 @@
 
 using namespace std;
 
-class TriangleObject : public IObject {
-public:
-    VertexVectorPtr getVertices() {
-        VertexVectorPtr v = VertexVectorPtr(new vector<Vertex> ({
-            glm::vec4(-0.5f, -0.5f, 0.0f, 1.0f),
-            glm::vec4( 0.5f, -0.5f, 0.0f, 1.0f),
-            glm::vec4( 0.0f,  0.5f, 0.0f, 1.0f),
-        }));
-        return v;
-    }
-    IndexVectorPtr getIndices() {
-        IndexVectorPtr v = IndexVectorPtr(new vector<unsigned int>({0, 1, 2 }));
-        return v;
-    }
-};
-
 Renderer::Renderer(shared_ptr<Camera> camera)
 {
     sRenderer = this;
-    mObject = new SimpleObject(shared_ptr<TriangleObject>(new TriangleObject));
+    mObject = new SimpleObject(shared_ptr<Cube>(new Cube));
     mCamera = camera;
 }
 

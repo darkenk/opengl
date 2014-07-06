@@ -68,7 +68,7 @@ void World::keyboard(unsigned char key, int x, int y)
         mCamera->rotateDown(1.0f);
         break;
     }
-    LOGV << "You pressed : " << key << " at " << x << ", " << y;
+    LOGV << "Camera pos: " << mCamera->dump();
 }
 
 void World::setCamera(shared_ptr<Camera> camera)

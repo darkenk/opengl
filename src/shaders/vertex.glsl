@@ -29,11 +29,17 @@
  */
 #version 330
 
-layout(location=0) in vec4 in_Position;
+// input from application
+layout(location=0) in vec4 inPosition;
+layout(location=1) in vec4 inColor;
+
+// output from shader
+out vec4 vColor;
 
 uniform mat4 gWorld;
- 
+
 void main(void)
 {
-   gl_Position = gWorld * in_Position;
+   gl_Position = gWorld * inPosition;
+   vColor = inColor;
 }

@@ -39,14 +39,22 @@ Cube::Cube()
 
 VertexVectorPtr Cube::getVertices() {
     VertexVectorPtr v = VertexVectorPtr(new vector<Vertex> ({
-        glm::vec4(-0.5f, 0.5f, -0.5f, 1.0),
-        glm::vec4( 0.5f, 0.5f, -0.5f, 1.0),
-        glm::vec4(-0.5f, -0.5f,-0.5f, 1.0),
-        glm::vec4( 0.5f, -0.5f,-0.5f, 1.0), //3
-        glm::vec4(-0.5f, 0.5f,  0.5f, 1.0), //
-        glm::vec4( 0.5f, 0.5f,  0.5f, 1.0),
-        glm::vec4(-0.5f, -0.5f, 0.5f, 1.0),
-        glm::vec4( 0.5f, -0.5f, 0.5f, 1.0), //7
+        Vertex( glm::vec4(-0.5f, 0.5f, -0.5f, 1.0),
+                glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)),
+        Vertex( glm::vec4( 0.5f, 0.5f, -0.5f, 1.0),
+                glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)),
+        Vertex( glm::vec4(-0.5f, -0.5f,-0.5f, 1.0),
+                glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)),
+        Vertex( glm::vec4( 0.5f, -0.5f,-0.5f, 1.0), //3
+                glm::vec4(1.0f, 1.0f, 0.0f, 1.0f)),
+        Vertex( glm::vec4(-0.5f, 0.5f,  0.5f, 1.0), //
+                glm::vec4(0.0f, 1.0f, 1.0f, 1.0f)),
+        Vertex( glm::vec4( 0.5f, 0.5f,  0.5f, 1.0),
+                glm::vec4(1.0f, 0.0f, 1.0f, 1.0f)),
+        Vertex( glm::vec4(-0.5f, -0.5f, 0.5f, 1.0),
+                glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)),
+        Vertex( glm::vec4( 0.5f, -0.5f, 0.5f, 1.0), //7
+                glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)),
     }));
     return v;
 }

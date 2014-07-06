@@ -29,9 +29,11 @@
  */
 #version 330
 
+// input from shader
+in vec4 vColor;
 out vec4 out_Color;
 
 void main(void)
 {
-    out_Color = vec4(0.0f, 1.0f, 0.2f, 1.0f);
+    out_Color = vColor;
 }

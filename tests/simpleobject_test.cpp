@@ -62,9 +62,9 @@ class TriangleObject : public IObject {
 public:
     VertexVectorPtr getVertices() {
         VertexVectorPtr v = VertexVectorPtr(new vector<Vertex> ({
-            glm::vec4(-0.5f, -0.5f, 0.0f, 1.0f),
-            glm::vec4( 0.5f, -0.5f, 0.0f, 1.0f),
-            glm::vec4( 0.0f,  0.5f, 0.0f, 1.0f),
+            Vertex(glm::vec4(-0.5f, -0.5f, 0.0f, 1.0f), glm::vec4(0.0f,  1.0f, 1.0f, 1.0f)),
+            Vertex(glm::vec4( 0.5f, -0.5f, 0.0f, 1.0f), glm::vec4(0.0f,  1.0f, 1.0f, 1.0f)),
+            Vertex(glm::vec4( 0.0f,  0.5f, 0.0f, 1.0f), glm::vec4(0.0f,  1.0f, 1.0f, 1.0f)),
         }));
         return v;
     }
@@ -133,8 +133,11 @@ TEST_F(SimpleObjectTest, set_array_buffer_with_vertices)
 
     float data[] = {
                     -0.5f, -0.5f, 0.0f, 1.0f,
+                     0.0f,  1.0f, 1.0f, 1.0f,
                      0.5f, -0.5f, 0.0f, 1.0f,
-                     0.0f,  0.5f, 0.0f, 1.0f };
+                     0.0f,  1.0f, 1.0f, 1.0f,
+                     0.0f,  0.5f, 0.0f, 1.0f,
+                     0.0f,  1.0f, 1.0f, 1.0f};
     EXPECT_CALL(gl, gl_BindBuffer(Ne(GL_ARRAY_BUFFER),_))
           .Times(AnyNumber());
     EXPECT_CALL(gl, gl_BufferData(Ne(GL_ARRAY_BUFFER),_,_,_))
@@ -142,7 +145,7 @@ TEST_F(SimpleObjectTest, set_array_buffer_with_vertices)
     {
         InSequence s;
         EXPECT_CALL(gl, gl_BindBuffer(GL_ARRAY_BUFFER,_));
-        EXPECT_CALL(gl, gl_BufferData(GL_ARRAY_BUFFER,48,
+        EXPECT_CALL(gl, gl_BufferData(GL_ARRAY_BUFFER, 96,
                                       VerifyArrayFloat(data, 12),GL_STATIC_DRAW));
     }
     SimpleObject so(to);

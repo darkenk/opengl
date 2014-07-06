@@ -11,22 +11,30 @@ find_path(FREEGLUT_INCLUDE_DIRS NAMES GL)
 # Look for the library.
 find_library(FREEGLUT_LIBRARIES NAMES glut)
 
+# show only file name instead of absolute path
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__FILENAME__='\"$(subst ${CMAKE_SOURCE_DIR}/,,$(abspath $<))\"'")
+
 include_directories(
-        ${OPENGL_INCLUDE_DIRS}
-        ${GLEW_INCLUDE_DIRS}
-        ${FREEGLUT_INCLUDE_DIRS}
-        ${GLM_INCLUDE_DIRS})
+    ${OPENGL_INCLUDE_DIRS}
+    ${GLEW_INCLUDE_DIRS}
+    ${FREEGLUT_INCLUDE_DIRS}
+    ${GLM_INCLUDE_DIRS})
 target_link_libraries(opengl
-        ${OPENGL_LIBRARIES}
-        ${FREEGLUT_LIBRARIES}
-        ${GLEW_LIBRARIES}
-        ${GLUT_LIBRARIES})
+    ${OPENGL_LIBRARIES}
+    ${FREEGLUT_LIBRARIES}
+    ${GLEW_LIBRARIES}
+    ${GLUT_LIBRARIES})
 
 file(GLOB shader_SOURCES shaders/*)
 
-file(COPY ${shader_SOURCES} DESTINATION ${EXECUTABLE_OUTPUT_PATH})
+add_custom_target(
+    copy_shaders
+    COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/shaders/* ${EXECUTABLE_OUTPUT_PATH}/
+)
 
 add_custom_target(run
-	COMMAND opengl
-	COMMENT "Run with ${CMAKE_BUILD_TYPE} configuration"
+    COMMAND opengl
+    COMMENT "Run with ${CMAKE_BUILD_TYPE} configuration"
 )
+
+add_dependencies(run copy_shaders)
