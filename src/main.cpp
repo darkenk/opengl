@@ -34,7 +34,7 @@
 #include <string>
 
 #include "renderer.hpp"
-#include "shaderloader.hpp"
+#include "shader.hpp"
 #include "world.hpp"
 #include "logger.hpp"
 #include "utils.hpp"

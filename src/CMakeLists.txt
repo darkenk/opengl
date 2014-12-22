@@ -1,5 +1,4 @@
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-#file(GLOB opengl_RES shaders/.glsl)
 file(GLOB opengl_SOURCES *.cpp shaders/*.glsl)
 add_executable(opengl ${opengl_SOURCES})
 find_package(OpenGL REQUIRED)

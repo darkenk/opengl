@@ -32,7 +32,7 @@
 
 #include "irenderableobject.hpp"
 #include "terrain.hpp"
-#include "shaderloader.hpp"
+#include "shader.hpp"
 #include <GL/glew.h>
 #include <GL/glext.h>
 #include <memory>
@@ -49,7 +49,7 @@ public:
     virtual void setVpMatrix(glm::mat4& matrix);
 
 private:
-    std::unique_ptr<ShaderLoader> mShaderLoader;
+    std::unique_ptr<Shader> mShaderLoader;
     Terrain mTerrain;
     GLuint mWidth;
     GLuint mHeight;

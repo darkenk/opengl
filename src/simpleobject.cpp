@@ -28,7 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "simpleobject.hpp"
-#include "shaderloader.hpp"
+#include "shader.hpp"
 #include <GL/glu.h>
 #include <iostream>
 #include "exceptions.hpp"
@@ -39,7 +39,7 @@ using namespace std;
 
 SimpleObject::SimpleObject(std::shared_ptr<IObject> object)
 {
-    mShaderLoader = std::unique_ptr<ShaderLoader>(new ShaderLoader("./fragment.glsl", "./vertex.glsl"));
+    mShaderLoader = std::unique_ptr<Shader>(new Shader("./fragment.glsl", "./vertex.glsl"));
     mObject = object;
 
     glGetError();
@@ -65,7 +65,7 @@ SimpleObject::SimpleObject(std::shared_ptr<IObject> object)
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, mObject->getIndices()->size() * sizeof(unsigned int), mObject->getIndices()->data(), GL_STATIC_DRAW);
 
     //projection matrix
-    mModelId = glGetUniformLocation(mShaderLoader->programId(), "gWorld");
+    mModelId = mShaderLoader->getUniform("gWorld");
     mModel = glm::mat4();
 
     checkError(__FUNCTION__);
@@ -82,11 +82,12 @@ SimpleObject::~SimpleObject()
 
 void SimpleObject::render()
 {
-    glUseProgram(mShaderLoader->programId());
+    mShaderLoader->use();
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glUniformMatrix4fv(mModelId, 1, GL_FALSE, glm::value_ptr(mMVP));
     glBindVertexArray(mVao);
     glDrawElements(GL_TRIANGLES, mObject->getIndices()->size(), GL_UNSIGNED_INT, 0);
+    mShaderLoader->unUse();
 }
 
 void SimpleObject::setVpMatrix(glm::mat4& matrix)

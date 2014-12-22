@@ -31,7 +31,7 @@
 #define TRIANGLEOBJECT_H
 
 #include "irenderableobject.hpp"
-#include "shaderloader.hpp"
+#include "shader.hpp"
 #include <memory>
 #include <GL/glew.h>
 #include "iobject.hpp"
@@ -48,7 +48,7 @@ private:
     bool createShaders();
     bool releaseShaders();
 
-    std::unique_ptr<ShaderLoader> mShaderLoader;
+    std::unique_ptr<Shader> mShaderLoader;
     std::shared_ptr<IObject> mObject;
     GLuint mVertexBufferId;
     GLuint mIndicesBufferId;

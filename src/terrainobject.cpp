@@ -31,7 +31,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "terrainobject.hpp"
-#include "shaderloader.hpp"
+#include "shader.hpp"
 #include "exceptions.hpp"
 #include "logger.hpp"
 
@@ -48,7 +48,7 @@ TerrainObject::~TerrainObject()
 bool TerrainObject::init()
 {
     try {
-        mShaderLoader = std::unique_ptr<ShaderLoader>(new ShaderLoader("./terrain_frag.glsl", "./terrain_vert.glsl"));
+        mShaderLoader = std::unique_ptr<Shader>(new Shader("./terrain_frag.glsl", "./terrain_vert.glsl"));
     } catch (std::exception& e) {
         LOGE << e.what();
         return false;
@@ -70,7 +70,7 @@ bool TerrainObject::init()
 
     GLenum ErrorCheckValue = glGetError();
 
-    mModelId = glGetUniformLocation(mShaderLoader->programId(), "gWorld");
+    mModelId = mShaderLoader->getUniform("gWorld");
     mModel = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 
     glGenVertexArrays(1, &mVertexArrayId);
@@ -116,12 +116,13 @@ bool TerrainObject::init()
 
 void TerrainObject::render()
 {
-    glUseProgram(mShaderLoader->programId());
+    mShaderLoader->use();
     glUniformMatrix4fv(mModelId, 1, GL_FALSE, glm::value_ptr(mMVP));
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndicesBufferId);
     glDrawElements(GL_TRIANGLES, 3 * 2 * (mWidth - 1) * (mHeight - 1),
             GL_UNSIGNED_INT, 0);
+    mShaderLoader->unUse();
 }
 
 bool TerrainObject::release()

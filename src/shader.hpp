@@ -33,16 +33,21 @@
 #include <string>
 #include <vector>
 #include <GL/glew.h>
+#include <memory>
 
-class ShaderLoader
+class Shader
 {
 public:
-    ShaderLoader(const char* fragmentShader, const char* vertexShader);
-    ~ShaderLoader();
-    GLuint programId();
+    Shader(const std::string& fragmentShader, const std::string& vertexShader);
+    ~Shader();
+    void use();
+    void unUse();
+    GLuint getUniform(const std::string& name);
+    GLuint getAttribute(const std::string& name);
+
 private:
-    char* loadShader(const char *fileName);
-    GLuint createShader(const char *fileName, GLuint shaderType);
+    std::shared_ptr<std::string> loadShader(const std::string& fileName);
+    GLuint createShader(const std::string& fileName, GLuint shaderType);
     void createProgram();
     GLuint mProgramId;
     std::vector<GLuint> mShaderIds;
