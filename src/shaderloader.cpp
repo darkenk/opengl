@@ -31,10 +31,9 @@
 #include <fstream>
 #include <iomanip>
 #include "exceptions.hpp"
+#include "utils.hpp"
 
 using namespace std;
-
-string ShaderLoader::mLaunchedPath = "";
 
 ShaderLoader::ShaderLoader(const char* fragmentShader, const char* vertexShader) :
     mProgramId(0)
@@ -62,13 +61,12 @@ GLuint ShaderLoader::programId()
 
 char* ShaderLoader::loadShader(const char *fileName)
 {
-    std::string s(mLaunchedPath);
-    s.append(fileName);
+    std::string s{getBasePath() + fileName};
     std::ifstream file(s);
     if (!file.good()) {
         file.close();
         string msg = "No such file: ";
-        msg += fileName;
+        msg += s;
         throw Exception(msg);
     }
     file.seekg (0, std::ios::end);
@@ -104,9 +102,4 @@ void ShaderLoader::createProgram()
     if (error != GL_NO_ERROR) {
         throw Exception(reinterpret_cast <const char*>(gluErrorString(error)));
     }
-}
-
-void ShaderLoader::setLaunchedPath(std::string &s)
-{
-    mLaunchedPath = s;
 }

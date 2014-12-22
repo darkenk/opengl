@@ -1,5 +1,6 @@
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-file(GLOB opengl_SOURCES *.cpp)
+#file(GLOB opengl_RES shaders/.glsl)
+file(GLOB opengl_SOURCES *.cpp shaders/*.glsl)
 add_executable(opengl ${opengl_SOURCES})
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
@@ -23,12 +24,12 @@ target_link_libraries(opengl
     ${OPENGL_LIBRARIES}
     ${FREEGLUT_LIBRARIES}
     ${GLEW_LIBRARIES}
-    ${GLUT_LIBRARIES})
+    ${GLUT_LIBRARIES} pthread)
 
 file(GLOB shader_SOURCES shaders/*)
 
 add_custom_target(
-    copy_shaders
+    copy_shaders ALL
     COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/shaders/* ${EXECUTABLE_OUTPUT_PATH}/
 )
 
@@ -36,5 +37,3 @@ add_custom_target(run
     COMMAND opengl
     COMMENT "Run with ${CMAKE_BUILD_TYPE} configuration"
 )
-
-add_dependencies(run copy_shaders)

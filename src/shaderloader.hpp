@@ -40,14 +40,12 @@ public:
     ShaderLoader(const char* fragmentShader, const char* vertexShader);
     ~ShaderLoader();
     GLuint programId();
-    static void setLaunchedPath(std::string& s);
 private:
     char* loadShader(const char *fileName);
     GLuint createShader(const char *fileName, GLuint shaderType);
     void createProgram();
     GLuint mProgramId;
     std::vector<GLuint> mShaderIds;
-    static std::string mLaunchedPath;
 };
 
 #endif // SHADERLOADER_H

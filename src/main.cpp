@@ -37,12 +37,13 @@
 #include "shaderloader.hpp"
 #include "world.hpp"
 #include "logger.hpp"
+#include "utils.hpp"
 
 using namespace std;
 
-const char* WINDOW_TITLE = "OpenGL";
-const int INITIAL_WIDTH = 800;
-const int INITIAL_HEIGHT = 600;
+const char* WINDOW_TITLE{"OpenGL"};
+constexpr int INITIAL_WIDTH{800};
+constexpr int INITIAL_HEIGHT{600};
 
 int main(int argc, char* argv[])
 {
@@ -50,7 +51,7 @@ int main(int argc, char* argv[])
         string s(argv[0]);
         s.find_last_not_of("/");
         s.erase(s.find_last_of("/")+1);
-        ShaderLoader::setLaunchedPath(s);
+        setBasePath(s);
     }
     glutInit(&argc, argv);
     glutInitContextVersion(3,3);
@@ -74,10 +75,10 @@ int main(int argc, char* argv[])
     glewExperimental = GL_TRUE;
     glewInit();
 
-    shared_ptr<Camera> camera(new Camera);
-    shared_ptr<IRenderer> renderer(new Renderer(camera));
+    shared_ptr<Camera> camera{new Camera};
+    shared_ptr<IRenderer> renderer{new Renderer(camera)};
     renderer->resize(INITIAL_WIDTH, INITIAL_HEIGHT);
-    shared_ptr<World> world(new World);
+    shared_ptr<World> world{new World};
     world->setCamera(camera);
 
     glutMainLoop();

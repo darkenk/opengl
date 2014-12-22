@@ -49,4 +49,7 @@ typedef std::shared_ptr< std::vector<Vertex> > VertexVectorPtr;
 
 typedef std::shared_ptr< std::vector<unsigned int> > IndexVectorPtr;
 
+std::string getBasePath();
+void setBasePath(const std::string& path);
+
 #endif // UTILS_H
