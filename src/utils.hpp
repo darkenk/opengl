@@ -52,4 +52,6 @@ typedef std::shared_ptr< std::vector<unsigned int> > IndexVectorPtr;
 std::string getBasePath();
 void setBasePath(const std::string& path);
 
+GLint convertGLTypeToSize(GLenum type);
+
 #endif // UTILS_H

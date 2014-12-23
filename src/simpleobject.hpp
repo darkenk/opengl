@@ -35,6 +35,7 @@
 #include <memory>
 #include <GL/glew.h>
 #include "iobject.hpp"
+#include "buffer.hpp"
 
 class SimpleObject : public IRenderableObject
 {
@@ -50,7 +51,7 @@ private:
 
     std::unique_ptr<Shader> mShaderLoader;
     std::shared_ptr<IObject> mObject;
-    GLuint mVertexBufferId;
+    std::unique_ptr<Buffer> mVertexBuffer;
     GLuint mIndicesBufferId;
     GLuint mVao;
     GLuint mModelId;

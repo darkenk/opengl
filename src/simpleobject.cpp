@@ -34,6 +34,7 @@
 #include "exceptions.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "logger.hpp"
 
 using namespace std;
 
@@ -48,16 +49,14 @@ SimpleObject::SimpleObject(std::shared_ptr<IObject> object)
     glGenVertexArrays(1, &mVao);
     glBindVertexArray(mVao);
 
+    mVertexBuffer = std::unique_ptr<Buffer>{new Buffer{reinterpret_cast<GLbyte*>(object->getVertices()->data()),
+                                            object->getVertices()->size() * sizeof(Vertex)}};
+
+    LOGV << "Vertex: " << sizeof(Vertex) << " size: " << object->getVertices()->size();
+
     //vertices
-    glGenBuffers(1, &mVertexBufferId);
-    glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferId);
-    glBufferData(GL_ARRAY_BUFFER, mObject->getVertices()->size() * sizeof(Vertex) , mObject->getVertices()->data(), GL_STATIC_DRAW);
-    // enable position
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-    // enable color
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*) (sizeof(Vertex::position)));
+    mVertexBuffer->setAttributes(mShaderLoader->getAllAttributes());
+    mShaderLoader->getAllAttributes();
 
     //indices;
     glGenBuffers(1, &mIndicesBufferId);
@@ -76,7 +75,6 @@ SimpleObject::~SimpleObject()
     glUseProgram(0);
     mShaderLoader.release();
     glDeleteBuffers(1, &mIndicesBufferId);
-    glDeleteBuffers(1, &mVertexBufferId);
     glDeleteVertexArrays(1, &mVao);
 }
 

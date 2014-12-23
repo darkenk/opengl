@@ -32,6 +32,8 @@
 #include <iomanip>
 #include "exceptions.hpp"
 #include "utils.hpp"
+#include "logger.hpp"
+#include "buffer.hpp"
 
 using namespace std;
 
@@ -91,6 +93,32 @@ void Shader::createProgram()
     if (error != GL_NO_ERROR) {
         throw Exception(reinterpret_cast <const char*>(gluErrorString(error)));
     }
+}
+
+AttributeVectorPtr Shader::getAllAttributes()
+{
+    use();
+    GLint attrLength;
+    glGetProgramiv(mProgramId, GL_ACTIVE_ATTRIBUTES, &attrLength);
+    LOGV << "AttrLength " << attrLength;
+    constexpr GLsizei BUFF_SIZE = 256;
+    GLchar name[BUFF_SIZE]; // name of attribute
+    GLsizei length; // length of string written by gl
+    GLint size; // size of attribute
+    GLenum type; // type of attribute
+    GLint t;
+    GLint s;
+    AttributeVectorPtr attrs{new AttributeVector};
+    for(GLint i = 0; i < attrLength; i++) {
+        glGetActiveAttrib(mProgramId, i, BUFF_SIZE, &length, &size, &type, name);
+        glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_TYPE, &t);
+        glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_SIZE, &s);
+        Attribute a{i, s, t, name, convertGLTypeToSize(type)};
+        attrs->push_back(a);
+        LOGV << a << " type2: " << type;
+    }
+    unUse();
+    return attrs;
 }
 
 

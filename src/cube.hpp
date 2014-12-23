@@ -31,6 +31,8 @@
 #define CUBE_HPP
 
 #include "iobject.hpp"
+#include <GL/glew.h>
+#include "buffer.hpp"
 
 class Cube : public IObject {
 public:
@@ -38,4 +40,14 @@ public:
     VertexVectorPtr getVertices();
     IndexVectorPtr getIndices();
 };
+
+class Triangle : public IObject {
+public:
+    Triangle() {}
+    VertexVectorPtr getVertices();
+
+    IndexVectorPtr getIndices();
+
+};
+
 #endif // CUBE_HPP

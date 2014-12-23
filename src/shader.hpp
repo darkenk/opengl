@@ -34,6 +34,7 @@
 #include <vector>
 #include <GL/glew.h>
 #include <memory>
+#include <buffer.hpp>
 
 class Shader
 {
@@ -44,6 +45,7 @@ public:
     void unUse();
     GLuint getUniform(const std::string& name);
     GLuint getAttribute(const std::string& name);
+    AttributeVectorPtr getAllAttributes();
 
 private:
     std::shared_ptr<std::string> loadShader(const std::string& fileName);

@@ -36,7 +36,6 @@ Cube::Cube()
 {
 }
 
-
 VertexVectorPtr Cube::getVertices() {
     VertexVectorPtr v = VertexVectorPtr(new vector<Vertex> ({
         Vertex( glm::vec4(-0.5f, 0.5f, -0.5f, 1.0),
@@ -75,4 +74,26 @@ IndexVectorPtr Cube::getIndices() {
         2, 7, 3
     }));
     return v;
+}
+
+
+IndexVectorPtr Triangle::getIndices() {
+    IndexVectorPtr v = IndexVectorPtr(new vector<unsigned int>({
+                                                                   1, 2, 0
+                                                               }));
+    return v;
+}
+
+
+VertexVectorPtr Triangle::getVertices() {
+    VertexVectorPtr v = VertexVectorPtr{new std::vector<Vertex> {
+                                                                     //setup triangle geometry
+                                                                     Vertex( glm::vec4(-1.0f, -1.0f, 0.0f, 1.0f),
+                                                                     glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)),
+                                                                     Vertex( glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
+                                                                     glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)),
+                                                                     Vertex( glm::vec4(1.0f, -1.0f, 0.0f, 1.0f),
+                                                                     glm::vec4(0.0f, 0.0f, 1.0f, 1.0f))
+                                                                 }};
+                                                                 return v;
 }
