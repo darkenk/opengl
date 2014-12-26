@@ -28,22 +28,50 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "terrain.hpp"
+#include "logger.hpp"
 
-Terrain::Terrain() :
-        mTerrain(new vector<vector<int> >)
+using namespace std;
+
+Terrain::Terrain(unsigned int width, unsigned int height) :
+    mVertices{new VertexVector}, mIndices{new IndexVector}, mWidth{width},
+    mHeight{height}
 {
+    mVertices->reserve(mWidth * mHeight);
+    mIndices->reserve(3 * 2 * (mWidth -1) * (mHeight -1));
+    generate();
 }
 
-void Terrain::generate(unsigned int w, unsigned int h)
+VertexVectorPtr Terrain::getVertices()
 {
-    mTerrain->resize(h);
-    vector<vector<int> >::iterator iter = mTerrain->begin();
-    do {
-        (*iter).resize(w, 0);
-    } while (++iter != mTerrain->end());
+    return mVertices;
 }
 
-shared_ptr<vector<vector<int> > > Terrain::getTerrain()
+IndexVectorPtr Terrain::getIndices()
 {
-    return mTerrain;
+    return mIndices;
+}
+
+void Terrain::generate()
+{
+    for (unsigned int y = 0; y < mHeight; y++) {
+        for (unsigned int x = 0; x < mWidth; x++) {
+            mVertices->push_back(Vertex{glm::vec4{(float) x, 0.0f, (float)y, 1.0f}});
+        }
+    }
+    unsigned int upperLine;
+    unsigned int lowerLine;
+    for (GLuint y = 1; y < mHeight; y++) {
+        upperLine = (y - 1) * mWidth;
+        lowerLine = y * mWidth;
+        for (GLuint x = 1; x < mWidth; x++) {
+            mIndices->push_back(upperLine + x - 1);
+            mIndices->push_back(upperLine + x);
+            mIndices->push_back(lowerLine + x);
+
+            mIndices->push_back(upperLine + x - 1);
+            mIndices->push_back(lowerLine + x);
+            mIndices->push_back(lowerLine + x - 1);
+        }
+    }
+
 }

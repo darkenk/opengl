@@ -32,7 +32,7 @@
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 #include "renderer.hpp"
-#include "terrainobject.hpp"
+#include "terrain.hpp"
 #include "colouredobject.hpp"
 #include "cube.hpp"
 #include "logger.hpp"
@@ -47,8 +47,9 @@ Renderer::Renderer(shared_ptr<Camera> camera)
     glEnable(GL_DEPTH_TEST);
     // Accept fragment if it closer to the camera than the former one
     glDepthFunc(GL_LESS);
-    auto object = shared_ptr<ColouredObject>{new ColouredObject(shared_ptr<Cube>(new Cube))};
-    glm::mat4 m = glm::translate(glm::mat4(), glm::vec3(3.0f, 3.0f, 0.0f));
+    auto object = shared_ptr<ColouredObject>{new ColouredObject(
+                shared_ptr<Terrain>(new Terrain{24, 24}))};
+    glm::mat4 m = glm::translate(glm::mat4(), glm::vec3(-12.0f, -3.0f, -24.0f));
     object->setModel(m);
     addObject(object);
 }

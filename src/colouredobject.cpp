@@ -72,6 +72,7 @@ ColouredObject::~ColouredObject()
 void ColouredObject::render()
 {
     mShader->use();
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glUniformMatrix4fv(mModelId, 1, GL_FALSE, glm::value_ptr(mMVP));
     glBindVertexArray(mVao);
     glDrawElements(GL_TRIANGLES, mIndexBuffer->size(), GL_UNSIGNED_INT, 0);

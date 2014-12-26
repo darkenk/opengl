@@ -35,6 +35,7 @@
 #include <memory>
 #include <vector>
 #include <glm/glm.hpp>
+#include <ostream>
 
 struct Vertex
 {
@@ -43,11 +44,17 @@ struct Vertex
         position(pos), color(col) {}
     glm::vec4 position;
     glm::vec4 color;
+    friend std::ostream& operator<<(std::ostream& of, const Vertex& v) {
+        return of << "Vertex " << v.position.x << ", " << v.position.y << ", "
+                  << v.position.z << ", " << v.position.w;
+    }
 };
 
-typedef std::shared_ptr< std::vector<Vertex> > VertexVectorPtr;
+typedef std::vector<Vertex> VertexVector;
+typedef std::shared_ptr<VertexVector> VertexVectorPtr;
 
-typedef std::shared_ptr< std::vector<unsigned int> > IndexVectorPtr;
+typedef std::vector<unsigned int> IndexVector;
+typedef std::shared_ptr<IndexVector> IndexVectorPtr;
 
 std::string getBasePath();
 void setBasePath(const std::string& path);

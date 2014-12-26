@@ -32,18 +32,21 @@
 
 #include <vector>
 #include <memory>
+#include "iobject.hpp"
 
-using namespace std;
-
-class Terrain
+class Terrain : public IObject
 {
 public:
-    Terrain();
-    void generate(unsigned int w, unsigned int h);
-    shared_ptr<vector< vector < int > > > getTerrain();
+    Terrain(unsigned int width, unsigned int height);
+    virtual VertexVectorPtr getVertices();
+    virtual IndexVectorPtr getIndices();
 
 private:
-    shared_ptr< vector< vector< int > > > mTerrain;
+    void generate();
+    VertexVectorPtr mVertices;
+    IndexVectorPtr mIndices;
+    unsigned int mWidth;
+    unsigned int mHeight;
 };
 
 #endif // TERRAIN_HPP
