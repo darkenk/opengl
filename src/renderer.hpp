@@ -31,24 +31,23 @@
 #define RENDERER_H
 #include <glm/glm.hpp>
 #include <memory>
+#include <vector>
 #include "camera.hpp"
-#include "irenderer.hpp"
 #include "irenderableobject.hpp"
 
-using namespace std;
-
-class Renderer : public IRenderer
+class Renderer
 {
 public:
-    Renderer(shared_ptr<Camera> mCamera);
+    Renderer(std::shared_ptr<Camera> mCamera);
     virtual ~Renderer();
     virtual void render();
     virtual void cleanup();
     virtual void resize(int width, int height);
+    void addObject(std::shared_ptr<IRenderableObject> object);
 
 private:
-    shared_ptr<Camera> mCamera;
-    IRenderableObject* mObject;
+    std::shared_ptr<Camera> mCamera;
+    std::vector<std::shared_ptr<IRenderableObject>> mObjects;
     glm::mat4 mProjection;
 };
 

@@ -27,10 +27,8 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "irenderer.hpp"
+#include "buffer.cpp"
+#include "utils.hpp"
 
-IRenderer* IRenderer::sRenderer = nullptr;
-
-IRenderer::~IRenderer()
-{
-}
+template class Buffer<Vertex>;
+template class Buffer<unsigned int>;

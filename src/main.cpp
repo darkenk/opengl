@@ -45,6 +45,23 @@ const char* WINDOW_TITLE{"OpenGL"};
 constexpr int INITIAL_WIDTH{800};
 constexpr int INITIAL_HEIGHT{600};
 
+shared_ptr<Renderer> gRenderer;
+
+static void render()
+{
+    gRenderer->render();
+}
+
+static void cleanup()
+{
+    gRenderer->cleanup();
+}
+
+static void resize(int width, int height)
+{
+    gRenderer->resize(width, height);
+}
+
 int main(int argc, char* argv[])
 {
     {
@@ -54,7 +71,7 @@ int main(int argc, char* argv[])
         setBasePath(s);
     }
     glutInit(&argc, argv);
-    glutInitContextVersion(3,3);
+    glutInitContextVersion(3, 3);
     glutInitContextFlags(GLUT_FORWARD_COMPATIBLE);
     glutInitContextProfile(GLUT_CORE_PROFILE);
 
@@ -64,20 +81,18 @@ int main(int argc, char* argv[])
     );
 
     glutInitWindowSize(INITIAL_WIDTH, INITIAL_HEIGHT);
-
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-
     glutCreateWindow(WINDOW_TITLE);
-    glutDisplayFunc(IRenderer::sRender);
-    glutCloseFunc(IRenderer::sCleanup);
-    glutReshapeFunc(IRenderer::sResize);
+    glutDisplayFunc(render);
+    glutCloseFunc(cleanup);
+    glutReshapeFunc(resize);
     glutKeyboardFunc(World::sKeyboard);
     glewExperimental = GL_TRUE;
     glewInit();
 
     shared_ptr<Camera> camera{new Camera};
-    shared_ptr<IRenderer> renderer{new Renderer(camera)};
-    renderer->resize(INITIAL_WIDTH, INITIAL_HEIGHT);
+    gRenderer = shared_ptr<Renderer>{new Renderer(camera)};
+    gRenderer->resize(INITIAL_WIDTH, INITIAL_HEIGHT);
     shared_ptr<World> world{new World};
     world->setCamera(camera);
 

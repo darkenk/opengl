@@ -51,6 +51,15 @@ public:
             throw Exception(msg);
         }
     }
+    virtual void setModel(glm::mat4& matrix) {
+        mModel = matrix;
+    }
+    virtual glm::mat4& getModel() {
+        return mModel;
+    }
+
+private:
+    glm::mat4 mModel;
 };
 
 #endif // IRENDERABLEOBJECT_HPP

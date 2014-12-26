@@ -33,7 +33,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "renderer.hpp"
 #include "terrainobject.hpp"
-#include "simpleobject.hpp"
+#include "colouredobject.hpp"
 #include "cube.hpp"
 #include "logger.hpp"
 
@@ -41,14 +41,20 @@ using namespace std;
 
 Renderer::Renderer(shared_ptr<Camera> camera)
 {
-    sRenderer = this;
-    mObject = new SimpleObject(shared_ptr<Cube>(new Cube));
+    addObject(shared_ptr<ColouredObject>{new ColouredObject(shared_ptr<Cube>(new Cube))});
     mCamera = camera;
+    // Enable depth test
+    glEnable(GL_DEPTH_TEST);
+    // Accept fragment if it closer to the camera than the former one
+    glDepthFunc(GL_LESS);
+    auto object = shared_ptr<ColouredObject>{new ColouredObject(shared_ptr<Cube>(new Cube))};
+    glm::mat4 m = glm::translate(glm::mat4(), glm::vec3(3.0f, 3.0f, 0.0f));
+    object->setModel(m);
+    addObject(object);
 }
 
 Renderer::~Renderer()
 {
-    sRenderer = nullptr;
 }
 
 void Renderer::render()
@@ -60,8 +66,10 @@ void Renderer::render()
             gluErrorString(ErrorCheckValue);
     }
     glm::mat4 tmp = mProjection * mCamera->getMatrix();
-    mObject->setVpMatrix(tmp);
-    mObject->render();
+    for(auto object : mObjects) {
+        object->setVpMatrix(tmp);
+        object->render();
+    }
     ErrorCheckValue = glGetError();
     if (ErrorCheckValue != GL_NO_ERROR) {
         LOGE << "ERROR: Render: " <<
@@ -77,8 +85,11 @@ void Renderer::resize(int width, int height)
     glViewport(0, 0, width, height);
 }
 
+void Renderer::addObject(shared_ptr<IRenderableObject> object)
+{
+    mObjects.push_back(object);
+}
+
 void Renderer::cleanup()
 {
-    delete mObject;
-    mObject = 0;
 }

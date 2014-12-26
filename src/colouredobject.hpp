@@ -27,37 +27,37 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef IRENDERER_H
-#define IRENDERER_H
+#ifndef TRIANGLEOBJECT_H
+#define TRIANGLEOBJECT_H
 
-class IRenderer
+#include "irenderableobject.hpp"
+#include "shader.hpp"
+#include <memory>
+#include <GL/glew.h>
+#include "iobject.hpp"
+#include "buffer.hpp"
+
+class ColouredObject : public IRenderableObject
 {
 public:
-    virtual void render() = 0;
-    virtual void cleanup() = 0;
-    virtual void resize(int width, int height) = 0;
-    virtual ~IRenderer();
+    ColouredObject(std::shared_ptr<IObject> object);
+    virtual ~ColouredObject();
+    virtual void render();
+    virtual void setVpMatrix(glm::mat4& matrix);
 
-    static void sRender() {
-        if (sRenderer) {
-            sRenderer->render();
-        }
-    }
+private:
+    bool createShaders();
+    bool releaseShaders();
 
-    static void sCleanup() {
-        if (sRenderer) {
-            sRenderer->cleanup();
-        }
-    }
+    std::unique_ptr<Shader> mShader;
+    std::shared_ptr<IObject> mObject;
+    std::unique_ptr<Buffer<Vertex>> mVertexBuffer;
+    std::unique_ptr<Buffer<unsigned int>> mIndexBuffer;
+    GLuint mVao;
+    GLuint mModelId;
 
-    static void sResize(int width, int height) {
-        if (sRenderer) {
-            sRenderer->resize(width, height);
-        }
-    }
-
-protected:
-    static IRenderer* sRenderer;
+    glm::mat4 mModel;
+    glm::mat4 mMVP;
 };
 
-#endif // IRENDERER_H
+#endif // TRIANGLEOBJECT_H

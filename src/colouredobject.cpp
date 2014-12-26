@@ -27,37 +27,58 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef TRIANGLEOBJECT_H
-#define TRIANGLEOBJECT_H
-
-#include "irenderableobject.hpp"
+#include "colouredobject.hpp"
 #include "shader.hpp"
-#include <memory>
-#include <GL/glew.h>
-#include "iobject.hpp"
-#include "buffer.hpp"
+#include <GL/glu.h>
+#include <iostream>
+#include "exceptions.hpp"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include "logger.hpp"
 
-class SimpleObject : public IRenderableObject
+using namespace std;
+
+ColouredObject::ColouredObject(std::shared_ptr<IObject> object)
 {
-public:
-    SimpleObject(std::shared_ptr<IObject> object);
-    virtual ~SimpleObject();
-    virtual void render();
-    virtual void setVpMatrix(glm::mat4& matrix);
+    mShader = unique_ptr<Shader>(new Shader("./fragment.glsl", "./vertex.glsl"));
+    mObject = object;
 
-private:
-    bool createShaders();
-    bool releaseShaders();
+    glGetError();
 
-    std::unique_ptr<Shader> mShaderLoader;
-    std::shared_ptr<IObject> mObject;
-    std::unique_ptr<Buffer> mVertexBuffer;
-    GLuint mIndicesBufferId;
-    GLuint mVao;
-    GLuint mModelId;
+    //vao
+    glGenVertexArrays(1, &mVao);
+    glBindVertexArray(mVao);
 
-    glm::mat4 mModel;
-    glm::mat4 mMVP;
-};
+    //vertices
+    mVertexBuffer = unique_ptr<Buffer<Vertex>>{new Buffer<Vertex>{object->getVertices()}};
+    mVertexBuffer->setAttributes(mShader->getAllAttributes());
 
-#endif // TRIANGLEOBJECT_H
+    //indices;
+    mIndexBuffer = unique_ptr<Buffer<unsigned int>>{new Buffer<unsigned int>{object->getIndices(),
+                                                    GL_ELEMENT_ARRAY_BUFFER}};
+
+    //projection matrix
+    mModelId = mShader->getUniform("gWorld");
+
+    checkError(__FUNCTION__);
+}
+
+ColouredObject::~ColouredObject()
+{
+    mShader.release();
+    glDeleteVertexArrays(1, &mVao);
+}
+
+void ColouredObject::render()
+{
+    mShader->use();
+    glUniformMatrix4fv(mModelId, 1, GL_FALSE, glm::value_ptr(mMVP));
+    glBindVertexArray(mVao);
+    glDrawElements(GL_TRIANGLES, mIndexBuffer->size(), GL_UNSIGNED_INT, 0);
+    mShader->unUse();
+}
+
+void ColouredObject::setVpMatrix(glm::mat4& matrix)
+{
+    mMVP = matrix * getModel();
+}
