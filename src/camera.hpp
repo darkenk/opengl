@@ -34,14 +34,12 @@
 #include <string>
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
-#include <glm/gtc/quaternion.hpp>
-#include <glm/gtx/quaternion.hpp>
 
 class Camera
 {
 public:
-    Camera(const glm::vec3& position = glm::vec3(0, 0, 2),
-        const glm::vec3& lookAt = glm::vec3(0, 0, 0),
+    Camera(const glm::vec3& position = glm::vec3(0, 0, 0),
+        const glm::vec3& direction = glm::vec3(0, 0, -1),
         const glm::vec3& up = glm::vec3(0,1,0));
     virtual ~Camera();
 
@@ -50,20 +48,22 @@ public:
     void right(float speed = 0.2f);
     void forward(float speed = 0.2f);
     void backward(float speed = 0.2f);
-    void rotateLeft(float angle = 0.2f);
-    void rotateRight(float angle = 0.2f);
-    void rotateUp(float angle = 0.2f);
-    void rotateDown(float angle = 0.2f);
+    void rotateLeft(float angle = 0.1f);
+    void rotateRight(float angle = 0.1f);
+    void rotateUp(float angle = 0.1f);
+    void rotateDown(float angle = 0.1f);
     std::string dump();
 
 private:
+    void update();
     glm::mat4 mMatrix;
     glm::vec3 mUp;
+    glm::vec3 mDirection;
+    glm::vec3 mRight;
     glm::vec3 mPosition;
-    glm::vec3 mLookAt;
-    glm::vec3 mInitialDirection;
-    glm::quat mRotation;
-    glm::vec4 mDelta;
+    float mYaw;
+    float mPitch;
+    float mRoll;
 };
 
 #endif /* CAMERA_H_ */

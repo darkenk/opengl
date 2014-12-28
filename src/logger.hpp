@@ -32,6 +32,20 @@
 
 #include <string>
 #include <iostream>
+#include <cstdio>
+#include <glm/glm.hpp>
+
+inline std::ostream& operator<<(std::ostream& o, const glm::vec4& v) {
+    return o << "(" << v.x << ", " << v.y << ", " << v.z << ", " << v.w << ")";
+}
+
+inline std::ostream& operator<<(std::ostream& o, const glm::vec3& v) {
+    return o << "(" << v.x << ", " << v.y << ", " << v.z << ")";
+}
+
+inline std::ostream& operator<<(std::ostream& o, const glm::vec2& v) {
+    return o << "(" << v.x << ", " << v.y << ")";
+}
 
 class Logger
 {
@@ -57,9 +71,13 @@ private:
 };
 
 #define LOG(level) Logger(level) << __FILENAME__ << ":" << __LINE__ << " "
-
 #define LOGV LOG(Logger::Level::Verbose)
 #define LOGD LOG(Logger::Level::Debug)
 #define LOGE LOG(Logger::Level::Error)
+
+#define LOGP(color, fmt, ...) printf(color "%s:%d " fmt "\n", __FILENAME__, __LINE__, ##__VA_ARGS__)
+#define LOGVP(fmt, ...) LOGP("\e[32m", fmt, ##__VA_ARGS__)
+#define LOGVD(fmt, ...) LOGP("\e[33m", fmt, ##__VA_ARGS__)
+#define LOGVE(fmt, ...) LOGP("\e[31m", fmt, ##__VA_ARGS__)
 
 #endif // LOGGER_HPP

@@ -28,24 +28,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include <glm/gtx/rotate_vector.hpp>
-#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/euler_angles.hpp>
 #include <iostream>
 #include <sstream>
 #include "camera.hpp"
+#include "logger.hpp"
 
 using namespace std;
 
 Camera::Camera(const glm::vec3& position,
-        const glm::vec3& lookAt,
+        const glm::vec3& direction,
         const glm::vec3& up)
 {
     mPosition = position;
-    mLookAt = lookAt;
+    mDirection = direction;
     mUp = up;
-    //TODO: this not work
-    mInitialDirection = glm::normalize(lookAt - position);
-    mRotation = glm::quat_cast(glm::lookAt(mPosition, mLookAt, mUp));
-    mDelta = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+    mYaw = 0.0f;
+    mPitch = 0.0f;
+    mRoll = 0.0f;
+    update();
 }
 
 Camera::~Camera()
@@ -54,57 +55,71 @@ Camera::~Camera()
 
 const glm::mat4& Camera::getMatrix()
 {
-    mLookAt = glm::vec3(glm::toMat4(mRotation) * glm::vec4(mInitialDirection, 1.0f)) + mPosition;
-    glm::vec3 vector = mLookAt;
-    mMatrix = glm::lookAt(mPosition, mLookAt, mUp);
     return mMatrix;
 }
 
 void Camera::left(float speed)
 {
-    mPosition += glm::vec3(glm::toMat4(mRotation) * glm::vec4(-speed, 0.0f, 0.0f, 1.0f));
+    mPosition -= mRight * speed;
+    update();
 }
 
 void Camera::right(float speed)
 {
-    mPosition += glm::vec3(glm::toMat4(mRotation) * glm::vec4(speed, 0.0f, 0.0f, 1.0f));
+    mPosition += mRight * speed;
+    update();
 }
 
 void Camera::forward(float speed)
 {
-    mPosition += glm::vec3(glm::toMat4(mRotation) * glm::vec4(0.0f, 0.0f, -speed, 1.0f));
+    mPosition += mDirection * speed;
+    update();
 }
 
 void Camera::backward(float speed)
 {
-    mPosition += glm::vec3(glm::toMat4(mRotation) * glm::vec4(0.0f, 0.0f, speed, 1.0f));
+    mPosition -= mDirection * speed ;
+    update();
 }
 
 void Camera::rotateLeft(float angle)
 {
-    mRotation = glm::rotate(mRotation, angle, glm::vec3(0, 1, 0));
+    mYaw += angle;
+    update();
 }
 
 void Camera::rotateRight(float angle)
 {
-    mRotation = glm::rotate(mRotation, -angle, glm::vec3(0, 1, 0));
+    mYaw -= angle;
+    update();
 }
 
 void Camera::rotateUp(float angle)
 {
-    mRotation = glm::rotate(mRotation, -angle, glm::vec3(1, 0, 0));
+    mPitch += angle;
+    update();
 }
 
 void Camera::rotateDown(float angle)
 {
-    mRotation = glm::rotate(mRotation, angle, glm::vec3(1, 0, 0));
+    mPitch -= angle;
+    update();
 }
 
 string Camera::dump()
 {
     stringstream s;
-    s << "Position: (" << mPosition.x << ", " << mPosition.y << ", " <<
-         mPosition.z << "), LookAt: " << mLookAt.x << ", " << mLookAt.y <<
-         ", " << mLookAt.z << ")";
+    s << "pos: " << mPosition << " direction: " << mDirection << " up: " << mUp;
+    s << " right: " << mRight;
     return s.str();
+}
+
+void Camera::update()
+{
+    glm::mat4 rot = glm::yawPitchRoll(mYaw, mPitch, mRoll);
+    mDirection = glm::vec3(rot * glm::vec4(0, 0, -1, 0));
+    mUp = glm::vec3(rot * glm::vec4(0, 1, 0, 0));
+    mRight = glm::cross(mDirection, mUp);
+    glm::vec3 lookAt = mPosition + mDirection;
+    mMatrix = glm::lookAt(mPosition, lookAt, mUp);
 }

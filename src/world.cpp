@@ -56,19 +56,18 @@ void World::keyboard(unsigned char key, int x, int y)
         mCamera->right();
         break;
     case 'q':
-        mCamera->rotateLeft(1.0f);
+        mCamera->rotateLeft();
         break;
     case 'e':
-        mCamera->rotateRight(1.0f);
+        mCamera->rotateRight();
         break;
     case 'r':
-        mCamera->rotateUp(1.0f);
+        mCamera->rotateUp();
         break;
     case 'f':
-        mCamera->rotateDown(1.0f);
+        mCamera->rotateDown();
         break;
     }
-    LOGV << "Camera pos: " << mCamera->dump();
 }
 
 void World::setCamera(shared_ptr<Camera> camera)
