@@ -48,7 +48,7 @@ Renderer::Renderer(shared_ptr<Camera> camera)
     // Accept fragment if it closer to the camera than the former one
     glDepthFunc(GL_LESS);
     auto object = shared_ptr<ColouredObject>{new ColouredObject(
-                shared_ptr<Terrain>(new Terrain{24, 24}))};
+                shared_ptr<Terrain>(new Terrain{1024, 1024}))};
     glm::mat4 m = glm::translate(glm::mat4(), glm::vec3(-12.0f, -3.0f, -24.0f));
     object->setModel(m);
     addObject(object);

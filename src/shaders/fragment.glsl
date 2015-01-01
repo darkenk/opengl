@@ -33,7 +33,15 @@
 in vec4 vColor;
 out vec4 out_Color;
 
+struct DirectionalLight
+{
+    vec4 Color;
+    float AmbientIntensity;
+};
+
+uniform DirectionalLight gDirectionalLight;
+
 void main(void)
 {
-    out_Color = vColor;
+    out_Color = vColor * gDirectionalLight.Color * gDirectionalLight.AmbientIntensity;
 }

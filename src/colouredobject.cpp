@@ -57,8 +57,15 @@ ColouredObject::ColouredObject(std::shared_ptr<IObject> object)
     mIndexBuffer = unique_ptr<Buffer<unsigned int>>{new Buffer<unsigned int>{object->getIndices(),
                                                     GL_ELEMENT_ARRAY_BUFFER}};
 
+    mShader->use();
     //projection matrix
     mModelId = mShader->getUniform("gWorld");
+
+    //set light
+    glm::vec4 lightColor = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f);
+    float lightIntense = 0.7f;
+    glUniform4fv(mShader->getUniform("gDirectionalLight.Color"), 1, glm::value_ptr(lightColor));
+    glUniform1f(mShader->getUniform("gDirectionalLight.AmbientIntensity"), lightIntense);
 
     checkError(__FUNCTION__);
 }

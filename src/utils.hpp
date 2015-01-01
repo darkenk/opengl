@@ -50,6 +50,12 @@ struct Vertex
     }
 };
 
+struct DirectionalLight
+{
+    glm::vec4 color;
+    float ambientIntensity;
+};
+
 typedef std::vector<Vertex> VertexVector;
 typedef std::shared_ptr<VertexVector> VertexVectorPtr;
 
