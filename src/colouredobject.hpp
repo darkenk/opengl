@@ -54,7 +54,7 @@ private:
     std::unique_ptr<Buffer<Vertex>> mVertexBuffer;
     std::unique_ptr<Buffer<unsigned int>> mIndexBuffer;
     GLuint mVao;
-    GLuint mModelId;
+    GLint mModelId;
 
     glm::mat4 mModel;
     glm::mat4 mMVP;

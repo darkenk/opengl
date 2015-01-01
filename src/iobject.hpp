@@ -35,7 +35,7 @@
 class IObject
 {
 public:
-    virtual ~IObject() {}
+    virtual ~IObject();
     virtual VertexVectorPtr getVertices() = 0;
     virtual IndexVectorPtr getIndices() = 0;
 };

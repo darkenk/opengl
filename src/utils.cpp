@@ -3,7 +3,7 @@
 
 using namespace std;
 
-string gBasePath;
+static string gBasePath;
 
 string getBasePath() {
     return gBasePath;

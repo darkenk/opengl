@@ -33,8 +33,6 @@
 #include <memory>
 #include "camera.hpp"
 
-using namespace std;
-
 class World
 {
 public:
@@ -46,11 +44,11 @@ public:
         }
     }
 
-    void setCamera(shared_ptr<Camera> camera);
+    void setCamera(std::shared_ptr<Camera> camera);
 
 private:
     static World* sWorld;
-    shared_ptr<Camera> mCamera;
+    std::shared_ptr<Camera> mCamera;
 };
 
 #endif // WORLD_HPP

@@ -41,11 +41,11 @@
 
 using namespace std;
 
-const char* WINDOW_TITLE{"OpenGL"};
-constexpr int INITIAL_WIDTH{800};
+static const char* WINDOW_TITLE{"OpenGL"};
+static constexpr int INITIAL_WIDTH{800};
 constexpr int INITIAL_HEIGHT{600};
 
-shared_ptr<Renderer> gRenderer;
+static Renderer* gRenderer;
 
 static void render()
 {
@@ -91,12 +91,14 @@ int main(int argc, char* argv[])
     glewInit();
 
     shared_ptr<Camera> camera{new Camera};
-    gRenderer = shared_ptr<Renderer>{new Renderer(camera)};
+    gRenderer = new Renderer(camera);
     gRenderer->resize(INITIAL_WIDTH, INITIAL_HEIGHT);
     shared_ptr<World> world{new World};
     world->setCamera(camera);
 
     glutMainLoop();
+    delete gRenderer;
+    gRenderer = nullptr;
     return 0;
 }
 

@@ -27,52 +27,22 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "terrain.hpp"
-#include "logger.hpp"
+#include "irenderableobject.hpp"
 
-using namespace std;
-
-Terrain::Terrain(unsigned int width, unsigned int height) :
-    mVertices{new VertexVector}, mIndices{new IndexVector}, mWidth{width},
-    mHeight{height}
-{
-    mVertices->reserve(mWidth * mHeight);
-    mIndices->reserve(3 * 2 * (mWidth -1) * (mHeight -1));
-    generate();
-}
-
-VertexVectorPtr Terrain::getVertices()
-{
-    return mVertices;
-}
-
-IndexVectorPtr Terrain::getIndices()
-{
-    return mIndices;
-}
-
-void Terrain::generate()
-{
-    for (unsigned int y = 0; y < mHeight; y++) {
-        for (unsigned int x = 0; x < mWidth; x++) {
-            mVertices->push_back(Vertex{glm::vec4{static_cast<float>(x), 0.0f,
-                                                  static_cast<float>(y), 1.0f}});
-        }
+void IRenderableObject::checkError(const char* funcName) {
+    GLenum error = glGetError();
+    if (error != GL_NO_ERROR) {
+        std::string msg = funcName;
+        msg.append(" ");
+        msg.append(reinterpret_cast<const char*>(gluErrorString(error)));
+        throw Exception(msg);
     }
-    unsigned int upperLine;
-    unsigned int lowerLine;
-    for (GLuint y = 1; y < mHeight; y++) {
-        upperLine = (y - 1) * mWidth;
-        lowerLine = y * mWidth;
-        for (GLuint x = 1; x < mWidth; x++) {
-            mIndices->push_back(upperLine + x - 1);
-            mIndices->push_back(upperLine + x);
-            mIndices->push_back(lowerLine + x);
+}
 
-            mIndices->push_back(upperLine + x - 1);
-            mIndices->push_back(lowerLine + x);
-            mIndices->push_back(lowerLine + x - 1);
-        }
-    }
+void IRenderableObject::setModel(glm::mat4& matrix) {
+    mModel = matrix;
+}
 
+glm::mat4&IRenderableObject::getModel() {
+    return mModel;
 }

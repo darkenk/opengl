@@ -33,10 +33,10 @@ const char* Logger::getColor()
 {
     switch(mLevel) {
     case Level::Verbose:
-        return "\e[32m";
+        return "\033[32m";
     case Level::Debug:
-        return "\e[33m";
+        return "\033[33m";
     case Level::Error:
-        return "\e[31m";
+        return "\033[31m";
     }
 }

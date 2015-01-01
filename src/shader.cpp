@@ -131,13 +131,13 @@ void Shader::unUse() {
     glUseProgram(0);
 }
 
-GLuint Shader::getUniform(const string& name)
+GLint Shader::getUniform(const string& name)
 {
     // TODO: made cache for uniform
     return glGetUniformLocation(mProgramId, name.c_str());
 }
 
-GLuint Shader::getAttribute(const string& name)
+GLint Shader::getAttribute(const string& name)
 {
     // TODO: made cache for attribute
     return glGetAttribLocation(mProgramId, name.c_str());

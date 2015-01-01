@@ -41,22 +41,10 @@ class IRenderableObject
 public:
     virtual ~IRenderableObject() {}
     virtual void render() = 0;
-    virtual void setVpMatrix(glm::mat4& matrix) {}
-    void checkError(const char* funcName) {
-        GLenum error = glGetError();
-        if (error != GL_NO_ERROR) {
-            std::string msg = funcName;
-            msg.append(" ");
-            msg.append(reinterpret_cast<const char*>(gluErrorString(error)));
-            throw Exception(msg);
-        }
-    }
-    virtual void setModel(glm::mat4& matrix) {
-        mModel = matrix;
-    }
-    virtual glm::mat4& getModel() {
-        return mModel;
-    }
+    virtual void setVpMatrix(glm::mat4& /*matrix*/) {}
+    void checkError(const char* funcName);
+    virtual void setModel(glm::mat4& matrix);
+    virtual glm::mat4& getModel();
 
 private:
     glm::mat4 mModel;

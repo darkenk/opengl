@@ -85,5 +85,5 @@ void Buffer<T>::setAttributes(AttributeVectorPtr attrs)
 template<typename T>
 GLsizei Buffer<T>::size()
 {
-    return mData->size();
+    return static_cast<GLsizei>(mData->size());
 }

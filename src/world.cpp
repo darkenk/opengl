@@ -31,6 +31,8 @@
 #include "world.hpp"
 #include "logger.hpp"
 
+using namespace std;
+
 World* World::sWorld = nullptr;
 
 World::World()
@@ -40,7 +42,7 @@ World::World()
     }
 }
 
-void World::keyboard(unsigned char key, int x, int y)
+void World::keyboard(unsigned char key, int /*x*/, int /*y*/)
 {
     switch(key) {
     case 'w':

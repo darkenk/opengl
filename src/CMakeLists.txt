@@ -1,5 +1,7 @@
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 file(GLOB opengl_SOURCES *.cpp shaders/*.glsl)
+set_source_files_properties(buffer-impl.cpp PROPERTIES COMPILE_FLAGS -Wno-header-hygiene)
+set_source_files_properties(utils.cpp PROPERTIES COMPILE_FLAGS -Wno-global-constructors)
 add_executable(opengl ${opengl_SOURCES})
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)

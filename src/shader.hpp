@@ -43,8 +43,8 @@ public:
     ~Shader();
     void use();
     void unUse();
-    GLuint getUniform(const std::string& name);
-    GLuint getAttribute(const std::string& name);
+    GLint getUniform(const std::string& name);
+    GLint getAttribute(const std::string& name);
     AttributeVectorPtr getAllAttributes();
 
 private:

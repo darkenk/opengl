@@ -40,7 +40,7 @@ class Attribute
 {
 public:
     Attribute(GLint index, GLint size, GLint type, GLchar* name, GLint fullSize):
-        mIndex{index}, mSize{size}, mType{type}, mName{name}, mFullSize(fullSize) {}
+        mIndex{index}, mSize{size}, mType{type}, mFullSize(fullSize), mName{name} {}
 
     GLint mIndex;
     GLint mSize;

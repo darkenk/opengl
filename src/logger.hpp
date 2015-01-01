@@ -61,7 +61,7 @@ public:
 
     template<class T>
     Logger& operator<<(T var) {
-        std::cerr << getColor() << var << "\e[0m";
+        std::cerr << getColor() << var << "\033[0m";
         return *this;
     }
 
@@ -76,8 +76,8 @@ private:
 #define LOGE LOG(Logger::Level::Error)
 
 #define LOGP(color, fmt, ...) printf(color "%s:%d " fmt "\n", __FILENAME__, __LINE__, ##__VA_ARGS__)
-#define LOGVP(fmt, ...) LOGP("\e[32m", fmt, ##__VA_ARGS__)
-#define LOGVD(fmt, ...) LOGP("\e[33m", fmt, ##__VA_ARGS__)
-#define LOGVE(fmt, ...) LOGP("\e[31m", fmt, ##__VA_ARGS__)
+#define LOGVP(fmt, ...) LOGP("\033[32m", fmt, ##__VA_ARGS__)
+#define LOGVD(fmt, ...) LOGP("\033[33m", fmt, ##__VA_ARGS__)
+#define LOGVE(fmt, ...) LOGP("\033[31m", fmt, ##__VA_ARGS__)
 
 #endif // LOGGER_HPP
