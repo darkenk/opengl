@@ -30,12 +30,25 @@
 // main.cpp
 #include <QApplication>
 #include <QDesktopWidget>
+#include <QFile>
+#include <QTextStream>
 
 #include "mainwindow.hpp"
+
+static void loadQDarkStyleSheet() {
+    QFile f(":qdarkstyle/style.qss");
+    if (f.exists()) {
+        f.open(QFile::ReadOnly | QFile::Text);
+        QTextStream ts(&f);
+        qApp->setStyleSheet(ts.readAll());
+        f.close();
+    }
+}
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    loadQDarkStyleSheet();
     MainWindow window;
     window.setWindowTitle("OpenGL with Qt");
     window.show();

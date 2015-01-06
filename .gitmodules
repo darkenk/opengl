@@ -1,0 +1,3 @@
+[submodule "demos/QDarkStyleSheet"]
+	path = demos/QDarkStyleSheet
+	url = https://github.com/darkenk/QDarkStyleSheet
