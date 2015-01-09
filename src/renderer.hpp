@@ -38,12 +38,13 @@
 class Renderer
 {
 public:
-    Renderer(std::shared_ptr<Camera> mCamera);
+    Renderer();
     virtual ~Renderer();
     virtual void render();
     virtual void cleanup();
     virtual void resize(int width, int height);
     void addObject(std::shared_ptr<IRenderableObject> object);
+    void handleKey(int key);
 
 private:
     std::shared_ptr<Camera> mCamera;

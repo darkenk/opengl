@@ -16,7 +16,11 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="MyGLWidget" name="mRenderWindow" native="true"/>
+     <widget class="MyGLWidget" name="mRenderWindow" native="true">
+      <property name="focusPolicy">
+       <enum>Qt::StrongFocus</enum>
+      </property>
+     </widget>
     </item>
     <item>
      <widget class="QSlider" name="horizontalSlider">

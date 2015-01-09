@@ -38,12 +38,12 @@
 
 using namespace std;
 
-Renderer::Renderer(shared_ptr<Camera> camera)
+Renderer::Renderer()
 {
     glewExperimental = GL_TRUE;
     glewInit();
     addObject(shared_ptr<ColouredObject>{new ColouredObject(shared_ptr<Cube>(new Cube))});
-    mCamera = camera;
+    mCamera = make_shared<Camera>();
     // Enable depth test
     glEnable(GL_DEPTH_TEST);
     // Accept fragment if it closer to the camera than the former one
@@ -62,21 +62,12 @@ Renderer::~Renderer()
 void Renderer::render()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    GLenum ErrorCheckValue = glGetError();
-    if (ErrorCheckValue != GL_NO_ERROR) {
-        LOGE << "ERROR: Clear: " <<
-            gluErrorString(ErrorCheckValue);
-    }
     glm::mat4 tmp = mProjection * mCamera->getMatrix();
     for(auto object : mObjects) {
         object->setVpMatrix(tmp);
         object->render();
     }
-    ErrorCheckValue = glGetError();
-    if (ErrorCheckValue != GL_NO_ERROR) {
-        LOGE << "ERROR: Render: " <<
-            gluErrorString(ErrorCheckValue);
-    }
+    checkGlError(__FUNCTION__);
 }
 
 void Renderer::resize(int width, int height)
@@ -88,6 +79,36 @@ void Renderer::resize(int width, int height)
 void Renderer::addObject(shared_ptr<IRenderableObject> object)
 {
     mObjects.push_back(object);
+}
+
+void Renderer::handleKey(int key)
+{
+    switch(static_cast<unsigned char>(key)) {
+    case 'w':
+        mCamera->forward();
+        break;
+    case 's':
+        mCamera->backward();
+        break;
+    case 'a':
+        mCamera->left();
+        break;
+    case 'd':
+        mCamera->right();
+        break;
+    case 'q':
+        mCamera->rotateLeft();
+        break;
+    case 'e':
+        mCamera->rotateRight();
+        break;
+    case 'r':
+        mCamera->rotateUp();
+        break;
+    case 'f':
+        mCamera->rotateDown();
+        break;
+    }
 }
 
 void Renderer::cleanup()

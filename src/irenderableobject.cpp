@@ -29,20 +29,10 @@
  */
 #include "irenderableobject.hpp"
 
-void IRenderableObject::checkError(const char* funcName) {
-    GLenum error = glGetError();
-    if (error != GL_NO_ERROR) {
-        std::string msg = funcName;
-        msg.append(" ");
-        msg.append(reinterpret_cast<const char*>(gluErrorString(error)));
-        throw Exception(msg);
-    }
-}
-
 void IRenderableObject::setModel(glm::mat4& matrix) {
     mModel = matrix;
 }
 
-glm::mat4&IRenderableObject::getModel() {
+glm::mat4& IRenderableObject::getModel() {
     return mModel;
 }

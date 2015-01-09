@@ -35,7 +35,6 @@
 
 #include "renderer.hpp"
 #include "shader.hpp"
-#include "world.hpp"
 #include "logger.hpp"
 #include "utils.hpp"
 
@@ -64,6 +63,11 @@ static void resize(int width, int height)
     gRenderer->resize(width, height);
 }
 
+static void keyboard(unsigned char key, int /*x*/, int /*y*/)
+{
+    gRenderer->handleKey(key);
+}
+
 int main(int argc, char* argv[])
 {
     {
@@ -88,13 +92,10 @@ int main(int argc, char* argv[])
     glutDisplayFunc(render);
     glutCloseFunc(cleanup);
     glutReshapeFunc(resize);
-    glutKeyboardFunc(World::sKeyboard);
+    glutKeyboardFunc(keyboard);
 
-    shared_ptr<Camera> camera{new Camera};
-    gRenderer = new Renderer(camera);
+    gRenderer = new Renderer();
     gRenderer->resize(INITIAL_WIDTH, INITIAL_HEIGHT);
-    shared_ptr<World> world{new World};
-    world->setCamera(camera);
 
     glutMainLoop();
     delete gRenderer;

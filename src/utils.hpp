@@ -66,5 +66,6 @@ std::string getBasePath();
 void setBasePath(const std::string& path);
 
 GLint convertGLTypeToSize(GLenum type);
+void checkGlError(const char* funcName);
 
 #endif // UTILS_H

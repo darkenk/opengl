@@ -29,7 +29,6 @@
  */
 #include "colouredobject.hpp"
 #include "shader.hpp"
-#include <GL/glu.h>
 #include <iostream>
 #include "exceptions.hpp"
 #include <glm/gtc/matrix_transform.hpp>
@@ -67,7 +66,7 @@ ColouredObject::ColouredObject(std::shared_ptr<IObject> object)
     glUniform4fv(mShader->getUniform("gDirectionalLight.Color"), 1, glm::value_ptr(lightColor));
     glUniform1f(mShader->getUniform("gDirectionalLight.AmbientIntensity"), lightIntense);
 
-    checkError(__FUNCTION__);
+    checkGlError(__FUNCTION__);
 }
 
 ColouredObject::~ColouredObject()

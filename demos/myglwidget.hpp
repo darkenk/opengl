@@ -43,9 +43,10 @@ public:
     ~MyGLWidget();
 
 protected:
-    void initializeGL();
-    void paintGL();
-    void resizeGL(int width, int height);
+    virtual void initializeGL();
+    virtual void paintGL();
+    virtual void resizeGL(int width, int height);
+    virtual void keyPressEvent(QKeyEvent* e);
 
 private:
     std::shared_ptr<Renderer> mRenderer;

@@ -28,7 +28,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <QKeyEvent>
 #include "myglwidget.hpp"
+#include "logger.hpp"
 
 using namespace std;
 
@@ -47,8 +49,7 @@ MyGLWidget::~MyGLWidget()
 
 void MyGLWidget::initializeGL()
 {
-    shared_ptr<Camera> camera{new Camera};
-    mRenderer = make_shared<Renderer>(camera);
+    mRenderer = make_shared<Renderer>();
 }
 
 void MyGLWidget::paintGL()
@@ -60,4 +61,11 @@ void MyGLWidget::paintGL()
 void MyGLWidget::resizeGL(int width, int height)
 {
     mRenderer->resize(width, height);
+}
+
+void MyGLWidget::keyPressEvent(QKeyEvent* e)
+{
+    mRenderer->handleKey(static_cast<int>(e->nativeVirtualKey()));
+    e->accept();
+    QWidget::keyPressEvent(e);
 }
