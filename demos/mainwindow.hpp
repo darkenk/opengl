@@ -32,6 +32,7 @@
 #define MAINWINDOW_HPP
 
 #include <QMainWindow>
+#include "myglwidget.hpp"
 
 namespace Ui {
 class MainWindow;

@@ -28,7 +28,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include <GL/glew.h>
-#include <GL/freeglut.h>
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 #include "renderer.hpp"
@@ -41,6 +40,8 @@ using namespace std;
 
 Renderer::Renderer(shared_ptr<Camera> camera)
 {
+    glewExperimental = GL_TRUE;
+    glewInit();
     addObject(shared_ptr<ColouredObject>{new ColouredObject(shared_ptr<Cube>(new Cube))});
     mCamera = camera;
     // Enable depth test
@@ -76,8 +77,6 @@ void Renderer::render()
         LOGE << "ERROR: Render: " <<
             gluErrorString(ErrorCheckValue);
     }
-    glutSwapBuffers();
-    glutPostRedisplay();
 }
 
 void Renderer::resize(int width, int height)

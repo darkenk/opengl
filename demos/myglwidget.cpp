@@ -27,78 +27,37 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include <stdio.h>
-#include <GL/glew.h>
-#include <GL/freeglut.h>
-#include <memory>
-#include <string>
 
-#include "renderer.hpp"
-#include "shader.hpp"
-#include "world.hpp"
-#include "logger.hpp"
-#include "utils.hpp"
+#include "myglwidget.hpp"
 
 using namespace std;
 
-static const char* WINDOW_TITLE{"OpenGL"};
-static constexpr int INITIAL_WIDTH{800};
-constexpr int INITIAL_HEIGHT{600};
-
-static Renderer* gRenderer;
-
-static void render()
+MyGLWidget::MyGLWidget(QWidget* parent) :
+    QGLWidget(parent)
 {
-    gRenderer->render();
-    glutSwapBuffers();
-    glutPostRedisplay();
+    QGLFormat glFormat;
+    glFormat.setVersion(3, 3);
+    glFormat.setProfile(QGLFormat::CoreProfile);
+    this->setFormat(glFormat);
 }
 
-static void cleanup()
+MyGLWidget::~MyGLWidget()
 {
-    gRenderer->cleanup();
 }
 
-static void resize(int width, int height)
+void MyGLWidget::initializeGL()
 {
-    gRenderer->resize(width, height);
-}
-
-int main(int argc, char* argv[])
-{
-    {
-        string s(argv[0]);
-        s.find_last_not_of("/");
-        s.erase(s.find_last_of("/")+1);
-        setBasePath(s);
-    }
-    glutInit(&argc, argv);
-    glutInitContextVersion(3, 3);
-    glutInitContextFlags(GLUT_FORWARD_COMPATIBLE);
-    glutInitContextProfile(GLUT_CORE_PROFILE);
-
-    glutSetOption(
-        GLUT_ACTION_ON_WINDOW_CLOSE,
-        GLUT_ACTION_GLUTMAINLOOP_RETURNS
-    );
-
-    glutInitWindowSize(INITIAL_WIDTH, INITIAL_HEIGHT);
-    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-    glutCreateWindow(WINDOW_TITLE);
-    glutDisplayFunc(render);
-    glutCloseFunc(cleanup);
-    glutReshapeFunc(resize);
-    glutKeyboardFunc(World::sKeyboard);
-
     shared_ptr<Camera> camera{new Camera};
-    gRenderer = new Renderer(camera);
-    gRenderer->resize(INITIAL_WIDTH, INITIAL_HEIGHT);
-    shared_ptr<World> world{new World};
-    world->setCamera(camera);
-
-    glutMainLoop();
-    delete gRenderer;
-    gRenderer = nullptr;
-    return 0;
+    mRenderer = make_shared<Renderer>(camera);
 }
 
+void MyGLWidget::paintGL()
+{
+    mRenderer->render();
+    update();
+}
+
+void MyGLWidget::resizeGL(int width, int height)
+{
+    mRenderer->resize(width, height);
+}

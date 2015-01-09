@@ -17,13 +17,18 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     # using GCC
 endif()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILER_FLAGS}")
-# show only file name instead of absolute path
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__FILENAME__='\"$(subst ${CMAKE_SOURCE_DIR}/,,$(abspath $<))\"'")
+
+# Common lib dependencies
+find_package(OpenGL REQUIRED)
+find_package(GLEW REQUIRED)
+include(FindGLM)
+
+set(USED_LIBRARIES "${OPENGL_LIBRARIES};${GLEW_LIBRARIES};pthread")
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 add_subdirectory(src)
 
-if (ENABLE_DEMOS)
+if(ENABLE_DEMOS)
     add_subdirectory(demos)
 endif()
 

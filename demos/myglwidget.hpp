@@ -28,38 +28,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <QApplication>
-#include <QDesktopWidget>
-#include <QFile>
-#include <QTextStream>
-#include <string>
-#include "utils.hpp"
+#ifndef MYGLWIDGET_HPP
+#define MYGLWIDGET_HPP
 
-#include "mainwindow.hpp"
+#include "renderer.hpp"
+#include <QGLWidget>
+#include <memory>
 
-using namespace std;
-
-static void loadQDarkStyleSheet() {
-    QFile f(":qdarkstyle/style.qss");
-    if (f.exists()) {
-        f.open(QFile::ReadOnly | QFile::Text);
-        QTextStream ts(&f);
-        qApp->setStyleSheet(ts.readAll());
-        f.close();
-    }
-}
-
-int main(int argc, char *argv[])
+class MyGLWidget : public QGLWidget
 {
-    {
-        string s(argv[0]);
-        s.erase(s.find_last_of("/")+1);
-        setBasePath(s);
-    }
-    QApplication app(argc, argv);
-    loadQDarkStyleSheet();
-    MainWindow window;
-    window.setWindowTitle("OpenGL with Qt");
-    window.show();
-    return app.exec();
-}
+    Q_OBJECT
+public:
+    MyGLWidget(QWidget *parent = 0);
+    ~MyGLWidget();
+
+protected:
+    void initializeGL();
+    void paintGL();
+    void resizeGL(int width, int height);
+
+private:
+    std::shared_ptr<Renderer> mRenderer;
+};
+
+#endif // MYGLWIDGET_HPP

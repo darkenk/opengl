@@ -1,33 +1,29 @@
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-file(GLOB opengl_SOURCES *.cpp shaders/*.glsl)
-set_source_files_properties(buffer-impl.cpp PROPERTIES COMPILE_FLAGS -Wno-header-hygiene)
-set_source_files_properties(utils.cpp PROPERTIES COMPILE_FLAGS -Wno-global-constructors)
-add_executable(opengl ${opengl_SOURCES})
-find_package(OpenGL REQUIRED)
-find_package(GLEW REQUIRED)
-include(FindGLM)
-
-# Look for the header file.
-find_path(FREEGLUT_INCLUDE_DIRS NAMES GL)
-
-# Look for the library.
-find_library(FREEGLUT_LIBRARIES NAMES glut)
 
 # show only file name instead of absolute path
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__FILENAME__='\"$(subst ${CMAKE_SOURCE_DIR}/,,$(abspath $<))\"'")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__FILENAME__='\"$(subst ${CMAKE_CURRENT_SOURCE_DIR}/,,$(abspath \$<))\"'")
 
-include_directories(
-    ${OPENGL_INCLUDE_DIRS}
-    ${GLEW_INCLUDE_DIRS}
-    ${FREEGLUT_INCLUDE_DIRS}
-    ${GLM_INCLUDE_DIRS})
-target_link_libraries(opengl
-    ${OPENGL_LIBRARIES}
-    ${FREEGLUT_LIBRARIES}
-    ${GLEW_LIBRARIES}
-    ${GLUT_LIBRARIES} pthread)
+find_package(GLUT REQUIRED)
 
-file(GLOB shader_SOURCES shaders/*)
+include_directories(SYSTEM ${OPENGL_INCLUDE_DIRS})
+include_directories(SYSTEM ${GLEW_INCLUDE_DIRS})
+include_directories(SYSTEM ${GLUT_INCLUDE_DIRS})
+include_directories(SYSTEM ${GLM_INCLUDE_DIRS})
+
+file(GLOB SRC_FILES *.cpp)
+file(GLOB MAIN_FILE "main.cpp")
+file(GLOB SHADER_FILES shaders/*.glsl)
+set_source_files_properties(buffer-impl.cpp PROPERTIES COMPILE_FLAGS -Wno-header-hygiene)
+set_source_files_properties(utils.cpp PROPERTIES COMPILE_FLAGS -Wno-global-constructors)
+
+list(REMOVE_ITEM SRC_FILES ${MAIN_FILE})
+add_library(opengl_lib OBJECT ${SRC_FILES})
+
+add_executable(${PROJECT_NAME} ${MAIN_FILE} ${SHADER_FILES} $<TARGET_OBJECTS:opengl_lib>)
+
+target_link_libraries(${PROJECT_NAME}
+    ${GLUT_LIBRARIES}
+    ${USED_LIBRARIES})
 
 add_custom_target(
     copy_shaders ALL
