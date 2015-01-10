@@ -34,7 +34,6 @@
 #include <string>
 
 #include "renderer.hpp"
-#include "shader.hpp"
 #include "logger.hpp"
 #include "utils.hpp"
 
@@ -72,7 +71,6 @@ int main(int argc, char* argv[])
 {
     {
         string s(argv[0]);
-        s.find_last_not_of("/");
         s.erase(s.find_last_of("/")+1);
         setBasePath(s);
     }
@@ -94,12 +92,11 @@ int main(int argc, char* argv[])
     glutReshapeFunc(resize);
     glutKeyboardFunc(keyboard);
 
-    gRenderer = new Renderer();
+    gRenderer = new Renderer;
     gRenderer->resize(INITIAL_WIDTH, INITIAL_HEIGHT);
 
     glutMainLoop();
     delete gRenderer;
-    gRenderer = nullptr;
+    gRenderer = 0;
     return 0;
 }
-

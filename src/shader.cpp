@@ -49,7 +49,7 @@ Shader::Shader(const string& fragmentShader, const string& vertexShader) :
 Shader::~Shader()
 {
     vector<GLuint>::iterator iter = mShaderIds.begin();
-    for( ; iter != mShaderIds.end(); iter++) {
+    for ( ; iter != mShaderIds.end(); iter++) {
         glDetachShader(mProgramId, *iter);
         glDeleteShader(*iter);
     }
@@ -60,12 +60,12 @@ shared_ptr<string> Shader::loadShader(const string& fileName)
 {
     string s{getBasePath() + fileName};
     ifstream file{s, ios_base::in};
-    if (!file.good()) {
+    if (not file.good()) {
         throw Exception("No such file: " + s);
     }
     string line;
     shared_ptr<string> shader{new string};
-    while(getline(file, line)) {
+    while (getline(file, line)) {
         shader->append(line);
         shader->append(string{'\n'});
     }
@@ -89,10 +89,7 @@ void Shader::createProgram()
         glAttachShader(mProgramId, shaderId);
     }
     glLinkProgram(mProgramId);
-    GLuint error = glGetError();
-    if (error != GL_NO_ERROR) {
-        throw Exception(reinterpret_cast <const char*>(gluErrorString(error)));
-    }
+    checkGlError(__FUNCTION__);
 }
 
 AttributeVectorPtr Shader::getAllAttributes()
@@ -109,7 +106,7 @@ AttributeVectorPtr Shader::getAllAttributes()
     GLint t;
     GLint s;
     AttributeVectorPtr attrs{new AttributeVector};
-    for(GLint i = 0; i < attrLength; i++) {
+    for (GLint i = 0; i < attrLength; i++) {
         glGetActiveAttrib(mProgramId, i, BUFF_SIZE, &length, &size, &type, name);
         glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_TYPE, &t);
         glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_SIZE, &s);
@@ -121,11 +118,9 @@ AttributeVectorPtr Shader::getAllAttributes()
     return attrs;
 }
 
-
 void Shader::use() {
     glUseProgram(mProgramId);
 }
-
 
 void Shader::unUse() {
     glUseProgram(0);

@@ -22,16 +22,23 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILER_FLAGS}")
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 include(FindGLM)
+# cpp style checker
+find_package(vera++ QUIET)
+if(vera++_FOUND)
+    include(${VERA++_USE_FILE})
+endif()
 
 set(USED_LIBRARIES "${OPENGL_LIBRARIES};${GLEW_LIBRARIES};pthread")
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 add_subdirectory(src)
 
+option(ENABLE_DEMOS "enable demos" ON)
 if(ENABLE_DEMOS)
     add_subdirectory(demos)
 endif()
 
+option(ENABLE_DEMOS "enable tests" OFF)
 if(ENABLE_TESTS)
     set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin_tests)
     add_subdirectory(tests)

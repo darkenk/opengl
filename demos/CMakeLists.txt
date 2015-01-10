@@ -17,10 +17,20 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../src/)
 qt5_wrap_ui(UI_HEADERS mainwindow.ui)
 qt5_add_resources(QRC_SRC QDarkStyleSheet/qdarkstyle/style.qrc)
 set_source_files_properties(${QRC_SRC} PROPERTIES COMPILE_FLAGS "-Wno-error -Wno-everything")
-aux_source_directory(. SRC_FILES)
+file(GLOB SRC_FILES *.cpp)
+file(GLOB INC_FILES *.hpp)
 add_executable(${PROJECT_NAME} ${SRC_FILES} ${UI_HEADERS} ${QRC_SRC} $<TARGET_OBJECTS:opengl_lib>)
 
 target_link_libraries(${PROJECT_NAME}
     Qt5::Widgets
     Qt5::OpenGL
     ${USED_LIBRARIES})
+
+#cpp checker
+if(vera++_FOUND)
+    add_vera_targets(${SRC_FILES} ${INC_FILES}
+        NAME "demos"
+        NAME_ALL "demos_report"
+        RECURSE
+        ROOT ${CMAKE_SOURCE_DIR}/vera)
+endif()

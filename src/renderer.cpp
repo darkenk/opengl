@@ -42,14 +42,13 @@ Renderer::Renderer()
 {
     glewExperimental = GL_TRUE;
     glewInit();
-    addObject(shared_ptr<ColouredObject>{new ColouredObject(shared_ptr<Cube>(new Cube))});
+    addObject(make_shared<ColouredObject>(make_shared<Cube>()));
     mCamera = make_shared<Camera>();
     // Enable depth test
     glEnable(GL_DEPTH_TEST);
     // Accept fragment if it closer to the camera than the former one
     glDepthFunc(GL_LESS);
-    auto object = shared_ptr<ColouredObject>{new ColouredObject(
-                shared_ptr<Terrain>(new Terrain{1024, 1024}))};
+    auto object = make_shared<ColouredObject>(make_shared<Terrain>(1024, 1024));
     glm::mat4 m = glm::translate(glm::mat4(), glm::vec3(-12.0f, -3.0f, -24.0f));
     object->setModel(m);
     addObject(object);
@@ -63,7 +62,7 @@ void Renderer::render()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glm::mat4 tmp = mProjection * mCamera->getMatrix();
-    for(auto object : mObjects) {
+    for (auto object : mObjects) {
         object->setVpMatrix(tmp);
         object->render();
     }
@@ -83,7 +82,7 @@ void Renderer::addObject(shared_ptr<IRenderableObject> object)
 
 void Renderer::handleKey(int key)
 {
-    switch(static_cast<unsigned char>(key)) {
+    switch (static_cast<unsigned char>(key)) {
     case 'w':
         mCamera->forward();
         break;

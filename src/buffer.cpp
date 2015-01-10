@@ -61,11 +61,11 @@ void Buffer<T>::unBind()
 }
 
 template<typename T>
-void Buffer<T>::setAttributes(AttributeVectorPtr attrs)
+void Buffer<T>::setAttributes(const AttributeVector& attrs)
 {
     bind();
     GLsizei stride{0};
-    for(Attribute& attr : *attrs) {
+    for (auto attr : attrs) {
         stride += attr.mFullSize;
     }
     if (stride != sizeof(T)) {
@@ -73,7 +73,7 @@ void Buffer<T>::setAttributes(AttributeVectorPtr attrs)
     }
     LOGV << " stride " << stride;
     GLsizei offset{0};
-    for(Attribute& attr : *attrs) {
+    for (auto attr : attrs) {
         glEnableVertexAttribArray(attr.mIndex);
         glVertexAttribPointer(attr.mIndex, attr.mSize, attr.mType, GL_FALSE,
                               stride, reinterpret_cast<GLvoid*>(offset));

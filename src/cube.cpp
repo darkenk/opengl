@@ -37,14 +37,14 @@ Cube::Cube()
 }
 
 VertexVectorPtr Cube::getVertices() {
-    VertexVectorPtr v = VertexVectorPtr(new vector<Vertex> ({
+    VertexVectorPtr v = make_shared<VertexVector>(initializer_list<Vertex>{
         Vertex( glm::vec4(-0.5f, 0.5f, -0.5f, 1.0),
                 glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)),
         Vertex( glm::vec4( 0.5f, 0.5f, -0.5f, 1.0),
                 glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)),
-        Vertex( glm::vec4(-0.5f, -0.5f,-0.5f, 1.0),
+        Vertex( glm::vec4(-0.5f, -0.5f, -0.5f, 1.0),
                 glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)),
-        Vertex( glm::vec4( 0.5f, -0.5f,-0.5f, 1.0), //3
+        Vertex( glm::vec4( 0.5f, -0.5f, -0.5f, 1.0), //3
                 glm::vec4(1.0f, 1.0f, 0.0f, 1.0f)),
         Vertex( glm::vec4(-0.5f, 0.5f,  0.5f, 1.0), //
                 glm::vec4(0.0f, 1.0f, 1.0f, 1.0f)),
@@ -54,12 +54,12 @@ VertexVectorPtr Cube::getVertices() {
                 glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)),
         Vertex( glm::vec4( 0.5f, -0.5f, 0.5f, 1.0), //7
                 glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)),
-    }));
+    });
     return v;
 }
 
 IndexVectorPtr Cube::getIndices() {
-    IndexVectorPtr v = IndexVectorPtr(new vector<unsigned int>({
+    IndexVectorPtr v = make_shared<IndexVector>(initializer_list<Index>{
         1, 0, 2,
         1, 2, 3,
         5, 4, 6,
@@ -72,28 +72,23 @@ IndexVectorPtr Cube::getIndices() {
         5, 1, 0,
         2, 6, 7,
         2, 7, 3
-    }));
+    });
     return v;
 }
-
 
 IndexVectorPtr Triangle::getIndices() {
-    IndexVectorPtr v = IndexVectorPtr(new vector<unsigned int>({
-                                                                   1, 2, 0
-                                                               }));
+    IndexVectorPtr v = make_shared<IndexVector>(initializer_list<Index>{1, 2, 0});
     return v;
 }
 
-
 VertexVectorPtr Triangle::getVertices() {
-    VertexVectorPtr v = VertexVectorPtr{new std::vector<Vertex> {
-                                                                     //setup triangle geometry
-                                                                     Vertex( glm::vec4(-1.0f, -1.0f, 0.0f, 1.0f),
-                                                                     glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)),
-                                                                     Vertex( glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
-                                                                     glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)),
-                                                                     Vertex( glm::vec4(1.0f, -1.0f, 0.0f, 1.0f),
-                                                                     glm::vec4(0.0f, 0.0f, 1.0f, 1.0f))
-                                                                 }};
-                                                                 return v;
+    VertexVectorPtr v = make_shared<VertexVector>(initializer_list<Vertex>{
+         Vertex( glm::vec4(-1.0f, -1.0f, 0.0f, 1.0f),
+                 glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)),
+         Vertex( glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
+                 glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)),
+         Vertex( glm::vec4(1.0f, -1.0f, 0.0f, 1.0f),
+                 glm::vec4(0.0f, 0.0f, 1.0f, 1.0f))
+    });
+    return v;
 }

@@ -34,12 +34,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "logger.hpp"
+#include "make_unique.hpp"
 
 using namespace std;
 
-ColouredObject::ColouredObject(std::shared_ptr<IObject> object)
+ColouredObject::ColouredObject(shared_ptr<IObject> object)
 {
-    mShader = unique_ptr<Shader>(new Shader("./fragment.glsl", "./vertex.glsl"));
+    mShader = make_unique<Shader>("./fragment.glsl", "./vertex.glsl");
     mObject = object;
 
     glGetError();
@@ -49,12 +50,12 @@ ColouredObject::ColouredObject(std::shared_ptr<IObject> object)
     glBindVertexArray(mVao);
 
     //vertices
-    mVertexBuffer = unique_ptr<Buffer<Vertex>>{new Buffer<Vertex>{object->getVertices()}};
-    mVertexBuffer->setAttributes(mShader->getAllAttributes());
+    mVertexBuffer = make_unique<Buffer<Vertex>>(object->getVertices());
+    mVertexBuffer->setAttributes(*mShader->getAllAttributes());
 
     //indices;
-    mIndexBuffer = unique_ptr<Buffer<unsigned int>>{new Buffer<unsigned int>{object->getIndices(),
-                                                    GL_ELEMENT_ARRAY_BUFFER}};
+    mIndexBuffer = make_unique<Buffer<Index>>(object->getIndices(),
+                                              static_cast<GLenum>(GL_ELEMENT_ARRAY_BUFFER));
 
     mShader->use();
     //projection matrix
@@ -71,7 +72,6 @@ ColouredObject::ColouredObject(std::shared_ptr<IObject> object)
 
 ColouredObject::~ColouredObject()
 {
-    mShader.release();
     glDeleteVertexArrays(1, &mVao);
 }
 

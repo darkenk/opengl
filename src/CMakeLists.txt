@@ -11,6 +11,7 @@ include_directories(SYSTEM ${GLUT_INCLUDE_DIRS})
 include_directories(SYSTEM ${GLM_INCLUDE_DIRS})
 
 file(GLOB SRC_FILES *.cpp)
+file(GLOB INC_FILES *.hpp)
 file(GLOB MAIN_FILE "main.cpp")
 file(GLOB SHADER_FILES shaders/*.glsl)
 set_source_files_properties(buffer-impl.cpp PROPERTIES COMPILE_FLAGS -Wno-header-hygiene)
@@ -34,3 +35,9 @@ add_custom_target(run
     COMMAND opengl
     COMMENT "Run with ${CMAKE_BUILD_TYPE} configuration"
 )
+
+if(vera++_FOUND)
+    add_vera_targets(${SRC_FILES} ${MAIN_FILE} ${INC_FILES}
+        RECURSE
+        ROOT ${CMAKE_SOURCE_DIR}/vera)
+endif()

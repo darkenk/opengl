@@ -78,7 +78,7 @@ void Camera::forward(float speed)
 
 void Camera::backward(float speed)
 {
-    mPosition -= mDirection * speed ;
+    mPosition -= mDirection * speed;
     update();
 }
 

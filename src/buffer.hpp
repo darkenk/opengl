@@ -55,8 +55,6 @@ public:
     }
 };
 
-typedef std::vector<GLbyte> DataVector;
-typedef std::shared_ptr<DataVector> DataVectorPtr;
 typedef std::vector<Attribute> AttributeVector;
 typedef std::shared_ptr<AttributeVector> AttributeVectorPtr;
 
@@ -68,7 +66,7 @@ public:
     ~Buffer();
     void bind();
     void unBind();
-    void setAttributes(AttributeVectorPtr attrs);
+    void setAttributes(const AttributeVector& attrs);
     GLsizei size();
 
 private:

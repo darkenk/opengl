@@ -29,7 +29,6 @@
  */
 #include "exceptions.hpp"
 
-
 Exception::Exception(const std::string& msg) noexcept
 {
     mMessage = msg;

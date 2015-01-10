@@ -59,7 +59,8 @@ struct DirectionalLight
 typedef std::vector<Vertex> VertexVector;
 typedef std::shared_ptr<VertexVector> VertexVectorPtr;
 
-typedef std::vector<unsigned int> IndexVector;
+typedef unsigned int Index;
+typedef std::vector<Index> IndexVector;
 typedef std::shared_ptr<IndexVector> IndexVectorPtr;
 
 std::string getBasePath();
