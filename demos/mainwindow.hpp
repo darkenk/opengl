@@ -45,6 +45,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+protected slots:
+    void onAmbientIntensityChanged(float v);
+
 private:
     Ui::MainWindow *ui;
 };

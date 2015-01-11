@@ -35,10 +35,18 @@ MainWindow::MainWindow(QWidget *parent) :
     ui{new Ui::MainWindow}
 {
     ui->setupUi(this);
+    ui->mAmbientLightIntensity->setName("Ambient intensity");
+    connect(ui->mAmbientLightIntensity, SIGNAL(valueChanged(float)), this,
+                                               SLOT(onAmbientIntensityChanged(float)));
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
     ui = nullptr;
+}
+
+void MainWindow::onAmbientIntensityChanged(float v)
+{
+    ui->mRenderWindow->getRenderer().getLight().setAmbientIntensity(v);
 }

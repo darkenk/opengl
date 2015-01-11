@@ -40,6 +40,7 @@ class MyGLWidget : public QGLWidget
 public:
     MyGLWidget(QWidget *parent = 0);
     ~MyGLWidget();
+    Renderer& getRenderer() { return *mRenderer; }
 
 protected:
     virtual void initializeGL();

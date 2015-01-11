@@ -27,33 +27,54 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef RENDERER_H
-#define RENDERER_H
-#include <glm/glm.hpp>
-#include <memory>
-#include <vector>
-#include "camera.hpp"
-#include "irenderableobject.hpp"
+#include <glm/gtc/type_ptr.hpp>
 #include "light.hpp"
 
-class Renderer
+using namespace std;
+
+Light::Light() :
+    mAmbientColor(glm::vec4{0.0f, 1.0f, 1.0f, 1.0f}),
+    mAmbientIntensity(1.0f)
 {
-public:
-    Renderer();
-    virtual ~Renderer();
-    virtual void render();
-    virtual void cleanup();
-    virtual void resize(int width, int height);
-    void addObject(std::shared_ptr<IRenderableObject> object);
-    void handleKey(int key);
-    Light& getLight();
+}
 
-private:
-    std::shared_ptr<Camera> mCamera;
-    std::vector<std::shared_ptr<IRenderableObject>> mObjects;
-    glm::mat4 mProjection;
-    Light mLight;
-    std::shared_ptr<Shader> mShader;
-};
+Light::~Light()
+{
+}
 
-#endif // RENDERER_H
+void Light::addShader(shared_ptr<Shader> shader)
+{
+    mShaders.push_back(shader);
+    setAmbientColorInShader(*shader);
+    setAmbientIntensityInShader(*shader);
+}
+
+void Light::setAmbientColor(glm::vec4& color)
+{
+    mAmbientColor = color;
+    for (auto shader : mShaders) {
+        setAmbientColorInShader(*shader);
+    }
+}
+
+void Light::setAmbientIntensity(GLfloat intensity)
+{
+    mAmbientIntensity = intensity;
+    for (auto shader : mShaders) {
+        setAmbientIntensityInShader(*shader);
+    }
+}
+
+void Light::setAmbientColorInShader(Shader& shader)
+{
+    shader.use();
+    glUniform4fv(shader.getUniform("gDirectionalLight.Color"), 1, glm::value_ptr(mAmbientColor));
+    shader.unUse();
+}
+
+void Light::setAmbientIntensityInShader(Shader& shader)
+{
+    shader.use();
+    glUniform1f(shader.getUniform("gDirectionalLight.AmbientIntensity"), mAmbientIntensity);
+    shader.unUse();
+}

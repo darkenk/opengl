@@ -38,11 +38,9 @@
 
 using namespace std;
 
-ColouredObject::ColouredObject(shared_ptr<IObject> object)
+ColouredObject::ColouredObject(shared_ptr<IObject> object, std::shared_ptr<Shader> shader):
+    mObject{object}, mShader{shader}
 {
-    mShader = make_unique<Shader>("./fragment.glsl", "./vertex.glsl");
-    mObject = object;
-
     glGetError();
 
     //vao
@@ -60,12 +58,6 @@ ColouredObject::ColouredObject(shared_ptr<IObject> object)
     mShader->use();
     //projection matrix
     mModelId = mShader->getUniform("gWorld");
-
-    //set light
-    glm::vec4 lightColor = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f);
-    float lightIntense = 0.7f;
-    glUniform4fv(mShader->getUniform("gDirectionalLight.Color"), 1, glm::value_ptr(lightColor));
-    glUniform1f(mShader->getUniform("gDirectionalLight.AmbientIntensity"), lightIntense);
 
     checkGlError(__FUNCTION__);
 }

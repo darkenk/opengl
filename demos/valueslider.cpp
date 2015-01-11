@@ -27,33 +27,37 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef RENDERER_H
-#define RENDERER_H
-#include <glm/glm.hpp>
-#include <memory>
-#include <vector>
-#include "camera.hpp"
-#include "irenderableobject.hpp"
-#include "light.hpp"
 
-class Renderer
+#include "valueslider.hpp"
+#include "ui_valueslider.h"
+
+ValueSlider::ValueSlider(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::ValueSlider)
 {
-public:
-    Renderer();
-    virtual ~Renderer();
-    virtual void render();
-    virtual void cleanup();
-    virtual void resize(int width, int height);
-    void addObject(std::shared_ptr<IRenderableObject> object);
-    void handleKey(int key);
-    Light& getLight();
+    ui->setupUi(this);
+    mMaxValue = ui->horizontalSlider->maximum();
+}
 
-private:
-    std::shared_ptr<Camera> mCamera;
-    std::vector<std::shared_ptr<IRenderableObject>> mObjects;
-    glm::mat4 mProjection;
-    Light mLight;
-    std::shared_ptr<Shader> mShader;
-};
+ValueSlider::~ValueSlider()
+{
+    delete ui;
+}
 
-#endif // RENDERER_H
+void ValueSlider::setName(const QString& name)
+{
+    ui->label->setText(name);
+}
+
+void ValueSlider::setMaxValue(int maxValue)
+{
+    ui->horizontalSlider->setMaximum(maxValue);
+    mMaxValue = maxValue;
+}
+
+void ValueSlider::on_horizontalSlider_valueChanged(int value)
+{
+    float v = value/mMaxValue;
+    ui->lcdNumber->display(v);
+    emit valueChanged(v);
+}

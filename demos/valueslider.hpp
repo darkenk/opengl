@@ -27,33 +27,35 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef RENDERER_H
-#define RENDERER_H
-#include <glm/glm.hpp>
-#include <memory>
-#include <vector>
-#include "camera.hpp"
-#include "irenderableobject.hpp"
-#include "light.hpp"
 
-class Renderer
+#ifndef VALUESLIDER_HPP
+#define VALUESLIDER_HPP
+
+#include <QWidget>
+
+namespace Ui {
+class ValueSlider;
+}
+
+class ValueSlider : public QWidget
 {
+    Q_OBJECT
 public:
-    Renderer();
-    virtual ~Renderer();
-    virtual void render();
-    virtual void cleanup();
-    virtual void resize(int width, int height);
-    void addObject(std::shared_ptr<IRenderableObject> object);
-    void handleKey(int key);
-    Light& getLight();
+    explicit ValueSlider(QWidget *parent = 0);
+    ~ValueSlider();
+    void setName(const QString& name);
+    void setMaxValue(int maxValue);
+
+signals:
+    void valueChanged(float value);
+
+private slots:
+    void on_horizontalSlider_valueChanged(int value);
 
 private:
-    std::shared_ptr<Camera> mCamera;
-    std::vector<std::shared_ptr<IRenderableObject>> mObjects;
-    glm::mat4 mProjection;
-    Light mLight;
-    std::shared_ptr<Shader> mShader;
+    Ui::ValueSlider *ui;
+    QString mName;
+    float mMaxValue;
 };
 
-#endif // RENDERER_H
+#endif // VALUESLIDER_HPP

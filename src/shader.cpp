@@ -48,7 +48,7 @@ Shader::Shader(const string& fragmentShader, const string& vertexShader) :
 
 Shader::~Shader()
 {
-    vector<GLuint>::iterator iter = mShaderIds.begin();
+    auto iter = mShaderIds.begin();
     for ( ; iter != mShaderIds.end(); iter++) {
         glDetachShader(mProgramId, *iter);
         glDeleteShader(*iter);
@@ -94,6 +94,7 @@ void Shader::createProgram()
 
 AttributeVectorPtr Shader::getAllAttributes()
 {
+    // TODO: ugly function, needs refactor
     use();
     GLint attrLength;
     glGetProgramiv(mProgramId, GL_ACTIVE_ATTRIBUTES, &attrLength);

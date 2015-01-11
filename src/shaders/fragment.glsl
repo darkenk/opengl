@@ -39,7 +39,7 @@ struct DirectionalLight
     float AmbientIntensity;
 };
 
-uniform DirectionalLight gDirectionalLight;
+uniform DirectionalLight gDirectionalLight = DirectionalLight(vec4(1.0, 1.0, 1.0, 1.0), 1.0);
 
 void main(void)
 {

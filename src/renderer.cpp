@@ -42,13 +42,15 @@ Renderer::Renderer()
 {
     glewExperimental = GL_TRUE;
     glewInit();
-    addObject(make_shared<ColouredObject>(make_shared<Cube>()));
+    mShader = make_shared<Shader>("./fragment.glsl", "./vertex.glsl");
+    mLight.addShader(mShader);
+    addObject(make_shared<ColouredObject>(make_shared<Cube>(), mShader));
     mCamera = make_shared<Camera>();
     // Enable depth test
     glEnable(GL_DEPTH_TEST);
     // Accept fragment if it closer to the camera than the former one
     glDepthFunc(GL_LESS);
-    auto object = make_shared<ColouredObject>(make_shared<Terrain>(1024, 1024));
+    auto object = make_shared<ColouredObject>(make_shared<Terrain>(1024, 1024), mShader);
     glm::mat4 m = glm::translate(glm::mat4(), glm::vec3(-12.0f, -3.0f, -24.0f));
     object->setModel(m);
     addObject(object);
@@ -82,6 +84,7 @@ void Renderer::addObject(shared_ptr<IRenderableObject> object)
 
 void Renderer::handleKey(int key)
 {
+    // TODO is it possible to make it more beautiful?
     switch (static_cast<unsigned char>(key)) {
     case 'w':
         mCamera->forward();
@@ -108,6 +111,11 @@ void Renderer::handleKey(int key)
         mCamera->rotateDown();
         break;
     }
+}
+
+Light& Renderer::getLight()
+{
+    return mLight;
 }
 
 void Renderer::cleanup()

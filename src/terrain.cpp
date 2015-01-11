@@ -53,6 +53,7 @@ IndexVectorPtr Terrain::getIndices()
 
 void Terrain::generate()
 {
+    // TODO: ugly function, made a refactor
     for (unsigned int y = 0; y < mHeight; y++) {
         for (unsigned int x = 0; x < mWidth; x++) {
             mVertices->push_back(Vertex{glm::vec4{static_cast<float>(x), 0.0f,

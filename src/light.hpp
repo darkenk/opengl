@@ -27,33 +27,31 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef RENDERER_H
-#define RENDERER_H
-#include <glm/glm.hpp>
+#ifndef LIGHT_HPP
+#define LIGHT_HPP
+
 #include <memory>
 #include <vector>
-#include "camera.hpp"
-#include "irenderableobject.hpp"
-#include "light.hpp"
+#include <glm/glm.hpp>
+#include "shader.hpp"
 
-class Renderer
+class Light
 {
 public:
-    Renderer();
-    virtual ~Renderer();
-    virtual void render();
-    virtual void cleanup();
-    virtual void resize(int width, int height);
-    void addObject(std::shared_ptr<IRenderableObject> object);
-    void handleKey(int key);
-    Light& getLight();
+    Light();
+    ~Light();
+
+    void addShader(std::shared_ptr<Shader> shader);
+    void setAmbientColor(glm::vec4& color);
+    void setAmbientIntensity(GLfloat intensity);
 
 private:
-    std::shared_ptr<Camera> mCamera;
-    std::vector<std::shared_ptr<IRenderableObject>> mObjects;
-    glm::mat4 mProjection;
-    Light mLight;
-    std::shared_ptr<Shader> mShader;
+    inline void setAmbientColorInShader(Shader& shader);
+    inline void setAmbientIntensityInShader(Shader& shader);
+
+    std::vector<std::shared_ptr<Shader>> mShaders;
+    glm::vec4 mAmbientColor;
+    GLfloat mAmbientIntensity;
 };
 
-#endif // RENDERER_H
+#endif // LIGHT_HPP

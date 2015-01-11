@@ -40,7 +40,7 @@
 class ColouredObject : public IRenderableObject
 {
 public:
-    ColouredObject(std::shared_ptr<IObject> object);
+    ColouredObject(std::shared_ptr<IObject> object, std::shared_ptr<Shader> shader);
     virtual ~ColouredObject();
     virtual void render();
     virtual void setVpMatrix(glm::mat4& matrix);
@@ -49,8 +49,8 @@ private:
     bool createShaders();
     bool releaseShaders();
 
-    std::unique_ptr<Shader> mShader;
     std::shared_ptr<IObject> mObject;
+    std::shared_ptr<Shader> mShader;
     std::unique_ptr<Buffer<Vertex>> mVertexBuffer;
     std::unique_ptr<Buffer<unsigned int>> mIndexBuffer;
     GLuint mVao;
