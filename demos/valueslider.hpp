@@ -45,6 +45,8 @@ public:
     ~ValueSlider();
     void setName(const QString& name);
     void setMaxValue(int maxValue);
+    float getMaxValue();
+    void setValue(int value);
 
 signals:
     void valueChanged(float value);

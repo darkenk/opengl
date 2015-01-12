@@ -36,8 +36,17 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->mAmbientLightIntensity->setName("Ambient intensity");
+    ui->mRedColor->setName("Red");
+    ui->mGreenColor->setName("Green");
+    ui->mBlueColor->setName("Blue");
+    ui->mAlpha->setName("Alpha");
     connect(ui->mAmbientLightIntensity, SIGNAL(valueChanged(float)), this,
                                                SLOT(onAmbientIntensityChanged(float)));
+    connect(ui->mRedColor, SIGNAL(valueChanged(float)), this, SLOT(onRedColorChanged(float)));
+    connect(ui->mGreenColor, SIGNAL(valueChanged(float)), this, SLOT(onGreenColorChanged(float)));
+    connect(ui->mBlueColor, SIGNAL(valueChanged(float)), this, SLOT(onBlueColorChanged(float)));
+    connect(ui->mAlpha, SIGNAL(valueChanged(float)), this, SLOT(onAlphaChanged(float)));
+    connect(ui->mRenderWindow, SIGNAL(initialized()), this, SLOT(onGLInitialized()));
 }
 
 MainWindow::~MainWindow()
@@ -46,7 +55,49 @@ MainWindow::~MainWindow()
     ui = nullptr;
 }
 
+void MainWindow::onGLInitialized()
+{
+    Light& light = ui->mRenderWindow->getRenderer().getLight();
+    float m = ui->mAmbientLightIntensity->getMaxValue();
+    ui->mAmbientLightIntensity->setValue(static_cast<int>(light.getAmbientIntensity() * m));
+    mAmbientLightColor = light.getAmbientColor();
+    m = ui->mBlueColor->getMaxValue();
+    ui->mBlueColor->setValue(static_cast<int>(mAmbientLightColor.b * m));
+    ui->mGreenColor->setValue(static_cast<int>(mAmbientLightColor.g * m));
+    ui->mRedColor->setValue(static_cast<int>(mAmbientLightColor.r * m));
+    ui->mAlpha->setValue(static_cast<int>(mAmbientLightColor.a * m));
+}
+
 void MainWindow::onAmbientIntensityChanged(float v)
 {
     ui->mRenderWindow->getRenderer().getLight().setAmbientIntensity(v);
+}
+
+void MainWindow::onRedColorChanged(float v)
+{
+    mAmbientLightColor.r = v;
+    updateAmbientLightColor();
+}
+
+void MainWindow::onGreenColorChanged(float v)
+{
+    mAmbientLightColor.g = v;
+    updateAmbientLightColor();
+}
+
+void MainWindow::onBlueColorChanged(float v)
+{
+    mAmbientLightColor.b = v;
+    updateAmbientLightColor();
+}
+
+void MainWindow::onAlphaChanged(float v)
+{
+    mAmbientLightColor.a = v;
+    updateAmbientLightColor();
+}
+
+void MainWindow::updateAmbientLightColor()
+{
+    ui->mRenderWindow->getRenderer().getLight().setAmbientColor(mAmbientLightColor);
 }

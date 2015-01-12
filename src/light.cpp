@@ -57,12 +57,22 @@ void Light::setAmbientColor(glm::vec4& color)
     }
 }
 
+glm::vec4 Light::getAmbientColor()
+{
+    return mAmbientColor;
+}
+
 void Light::setAmbientIntensity(GLfloat intensity)
 {
     mAmbientIntensity = intensity;
     for (auto shader : mShaders) {
         setAmbientIntensityInShader(*shader);
     }
+}
+
+GLfloat Light::getAmbientIntensity()
+{
+    return mAmbientIntensity;
 }
 
 void Light::setAmbientColorInShader(Shader& shader)

@@ -55,6 +55,16 @@ void ValueSlider::setMaxValue(int maxValue)
     mMaxValue = maxValue;
 }
 
+float ValueSlider::getMaxValue()
+{
+    return mMaxValue;
+}
+
+void ValueSlider::setValue(int value)
+{
+    ui->horizontalSlider->setValue(value);
+}
+
 void ValueSlider::on_horizontalSlider_valueChanged(int value)
 {
     float v = value/mMaxValue;

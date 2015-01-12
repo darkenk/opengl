@@ -43,7 +43,9 @@ public:
 
     void addShader(std::shared_ptr<Shader> shader);
     void setAmbientColor(glm::vec4& color);
+    glm::vec4 getAmbientColor();
     void setAmbientIntensity(GLfloat intensity);
+    GLfloat getAmbientIntensity();
 
 private:
     inline void setAmbientColorInShader(Shader& shader);

@@ -46,10 +46,17 @@ public:
     ~MainWindow();
 
 protected slots:
+    void onGLInitialized();
     void onAmbientIntensityChanged(float v);
+    void onRedColorChanged(float v);
+    void onGreenColorChanged(float v);
+    void onBlueColorChanged(float v);
+    void onAlphaChanged(float v);
 
 private:
+    void updateAmbientLightColor();
     Ui::MainWindow *ui;
+    glm::vec4 mAmbientLightColor;
 };
 
 #endif // MAINWINDOW_HPP

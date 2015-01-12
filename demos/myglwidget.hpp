@@ -42,6 +42,9 @@ public:
     ~MyGLWidget();
     Renderer& getRenderer() { return *mRenderer; }
 
+signals:
+    void initialized();
+
 protected:
     virtual void initializeGL();
     virtual void paintGL();

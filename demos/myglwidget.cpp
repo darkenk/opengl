@@ -29,7 +29,6 @@
  */
 #include <QKeyEvent>
 #include "myglwidget.hpp"
-#include "logger.hpp"
 
 using namespace std;
 
@@ -49,6 +48,7 @@ MyGLWidget::~MyGLWidget()
 void MyGLWidget::initializeGL()
 {
     mRenderer = make_shared<Renderer>();
+    emit initialized();
 }
 
 void MyGLWidget::paintGL()
