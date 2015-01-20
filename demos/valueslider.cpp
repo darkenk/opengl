@@ -27,7 +27,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 #include "valueslider.hpp"
 #include "ui_valueslider.h"
 
@@ -49,25 +48,20 @@ void ValueSlider::setName(const QString& name)
     ui->label->setText(name);
 }
 
-void ValueSlider::setMaxValue(int maxValue)
+void ValueSlider::setRange(float min, float max)
 {
-    ui->horizontalSlider->setMaximum(maxValue);
-    mMaxValue = maxValue;
+    ui->horizontalSlider->setMaximum(static_cast<int>(max * mMaxValue));
+    ui->horizontalSlider->setMinimum(static_cast<int>(min * mMaxValue));
 }
 
-float ValueSlider::getMaxValue()
+void ValueSlider::setValue(float value)
 {
-    return mMaxValue;
-}
-
-void ValueSlider::setValue(int value)
-{
-    ui->horizontalSlider->setValue(value);
+    ui->horizontalSlider->setValue(static_cast<int>(value * mMaxValue));
 }
 
 void ValueSlider::on_horizontalSlider_valueChanged(int value)
 {
     float v = value/mMaxValue;
-    ui->lcdNumber->display(v);
+    ui->value->setValue(v);
     emit valueChanged(v);
 }

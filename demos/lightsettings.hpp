@@ -27,24 +27,34 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "mainwindow.hpp"
-#include "ui_mainwindow.h"
+#ifndef LIGHTSETTINGS_HPP
+#define LIGHTSETTINGS_HPP
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow{parent},
-    ui{new Ui::MainWindow}
-{
-    ui->setupUi(this);
-    connect(ui->mRenderWindow, SIGNAL(initialized()), this, SLOT(onGLInitialized()));
+#include <QWidget>
+#include "light.hpp"
+
+namespace Ui {
+class LightSettings;
 }
 
-MainWindow::~MainWindow()
+class LightSettings : public QWidget
 {
-    delete ui;
-    ui = nullptr;
-}
+    Q_OBJECT
 
-void MainWindow::onGLInitialized()
-{
-    ui->mLightSettings->setLight(ui->mRenderWindow->getRenderer().getLight());
-}
+public:
+    explicit LightSettings(QWidget *parent = 0);
+    ~LightSettings();
+    void setLight(std::shared_ptr<Light> light);
+
+protected slots:
+    void onAmbientIntensityChanged(float v);
+    void onColorChanged(glm::vec4* color);
+    void onDiffuseDirectionChanged(glm::vec4* direction);
+    void onDiffuseIntensityChanged(float v);
+
+private:
+    Ui::LightSettings *ui;
+    std::shared_ptr<Light> mLight;
+};
+
+#endif // LIGHTSETTINGS_HPP

@@ -47,13 +47,20 @@ public:
     void setAmbientIntensity(GLfloat intensity);
     GLfloat getAmbientIntensity();
 
+    void setDiffuseDirection(glm::vec4& direction);
+    glm::vec4 getDiffuseDirection();
+    void setDiffuseIntensity(GLfloat intensity);
+    GLfloat getDiffuseIntensity();
+
 private:
-    inline void setAmbientColorInShader(Shader& shader);
-    inline void setAmbientIntensityInShader(Shader& shader);
+    inline void setVector4InShaders(const std::string& variableName, glm::vec4& value);
+    inline void setAmbientIntensityInShaders(const std::string& variableName, GLfloat value);
 
     std::vector<std::shared_ptr<Shader>> mShaders;
     glm::vec4 mAmbientColor;
     GLfloat mAmbientIntensity;
+    glm::vec4 mDiffuseDirection;
+    GLfloat mDiffuseIntensity;
 };
 
 #endif // LIGHT_HPP

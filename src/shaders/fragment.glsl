@@ -31,17 +31,34 @@
 
 // input from shader
 in vec4 vColor;
+in vec4 vNormal;
 out vec4 out_Color;
 
 struct DirectionalLight
 {
+    //ambient light
     vec4 Color;
     float AmbientIntensity;
+    // diffuse light
+    float DiffuseIntensity;
+    vec4 Direction;
 };
 
-uniform DirectionalLight gDirectionalLight = DirectionalLight(vec4(1.0, 1.0, 1.0, 1.0), 1.0);
+uniform DirectionalLight gDirectionalLight = DirectionalLight(
+            vec4(1.0, 1.0, 1.0, 1.0),
+            1.0,
+            1.0,
+            vec4(1.0, 1.0, 1.0, 1.0));
 
 void main(void)
 {
-    out_Color = vColor * gDirectionalLight.Color * gDirectionalLight.AmbientIntensity;
+    float DiffuseFactor = dot(normalize(vNormal), -gDirectionalLight.Direction);
+    vec4 DiffuseColor;
+    if (DiffuseFactor > 0) {
+        DiffuseColor = vec4(gDirectionalLight.Color) * gDirectionalLight.DiffuseIntensity * DiffuseFactor;
+    }
+    else {
+        DiffuseColor = vec4(0, 0, 0, 0);
+    }
+    out_Color = vColor * (gDirectionalLight.Color * gDirectionalLight.AmbientIntensity + DiffuseColor);
 }

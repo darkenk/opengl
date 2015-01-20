@@ -32,14 +32,18 @@
 // input from application
 layout(location=0) in vec4 inPosition;
 layout(location=1) in vec4 inColor;
+layout(location=2) in vec4 inNormal;
 
 // output from shader
 out vec4 vColor;
+out vec4 vNormal;
 
 uniform mat4 gWorld;
+uniform mat4 gWVP;
 
 void main(void)
 {
-   gl_Position = gWorld * inPosition;
-   vColor = inColor;
+    gl_Position = gWVP * inPosition;
+    vColor = inColor;
+    vNormal = gWorld * inNormal;
 }

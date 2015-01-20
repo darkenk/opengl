@@ -46,13 +46,13 @@ public:
     virtual void resize(int width, int height);
     void addObject(std::shared_ptr<IRenderableObject> object);
     void handleKey(int key);
-    Light& getLight();
+    std::shared_ptr<Light> getLight();
 
 private:
     std::shared_ptr<Camera> mCamera;
     std::vector<std::shared_ptr<IRenderableObject>> mObjects;
     glm::mat4 mProjection;
-    Light mLight;
+    std::shared_ptr<Light> mLight;
     std::shared_ptr<Shader> mShader;
 };
 

@@ -40,10 +40,12 @@
 struct Vertex
 {
     Vertex() {}
-    Vertex(glm::vec4 pos, glm::vec4 col = glm::vec4(1.0f, 1.0f, 0.2f, 1.0f)) :
-        position(pos), color(col) {}
+    Vertex(glm::vec4 pos, glm::vec4 col = glm::vec4{1.0f, 1.0f, 0.2f, 1.0f},
+           glm::vec4 nor = glm::vec4{1.0f, 1.0f, 1.0f, 1.0f}) :
+        position(pos), color(col), normal(nor) {}
     glm::vec4 position;
     glm::vec4 color;
+    glm::vec4 normal;
     friend std::ostream& operator<<(std::ostream& of, const Vertex& v) {
         return of << "Vertex " << v.position.x << ", " << v.position.y << ", "
                   << v.position.z << ", " << v.position.w;

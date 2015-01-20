@@ -27,7 +27,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 #ifndef VALUESLIDER_HPP
 #define VALUESLIDER_HPP
 
@@ -44,9 +43,8 @@ public:
     explicit ValueSlider(QWidget *parent = 0);
     ~ValueSlider();
     void setName(const QString& name);
-    void setMaxValue(int maxValue);
-    float getMaxValue();
-    void setValue(int value);
+    void setRange(float min, float max);
+    void setValue(float value);
 
 signals:
     void valueChanged(float value);

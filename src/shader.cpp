@@ -34,6 +34,7 @@
 #include "utils.hpp"
 #include "logger.hpp"
 #include "buffer.hpp"
+#include "make_unique.hpp"
 
 using namespace std;
 
@@ -56,7 +57,7 @@ Shader::~Shader()
     glDeleteProgram(mProgramId);
 }
 
-shared_ptr<string> Shader::loadShader(const string& fileName)
+unique_ptr<string> Shader::loadShader(const string& fileName)
 {
     string s{getBasePath() + fileName};
     ifstream file{s, ios_base::in};
@@ -64,7 +65,7 @@ shared_ptr<string> Shader::loadShader(const string& fileName)
         throw Exception("No such file: " + s);
     }
     string line;
-    shared_ptr<string> shader{new string};
+    unique_ptr<string> shader = make_unique<string>();
     while (getline(file, line)) {
         shader->append(line);
         shader->append(string{'\n'});
@@ -74,12 +75,28 @@ shared_ptr<string> Shader::loadShader(const string& fileName)
 
 GLuint Shader::createShader(const string& fileName, GLuint shaderType)
 {
-    shared_ptr<string> shader = loadShader(fileName);
+    unique_ptr<string> shader = loadShader(fileName);
     GLuint shaderId = glCreateShader(shaderType);
     const char* str = shader->c_str();
     glShaderSource(shaderId, 1, &str, NULL);
     glCompileShader(shaderId);
+    checkCompilationError(shaderId, fileName);
     return shaderId;
+}
+
+void Shader::checkCompilationError(GLuint shaderId, const string& fileName)
+{
+    GLint success{0};
+    glGetShaderiv(shaderId, GL_COMPILE_STATUS, &success);
+    if (not success) {
+        GLint logSize{0};
+        glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &logSize);
+        GLchar* errorLog = new GLchar[logSize];
+        glGetShaderInfoLog(shaderId, logSize, &logSize, errorLog);
+        string msg{"Compilation error in " + fileName + " " + errorLog};
+        delete[] errorLog;
+        throw Exception(msg);
+    }
 }
 
 void Shader::createProgram()

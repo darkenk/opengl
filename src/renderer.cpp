@@ -43,7 +43,8 @@ Renderer::Renderer()
     glewExperimental = GL_TRUE;
     glewInit();
     mShader = make_shared<Shader>("./fragment.glsl", "./vertex.glsl");
-    mLight.addShader(mShader);
+    mLight = make_shared<Light>();
+    mLight->addShader(mShader);
     addObject(make_shared<ColouredObject>(make_shared<Cube>(), mShader));
     mCamera = make_shared<Camera>();
     // Enable depth test
@@ -113,7 +114,7 @@ void Renderer::handleKey(int key)
     }
 }
 
-Light& Renderer::getLight()
+shared_ptr<Light> Renderer::getLight()
 {
     return mLight;
 }

@@ -46,9 +46,6 @@ public:
     virtual void setVpMatrix(glm::mat4& matrix);
 
 private:
-    bool createShaders();
-    bool releaseShaders();
-
     std::shared_ptr<IObject> mObject;
     std::shared_ptr<Shader> mShader;
     std::unique_ptr<Buffer<Vertex>> mVertexBuffer;

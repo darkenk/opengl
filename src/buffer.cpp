@@ -69,7 +69,7 @@ void Buffer<T>::setAttributes(const AttributeVector& attrs)
         stride += attr.mFullSize;
     }
     if (stride != sizeof(T)) {
-        LOGE << "Stride: " << stride << " is different than sizeof(T)" << sizeof(T);
+        LOGE << "Stride: " << stride << " is different than sizeof(T) " << sizeof(T);
     }
     LOGV << " stride " << stride;
     GLsizei offset{0};

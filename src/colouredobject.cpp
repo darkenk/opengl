@@ -57,7 +57,7 @@ ColouredObject::ColouredObject(shared_ptr<IObject> object, std::shared_ptr<Shade
 
     mShader->use();
     //projection matrix
-    mModelId = mShader->getUniform("gWorld");
+    mModelId = mShader->getUniform("gWVP");
 
     checkGlError(__FUNCTION__);
 }
@@ -71,6 +71,7 @@ void ColouredObject::render()
 {
     mShader->use();
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glUniformMatrix4fv(mShader->getUniform("gWorld"), 1, GL_FALSE, glm::value_ptr(getModel()));
     glUniformMatrix4fv(mModelId, 1, GL_FALSE, glm::value_ptr(mMVP));
     glBindVertexArray(mVao);
     glDrawElements(GL_TRIANGLES, mIndexBuffer->size(), GL_UNSIGNED_INT, 0);

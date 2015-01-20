@@ -48,8 +48,9 @@ public:
     AttributeVectorPtr getAllAttributes();
 
 private:
-    std::shared_ptr<std::string> loadShader(const std::string& fileName);
+    std::unique_ptr<std::string> loadShader(const std::string& fileName);
     GLuint createShader(const std::string& fileName, GLuint shaderType);
+    void checkCompilationError(GLuint shaderId, const std::string& fileName);
     void createProgram();
     GLuint mProgramId;
     std::vector<GLuint> mShaderIds;

@@ -57,7 +57,9 @@ void Terrain::generate()
     for (unsigned int y = 0; y < mHeight; y++) {
         for (unsigned int x = 0; x < mWidth; x++) {
             mVertices->push_back(Vertex{glm::vec4{static_cast<float>(x), 0.0f,
-                                                  static_cast<float>(y), 1.0f}});
+                                                  static_cast<float>(y), 1.0f},
+                                        glm::vec4{1.0f, 1.0f, 0.2f, 1.0f},
+                                        glm::vec4{0.0f, 1.0f, 0.0f, 0.0f}});
         }
     }
     unsigned int upperLine;

@@ -33,8 +33,10 @@
 using namespace std;
 
 Light::Light() :
-    mAmbientColor(glm::vec4{0.0f, 1.0f, 1.0f, 1.0f}),
-    mAmbientIntensity(1.0f)
+    mAmbientColor{glm::vec4{0.0f, 1.0f, 1.0f, 1.0f}},
+    mAmbientIntensity{1.0f},
+    mDiffuseDirection{glm::vec4{1.0f, 1.0f, 0.0f, 1.0f}},
+    mDiffuseIntensity{1.0f}
 {
 }
 
@@ -45,16 +47,16 @@ Light::~Light()
 void Light::addShader(shared_ptr<Shader> shader)
 {
     mShaders.push_back(shader);
-    setAmbientColorInShader(*shader);
-    setAmbientIntensityInShader(*shader);
+    setAmbientColor(mAmbientColor);
+    setAmbientIntensity(mAmbientIntensity);
+    setDiffuseDirection(mDiffuseDirection);
+    setDiffuseIntensity(mDiffuseIntensity);
 }
 
 void Light::setAmbientColor(glm::vec4& color)
 {
     mAmbientColor = color;
-    for (auto shader : mShaders) {
-        setAmbientColorInShader(*shader);
-    }
+    setVector4InShaders("gDirectionalLight.Color", mAmbientColor);
 }
 
 glm::vec4 Light::getAmbientColor()
@@ -65,9 +67,7 @@ glm::vec4 Light::getAmbientColor()
 void Light::setAmbientIntensity(GLfloat intensity)
 {
     mAmbientIntensity = intensity;
-    for (auto shader : mShaders) {
-        setAmbientIntensityInShader(*shader);
-    }
+    setAmbientIntensityInShaders("gDirectionalLight.AmbientIntensity", intensity);
 }
 
 GLfloat Light::getAmbientIntensity()
@@ -75,16 +75,42 @@ GLfloat Light::getAmbientIntensity()
     return mAmbientIntensity;
 }
 
-void Light::setAmbientColorInShader(Shader& shader)
+glm::vec4 Light::getDiffuseDirection()
 {
-    shader.use();
-    glUniform4fv(shader.getUniform("gDirectionalLight.Color"), 1, glm::value_ptr(mAmbientColor));
-    shader.unUse();
+    return mDiffuseDirection;
 }
 
-void Light::setAmbientIntensityInShader(Shader& shader)
+void Light::setDiffuseDirection(glm::vec4& direction)
 {
-    shader.use();
-    glUniform1f(shader.getUniform("gDirectionalLight.AmbientIntensity"), mAmbientIntensity);
-    shader.unUse();
+    mDiffuseDirection = direction;
+    setVector4InShaders("gDirectionalLight.Direction", direction);
+}
+
+void Light::setDiffuseIntensity(GLfloat intensity)
+{
+    mDiffuseIntensity = intensity;
+    setAmbientIntensityInShaders("gDirectionalLight.DiffuseIntensity", intensity);
+}
+
+GLfloat Light::getDiffuseIntensity()
+{
+    return mDiffuseIntensity;
+}
+
+void Light::setVector4InShaders(const string& variableName, glm::vec4& value)
+{
+    for (auto shader : mShaders) {
+        shader->use();
+        glUniform4fv(shader->getUniform(variableName.c_str()), 1, glm::value_ptr(value));
+        shader->unUse();
+    }
+}
+
+void Light::setAmbientIntensityInShaders(const string& variableName, GLfloat value)
+{
+    for (auto shader : mShaders) {
+        shader->use();
+        glUniform1f(shader->getUniform(variableName.c_str()), value);
+        shader->unUse();
+    }
 }

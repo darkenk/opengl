@@ -27,24 +27,42 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "mainwindow.hpp"
-#include "ui_mainwindow.h"
+#ifndef VECTORSETTER_HPP
+#define VECTORSETTER_HPP
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow{parent},
-    ui{new Ui::MainWindow}
-{
-    ui->setupUi(this);
-    connect(ui->mRenderWindow, SIGNAL(initialized()), this, SLOT(onGLInitialized()));
+#include <QWidget>
+#include <QtWidgets/QGroupBox>
+#include <glm/glm.hpp>
+#include "valueslider.hpp"
+
+namespace Ui {
+class VectorSetter;
 }
 
-MainWindow::~MainWindow()
+class VectorSetter : public QWidget
 {
-    delete ui;
-    ui = nullptr;
-}
+    Q_OBJECT
 
-void MainWindow::onGLInitialized()
-{
-    ui->mLightSettings->setLight(ui->mRenderWindow->getRenderer().getLight());
-}
+public:
+    explicit VectorSetter(QWidget *parent = 0);
+    ~VectorSetter();
+    void setValue(const glm::vec4& vec);
+    void setValuesNames(const std::vector<const char*>& names);
+    void setName(const char* name);
+    void setRange(const std::vector<std::pair<float, float>>& range);
+
+signals:
+    void vectorChanged(glm::vec4* vec);
+
+protected slots:
+    void onXValueChanged(float v);
+    void onYValueChanged(float v);
+    void onZValueChanged(float v);
+    void onWValueChanged(float v);
+
+private:
+    Ui::VectorSetter *ui;
+    glm::vec4 mVectorValue;
+};
+
+#endif // VECTORSETTER_HPP
