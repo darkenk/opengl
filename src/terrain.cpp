@@ -68,13 +68,13 @@ void Terrain::generate()
         upperLine = (y - 1) * mWidth;
         lowerLine = y * mWidth;
         for (GLuint x = 1; x < mWidth; x++) {
-            mIndices->push_back(upperLine + x - 1);
+            mIndices->push_back(lowerLine + x);
             mIndices->push_back(upperLine + x);
-            mIndices->push_back(lowerLine + x);
-
             mIndices->push_back(upperLine + x - 1);
-            mIndices->push_back(lowerLine + x);
+
             mIndices->push_back(lowerLine + x - 1);
+            mIndices->push_back(lowerLine + x);
+            mIndices->push_back(upperLine + x - 1);
         }
     }
 

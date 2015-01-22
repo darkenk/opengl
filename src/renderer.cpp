@@ -42,15 +42,16 @@ Renderer::Renderer()
 {
     glewExperimental = GL_TRUE;
     glewInit();
+    // Enable depth test
+    glEnable(GL_DEPTH_TEST);
+    // Accept fragment if it closer to the camera than the former one
+    glDepthFunc(GL_LESS);
+    glEnable(GL_CULL_FACE);
     mShader = make_shared<Shader>("./fragment.glsl", "./vertex.glsl");
     mLight = make_shared<Light>();
     mLight->addShader(mShader);
     addObject(make_shared<ColouredObject>(make_shared<Cube>(), mShader));
     mCamera = make_shared<Camera>(glm::vec3{0.0f, 0.0f, 12.0f});
-    // Enable depth test
-    glEnable(GL_DEPTH_TEST);
-    // Accept fragment if it closer to the camera than the former one
-    glDepthFunc(GL_LESS);
     auto object = make_shared<ColouredObject>(make_shared<Terrain>(1024, 1024), mShader);
     glm::mat4 m = glm::translate(glm::mat4(), glm::vec3(-12.0f, -3.0f, -24.0f));
     object->setModel(m);
