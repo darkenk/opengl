@@ -32,12 +32,20 @@
 
 #include "iobject.hpp"
 #include "buffer.hpp"
+#include <vector>
 
 class Cube : public IObject {
 public:
     Cube();
     VertexVectorPtr getVertices();
     IndexVectorPtr getIndices();
+
+private:
+    inline std::vector<Vertex> generateFront();
+    inline void generateVertices();
+    inline void generateIndices();
+    std::shared_ptr<std::vector<Vertex>> mVertices;
+    std::shared_ptr<std::vector<Index>> mIndices;
 };
 
 class Triangle : public IObject {

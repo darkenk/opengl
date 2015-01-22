@@ -46,7 +46,7 @@ Renderer::Renderer()
     mLight = make_shared<Light>();
     mLight->addShader(mShader);
     addObject(make_shared<ColouredObject>(make_shared<Cube>(), mShader));
-    mCamera = make_shared<Camera>();
+    mCamera = make_shared<Camera>(glm::vec3{0.0f, 0.0f, 12.0f});
     // Enable depth test
     glEnable(GL_DEPTH_TEST);
     // Accept fragment if it closer to the camera than the former one

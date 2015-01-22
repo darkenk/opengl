@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014, Dariusz Kluska <darkenk@gmail.com>
+ * Copyright (C) 2015, Dariusz Kluska <darkenk@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,18 +27,20 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef UTILS_H
-#define UTILS_H
+#include "vertex.hpp"
+#include "logger.hpp"
 
-#include <GL/glew.h>
+void Vertex::rotateX(const Radians& angle) {
+    position = Position{glm::rotateX(position, static_cast<float>(angle))};
+    normal = Vector{glm::rotateX(normal, static_cast<float>(angle))};
+}
 
-#include <memory>
-#include <vector>
+void Vertex::rotateY(const Radians& angle) {
+    position = Position{glm::rotateY(position, static_cast<float>(angle))};
+    normal = Vector{glm::rotateY(normal, static_cast<float>(angle))};
+}
 
-std::string getBasePath();
-void setBasePath(const std::string& path);
-
-GLint convertGLTypeToSize(GLenum type);
-void checkGlError(const char* funcName);
-
-#endif // UTILS_H
+void Vertex::rotateZ(const Radians& angle) {
+    position = Position{glm::rotateZ(position, static_cast<float>(angle))};
+    normal = Vector{glm::rotateZ(normal, static_cast<float>(angle))};
+}

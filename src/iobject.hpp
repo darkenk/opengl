@@ -31,6 +31,7 @@
 #define IOBJECT_HPP
 
 #include "utils.hpp"
+#include "units/vertex.hpp"
 
 class IObject
 {

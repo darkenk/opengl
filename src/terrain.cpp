@@ -56,10 +56,10 @@ void Terrain::generate()
     // TODO: ugly function, made a refactor
     for (unsigned int y = 0; y < mHeight; y++) {
         for (unsigned int x = 0; x < mWidth; x++) {
-            mVertices->push_back(Vertex{glm::vec4{static_cast<float>(x), 0.0f,
-                                                  static_cast<float>(y), 1.0f},
-                                        glm::vec4{1.0f, 1.0f, 0.2f, 1.0f},
-                                        glm::vec4{0.0f, 1.0f, 0.0f, 0.0f}});
+            mVertices->push_back(Vertex{Position{static_cast<Meter>(x), 0.0_m,
+                                                  static_cast<Meter>(y)},
+                                        Color{1.0f, 1.0f, 0.2f, 1.0f},
+                                        Vector{0.0f, 1.0f, 0.0f}});
         }
     }
     unsigned int upperLine;

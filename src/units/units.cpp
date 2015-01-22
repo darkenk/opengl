@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014, Dariusz Kluska <darkenk@gmail.com>
+ * Copyright (C) 2015, Dariusz Kluska <darkenk@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,18 +27,4 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef UTILS_H
-#define UTILS_H
-
-#include <GL/glew.h>
-
-#include <memory>
-#include <vector>
-
-std::string getBasePath();
-void setBasePath(const std::string& path);
-
-GLint convertGLTypeToSize(GLenum type);
-void checkGlError(const char* funcName);
-
-#endif // UTILS_H
+#include "units.hpp"

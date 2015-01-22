@@ -28,7 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "buffer.cpp"
-#include "utils.hpp"
+#include "units/vertex.hpp"
 
 template class Buffer<Vertex>;
 template class Buffer<unsigned int>;

@@ -28,52 +28,69 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "cube.hpp"
+
 #include <vector>
+#include <glm/gtc/constants.hpp>
+#include <algorithm>
 
 using namespace std;
 
 Cube::Cube()
 {
+    mVertices = make_shared<vector<Vertex>>();
+    mIndices = make_shared<vector<Index>>();
+    generateVertices();
+    generateIndices();
 }
 
 VertexVectorPtr Cube::getVertices() {
-    VertexVectorPtr v = make_shared<VertexVector>(initializer_list<Vertex>{
-        Vertex( glm::vec4(-0.5f, 0.5f, -0.5f, 1.0),
-                glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)),
-        Vertex( glm::vec4( 0.5f, 0.5f, -0.5f, 1.0),
-                glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)),
-        Vertex( glm::vec4(-0.5f, -0.5f, -0.5f, 1.0),
-                glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)),
-        Vertex( glm::vec4( 0.5f, -0.5f, -0.5f, 1.0), //3
-                glm::vec4(1.0f, 1.0f, 0.0f, 1.0f)),
-        Vertex( glm::vec4(-0.5f, 0.5f,  0.5f, 1.0), //
-                glm::vec4(0.0f, 1.0f, 1.0f, 1.0f)),
-        Vertex( glm::vec4( 0.5f, 0.5f,  0.5f, 1.0),
-                glm::vec4(1.0f, 0.0f, 1.0f, 1.0f)),
-        Vertex( glm::vec4(-0.5f, -0.5f, 0.5f, 1.0),
-                glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)),
-        Vertex( glm::vec4( 0.5f, -0.5f, 0.5f, 1.0), //7
-                glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)),
-    });
-    return v;
+    return mVertices;
 }
 
 IndexVectorPtr Cube::getIndices() {
-    IndexVectorPtr v = make_shared<IndexVector>(initializer_list<Index>{
-        1, 0, 2,
-        1, 2, 3,
-        5, 4, 6,
-        5, 6, 7,
-        1, 5, 7,
-        1, 7, 3,
-        0, 4, 6,
-        0, 6, 2,
-        0, 4, 5,
-        5, 1, 0,
-        2, 6, 7,
-        2, 7, 3
-    });
-    return v;
+    return mIndices;
+}
+
+vector<Vertex> Cube::generateFront()
+{
+    const Color color{0.0f, 1.0f, 1.0f, 1.0f};
+    const Vector normal{0.0f, 0.0f, -1.0f};
+    vector<Vertex> tmp;
+    Vertex v{Position{-0.5_m, -0.5_m, 0.5_m}, color, normal};
+    for (int i = 0; i < 4; ++i) {
+        tmp.push_back(v);
+        v.rotateZ(Radians{-glm::half_pi<float>()});
+    }
+    return tmp;
+}
+
+void Cube::generateVertices()
+{
+    vector<Vertex> tmp{generateFront()};
+    int i = 4;
+    while (i--) {
+        mVertices->insert(mVertices->end(), tmp.begin(), tmp.end());
+        for_each(tmp.begin(), tmp.end(), [](Vertex& v) {
+            v.rotateY(Radians{glm::half_pi<float>()});
+        });
+    }
+    for_each(tmp.begin(), tmp.end(), [](Vertex& v) { v.rotateX(Radians{glm::half_pi<float>()}); });
+    mVertices->insert(mVertices->end(), tmp.begin(), tmp.end());
+    for_each(tmp.begin(), tmp.end(), [](Vertex& v) { v.rotateX(Radians{glm::pi<float>()}); });
+    mVertices->insert(mVertices->end(), tmp.begin(), tmp.end());
+}
+
+void Cube::generateIndices()
+{
+    constexpr Index verticesPerFace = 4;
+    for (Index face = 0; face < 6; ++face) {
+        mIndices->push_back(face * verticesPerFace);
+        mIndices->push_back(face * verticesPerFace + 1);
+        mIndices->push_back(face * verticesPerFace + 2);
+        mIndices->push_back(face * verticesPerFace + 2);
+        mIndices->push_back(face * verticesPerFace + 3);
+        mIndices->push_back(face * verticesPerFace);
+    }
 }
 
 IndexVectorPtr Triangle::getIndices() {
@@ -83,12 +100,12 @@ IndexVectorPtr Triangle::getIndices() {
 
 VertexVectorPtr Triangle::getVertices() {
     VertexVectorPtr v = make_shared<VertexVector>(initializer_list<Vertex>{
-         Vertex( glm::vec4(-1.0f, -1.0f, 0.0f, 1.0f),
-                 glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)),
-         Vertex( glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
-                 glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)),
-         Vertex( glm::vec4(1.0f, -1.0f, 0.0f, 1.0f),
-                 glm::vec4(0.0f, 0.0f, 1.0f, 1.0f))
+         Vertex{Position{-1.0_m, -1.0_m, 0.0_m},
+                Color{1.0f, 0.0f, 0.0f, 1.0f}},
+         Vertex{Position{0.0_m, 1.0_m, 0.0_m},
+                Color{0.0f, 1.0f, 0.0f, 1.0f}},
+         Vertex{Position{1.0_m, -1.0_m, 0.0_m},
+                Color{0.0f, 0.0f, 1.0f, 1.0f}}
     });
     return v;
 }

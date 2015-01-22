@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014, Dariusz Kluska <darkenk@gmail.com>
+ * Copyright (C) 2015, Dariusz Kluska <darkenk@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,18 +27,37 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef VERTEX_HPP
+#define VERTEX_HPP
 
-#include <GL/glew.h>
-
-#include <memory>
+#include <glm/glm.hpp>
+#include <glm/gtx/rotate_vector.hpp>
+#include <ostream>
 #include <vector>
+#include <memory>
+#include "units.hpp"
 
-std::string getBasePath();
-void setBasePath(const std::string& path);
+struct Vertex
+{
+    Vertex(Position pos, Color col = Color{1.0f, 1.0f, 0.2f, 1.0f},
+           Vector nor = Vector{1.0f, 1.0f, 1.0f}) : position(pos), color(col), normal(nor) {}
+    Position position;
+    Color color;
+    Vector normal;
+    friend std::ostream& operator<<(std::ostream& o, const Vertex& v) {
+        return o << "Vertex " << v.position;
+    }
 
-GLint convertGLTypeToSize(GLenum type);
-void checkGlError(const char* funcName);
+    void rotateX(const Radians& angle);
+    void rotateY(const Radians& angle);
+    void rotateZ(const Radians& angle);
+};
 
-#endif // UTILS_H
+typedef std::vector<Vertex> VertexVector;
+typedef std::shared_ptr<VertexVector> VertexVectorPtr;
+
+typedef unsigned int Index;
+typedef std::vector<Index> IndexVector;
+typedef std::shared_ptr<IndexVector> IndexVectorPtr;
+
+#endif // VERTEX_HPP

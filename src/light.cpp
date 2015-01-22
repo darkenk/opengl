@@ -34,9 +34,9 @@ using namespace std;
 
 Light::Light() :
     mAmbientColor{glm::vec4{0.0f, 1.0f, 1.0f, 1.0f}},
-    mAmbientIntensity{1.0f},
+    mAmbientIntensity{0.5f},
     mDiffuseDirection{glm::vec4{1.0f, 1.0f, 0.0f, 1.0f}},
-    mDiffuseIntensity{1.0f}
+    mDiffuseIntensity{0.5f}
 {
 }
 
