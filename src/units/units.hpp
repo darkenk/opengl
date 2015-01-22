@@ -31,6 +31,7 @@
 #define UNITS_HPP
 
 #include <glm/glm.hpp>
+#include <glm/gtx/constants.hpp>
 #include <ostream>
 
 class Radians
@@ -39,9 +40,17 @@ public:
     explicit constexpr Radians(const float radians) : mAngle(radians) {}
     explicit operator float() const { return mAngle; }
 
+    template<typename T>
+    Radians operator/(const T v) const { return Radians{mAngle / v}; }
+
+    template<typename T>
+    Radians operator*(const T v) const { return Radians{mAngle * v}; }
+
 private:
     float mAngle;
 };
+
+constexpr Radians PI{3.14159265358979323846264338327950288f};
 
 template<int M, int K, int S>
 struct Unit

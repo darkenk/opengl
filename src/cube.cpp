@@ -59,7 +59,7 @@ vector<Vertex> Cube::generateFront()
     Vertex v{Position{-0.5_m, -0.5_m, 0.5_m}, color, normal};
     for (int i = 0; i < 4; ++i) {
         tmp.push_back(v);
-        v.rotateZ(Radians{-glm::half_pi<float>()});
+        v.rotateZ(PI/2);
     }
     return tmp;
 }
@@ -70,13 +70,11 @@ void Cube::generateVertices()
     int i = 4;
     while (i--) {
         mVertices->insert(mVertices->end(), tmp.begin(), tmp.end());
-        for_each(tmp.begin(), tmp.end(), [](Vertex& v) {
-            v.rotateY(Radians{glm::half_pi<float>()});
-        });
+        for_each(tmp.begin(), tmp.end(), [](Vertex& v) { v.rotateY(PI/2); });
     }
-    for_each(tmp.begin(), tmp.end(), [](Vertex& v) { v.rotateX(Radians{glm::half_pi<float>()}); });
+    for_each(tmp.begin(), tmp.end(), [](Vertex& v) { v.rotateX(PI/2); });
     mVertices->insert(mVertices->end(), tmp.begin(), tmp.end());
-    for_each(tmp.begin(), tmp.end(), [](Vertex& v) { v.rotateX(Radians{glm::pi<float>()}); });
+    for_each(tmp.begin(), tmp.end(), [](Vertex& v) { v.rotateX(PI); });
     mVertices->insert(mVertices->end(), tmp.begin(), tmp.end());
 }
 
