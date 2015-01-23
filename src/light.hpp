@@ -34,6 +34,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include "shader.hpp"
+#include "units/units.hpp"
 
 class Light
 {
@@ -52,6 +53,8 @@ public:
     void setDiffuseIntensity(GLfloat intensity);
     GLfloat getDiffuseIntensity();
 
+    void setEyePosition(const Vector& v);
+
 private:
     inline void setVector4InShaders(const std::string& variableName, glm::vec4& value);
     inline void setAmbientIntensityInShaders(const std::string& variableName, GLfloat value);
@@ -61,6 +64,7 @@ private:
     GLfloat mAmbientIntensity;
     glm::vec4 mDiffuseDirection;
     GLfloat mDiffuseIntensity;
+    Vector mEyePosition;
 };
 
 #endif // LIGHT_HPP

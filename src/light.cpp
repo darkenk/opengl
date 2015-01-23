@@ -36,7 +36,8 @@ Light::Light() :
     mAmbientColor{glm::vec4{0.0f, 1.0f, 1.0f, 1.0f}},
     mAmbientIntensity{0.5f},
     mDiffuseDirection{glm::vec4{1.0f, 1.0f, 0.0f, 1.0f}},
-    mDiffuseIntensity{0.5f}
+    mDiffuseIntensity{0.5f},
+    mEyePosition{0.0f, 0.0f, 0.0f}
 {
 }
 
@@ -95,6 +96,12 @@ void Light::setDiffuseIntensity(GLfloat intensity)
 GLfloat Light::getDiffuseIntensity()
 {
     return mDiffuseIntensity;
+}
+
+void Light::setEyePosition(const Vector& v)
+{
+     mEyePosition = v;
+     setVector4InShaders("gEyePosition", mEyePosition);
 }
 
 void Light::setVector4InShaders(const string& variableName, glm::vec4& value)

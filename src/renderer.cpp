@@ -66,6 +66,7 @@ void Renderer::render()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glm::mat4 tmp = mProjection * mCamera->getMatrix();
+    mLight->setEyePosition(mCamera->getPosition());
     for (auto object : mObjects) {
         object->setVpMatrix(tmp);
         object->render();

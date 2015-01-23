@@ -34,6 +34,7 @@
 #include <string>
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
+#include "units/units.hpp"
 
 class Camera
 {
@@ -53,6 +54,8 @@ public:
     void rotateUp(float angle = 0.1f);
     void rotateDown(float angle = 0.1f);
     std::string dump();
+
+    Vector getPosition();
 
 private:
     void update();

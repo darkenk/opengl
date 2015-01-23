@@ -114,6 +114,11 @@ string Camera::dump()
     return s.str();
 }
 
+Vector Camera::getPosition()
+{
+    return Vector{mPosition.x, mPosition.y, mPosition.z};
+}
+
 void Camera::update()
 {
     glm::mat4 rot = glm::yawPitchRoll(mYaw, mPitch, mRoll);

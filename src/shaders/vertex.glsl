@@ -37,6 +37,7 @@ layout(location=2) in vec4 inNormal;
 // output from shader
 out vec4 vColor;
 out vec4 vNormal;
+out vec4 WorldPos0;
 
 uniform mat4 gWorld;
 uniform mat4 gWVP;
@@ -46,4 +47,5 @@ void main(void)
     gl_Position = gWVP * inPosition;
     vColor = inColor;
     vNormal = gWorld * inNormal;
+    WorldPos0 = gWorld * inPosition;
 }

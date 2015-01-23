@@ -32,6 +32,7 @@
 // input from shader
 in vec4 vColor;
 in vec4 vNormal;
+in vec4 WorldPos0;
 out vec4 out_Color;
 
 struct DirectionalLight
@@ -50,15 +51,31 @@ uniform DirectionalLight gDirectionalLight = DirectionalLight(
             1.0,
             vec4(1.0, 1.0, 1.0, 1.0));
 
+uniform vec4 gEyePosition = vec4(0.0, 0.0, 0.0, 1.0);
+uniform float gMatSpecularIntensity = 1.0;
+uniform float gSpecularPower = 32;
+
 void main(void)
 {
-    float DiffuseFactor = dot(normalize(vNormal), -gDirectionalLight.Direction);
-    vec4 DiffuseColor;
+    vec4 AmbientColor = gDirectionalLight.Color * gDirectionalLight.AmbientIntensity;
+    vec4 LightDirection = -gDirectionalLight.Direction;
+    vec3 Normal = normalize(vNormal.xyz);
+
+    float DiffuseFactor = dot(Normal, LightDirection.xyz);
+
+    vec4 DiffuseColor = vec4(0, 0, 0, 0);
+    vec4 SpecularColor = vec4(0, 0, 0, 0);
+
     if (DiffuseFactor > 0) {
-        DiffuseColor = vec4(gDirectionalLight.Color) * gDirectionalLight.DiffuseIntensity * DiffuseFactor;
+        DiffuseColor = vec4(gDirectionalLight.Color) * gDirectionalLight.DiffuseIntensity *DiffuseFactor;
+
+        vec3 VertexToEye = normalize(gEyePosition.xyz - WorldPos0.xyz);
+        vec3 LightReflect = normalize(reflect(gDirectionalLight.Direction.xyz, Normal));
+        float SpecularFactor = dot(VertexToEye, LightReflect);
+        SpecularFactor = pow(SpecularFactor, gSpecularPower);
+        if (SpecularFactor > 0) {
+            SpecularColor = vec4(gDirectionalLight.Color) * gMatSpecularIntensity * SpecularFactor;
+        }
     }
-    else {
-        DiffuseColor = vec4(0, 0, 0, 0);
-    }
-    out_Color = vColor * (gDirectionalLight.Color * gDirectionalLight.AmbientIntensity + DiffuseColor);
+    out_Color = vColor * (AmbientColor + DiffuseColor + SpecularColor);
 }
