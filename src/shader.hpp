@@ -39,7 +39,7 @@
 class Shader
 {
 public:
-    Shader(const std::string& fragmentShader, const std::string& vertexShader);
+    Shader(const std::vector<std::pair<GLuint, const std::string>>& shaders);
     ~Shader();
     void use();
     void unUse();

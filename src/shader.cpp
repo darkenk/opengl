@@ -38,12 +38,13 @@
 
 using namespace std;
 
-Shader::Shader(const string& fragmentShader, const string& vertexShader) :
+Shader::Shader(const std::vector<std::pair<GLuint, const string>>& shaders) :
     mProgramId(0)
 {
     glGetError();
-    mShaderIds.push_back(createShader(fragmentShader, GL_FRAGMENT_SHADER));
-    mShaderIds.push_back(createShader(vertexShader, GL_VERTEX_SHADER));
+    for (const auto& shader : shaders) {
+        mShaderIds.push_back(createShader(shader.second, shader.first));
+    }
     createProgram();
 }
 
