@@ -48,8 +48,8 @@ Renderer::Renderer()
     glDepthFunc(GL_LESS);
     glEnable(GL_CULL_FACE);
     vector<pair<GLuint, const string>> shaders{
-        pair<GLuint, const string>(GL_FRAGMENT_SHADER, "./fragment.glsl"),
-        pair<GLuint, const string>(GL_VERTEX_SHADER, "./vertex.glsl")};
+        pair<GLuint, const string>(GL_FRAGMENT_SHADER, "opengl_shaders/fragment.glsl"),
+        pair<GLuint, const string>(GL_VERTEX_SHADER, "opengl_shaders/vertex.glsl")};
     mShader = make_shared<Shader>(shaders);
     mLight = make_shared<Light>();
     mLight->addShader(mShader);

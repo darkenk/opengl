@@ -34,7 +34,7 @@
 #include <vector>
 #include <GL/glew.h>
 #include <memory>
-#include <buffer.hpp>
+#include "buffer.hpp"
 
 class Shader
 {
