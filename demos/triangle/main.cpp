@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014, Dariusz Kluska <darkenk@gmail.com>
+ * Copyright (C) 2015, Dariusz Kluska <darkenk@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,33 +27,22 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef MYGLWIDGET_HPP
-#define MYGLWIDGET_HPP
+#include <QApplication>
+#include <string>
+#include "utils.hpp"
+#include "trianglewidget.hpp"
 
-#include "renderer.hpp"
-#include <QGLWidget>
-#include <memory>
+using namespace std;
 
-class MyGLWidget : public QGLWidget
+int main(int argc, char *argv[])
 {
-    Q_OBJECT
-public:
-    MyGLWidget(QWidget *parent = 0);
-    virtual ~MyGLWidget();
-    Renderer& getRenderer() { return *mRenderer; }
-
-signals:
-    void initialized();
-
-protected:
-    virtual void initializeGL();
-    virtual void paintGL();
-    virtual void resizeGL(int width, int height);
-    virtual void keyPressEvent(QKeyEvent* e);
-    virtual void initScene() = 0;
-
-private:
-    std::shared_ptr<Renderer> mRenderer;
-};
-
-#endif // MYGLWIDGET_HPP
+    {
+        string s(argv[0]);
+        s.erase(s.find_last_of("/")+1);
+        setBasePath(s);
+    }
+    QApplication app(argc, argv);
+    TriangleWidget widget;
+    widget.show();
+    return app.exec();
+}

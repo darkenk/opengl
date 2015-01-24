@@ -38,7 +38,7 @@
      </widget>
     </item>
     <item>
-     <widget class="MyGLWidget" name="mRenderWindow" native="true">
+     <widget class="LightSceneWidget" name="mRenderWindow" native="true">
       <property name="enabled">
        <bool>true</bool>
       </property>
@@ -72,15 +72,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>MyGLWidget</class>
-   <extends>QWidget</extends>
-   <header>myglwidget.hpp</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>LightSettings</class>
    <extends>QWidget</extends>
    <header>lightsettings.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>LightSceneWidget</class>
+   <extends>QWidget</extends>
+   <header>lightscenewidget.hpp</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

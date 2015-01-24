@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014, Dariusz Kluska <darkenk@gmail.com>
+ * Copyright (C) 2015, Dariusz Kluska <darkenk@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,33 +27,32 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef MYGLWIDGET_HPP
-#define MYGLWIDGET_HPP
+#include "lightscenewidget.hpp"
+#include <vector>
+#include <utility>
+#include "shader.hpp"
+#include "terrain.hpp"
+#include "colouredobject.hpp"
+#include "cube.hpp"
 
-#include "renderer.hpp"
-#include <QGLWidget>
-#include <memory>
+using namespace std;
 
-class MyGLWidget : public QGLWidget
+LightSceneWidget::LightSceneWidget(QWidget* parent) :
+    MyGLWidget(parent)
 {
-    Q_OBJECT
-public:
-    MyGLWidget(QWidget *parent = 0);
-    virtual ~MyGLWidget();
-    Renderer& getRenderer() { return *mRenderer; }
 
-signals:
-    void initialized();
+}
 
-protected:
-    virtual void initializeGL();
-    virtual void paintGL();
-    virtual void resizeGL(int width, int height);
-    virtual void keyPressEvent(QKeyEvent* e);
-    virtual void initScene() = 0;
-
-private:
-    std::shared_ptr<Renderer> mRenderer;
-};
-
-#endif // MYGLWIDGET_HPP
+void LightSceneWidget::initScene()
+{
+    vector<pair<GLuint, const string>> shaders{
+        pair<GLuint, const string>(GL_FRAGMENT_SHADER, "opengl_shaders/fragment.glsl"),
+        pair<GLuint, const string>(GL_VERTEX_SHADER, "opengl_shaders/vertex.glsl")};
+    shared_ptr<Shader> shader = make_shared<Shader>(shaders);
+    getRenderer().getLight()->addShader(shader);
+    getRenderer().addObject(make_shared<ColouredObject>(make_shared<Cube>(), shader));
+    auto object = make_shared<ColouredObject>(make_shared<Terrain>(1024, 1024), shader);
+    glm::mat4 m = glm::translate(glm::mat4(), glm::vec3(-12.0f, -3.0f, -24.0f));
+    object->setModel(m);
+    getRenderer().addObject(object);
+}

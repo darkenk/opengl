@@ -47,18 +47,8 @@ Renderer::Renderer()
     // Accept fragment if it closer to the camera than the former one
     glDepthFunc(GL_LESS);
     glEnable(GL_CULL_FACE);
-    vector<pair<GLuint, const string>> shaders{
-        pair<GLuint, const string>(GL_FRAGMENT_SHADER, "opengl_shaders/fragment.glsl"),
-        pair<GLuint, const string>(GL_VERTEX_SHADER, "opengl_shaders/vertex.glsl")};
-    mShader = make_shared<Shader>(shaders);
     mLight = make_shared<Light>();
-    mLight->addShader(mShader);
-    addObject(make_shared<ColouredObject>(make_shared<Cube>(), mShader));
     mCamera = make_shared<Camera>(glm::vec3{0.0f, 0.0f, 12.0f});
-    auto object = make_shared<ColouredObject>(make_shared<Terrain>(1024, 1024), mShader);
-    glm::mat4 m = glm::translate(glm::mat4(), glm::vec3(-12.0f, -3.0f, -24.0f));
-    object->setModel(m);
-    addObject(object);
 }
 
 Renderer::~Renderer()

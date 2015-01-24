@@ -48,6 +48,7 @@ MyGLWidget::~MyGLWidget()
 void MyGLWidget::initializeGL()
 {
     mRenderer = make_shared<Renderer>();
+    initScene();
     emit initialized();
 }
 

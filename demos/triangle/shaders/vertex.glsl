@@ -27,33 +27,20 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef MYGLWIDGET_HPP
-#define MYGLWIDGET_HPP
+#version 330
 
-#include "renderer.hpp"
-#include <QGLWidget>
-#include <memory>
+// input from application
+layout(location=0) in vec4 inPosition;
+layout(location=1) in vec4 inColor;
 
-class MyGLWidget : public QGLWidget
+uniform mat4 gWorld;
+uniform mat4 gWVP;
+
+out vec4 vColor;
+
+void main(void)
 {
-    Q_OBJECT
-public:
-    MyGLWidget(QWidget *parent = 0);
-    virtual ~MyGLWidget();
-    Renderer& getRenderer() { return *mRenderer; }
+    gl_Position = gWVP * inPosition;
+    vColor = inColor;
+}
 
-signals:
-    void initialized();
-
-protected:
-    virtual void initializeGL();
-    virtual void paintGL();
-    virtual void resizeGL(int width, int height);
-    virtual void keyPressEvent(QKeyEvent* e);
-    virtual void initScene() = 0;
-
-private:
-    std::shared_ptr<Renderer> mRenderer;
-};
-
-#endif // MYGLWIDGET_HPP

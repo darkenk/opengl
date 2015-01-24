@@ -1,4 +1,4 @@
-project(light_demo)
+project(triangle)
 
 # automoc generate some code which doesn't compile and thus this flag
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-undefined-reinterpret-cast")
@@ -15,7 +15,8 @@ file(GLOB UI_FILES *.ui)
 qt5_wrap_ui(UI_HEADERS ${UI_FILES})
 file(GLOB SRC_FILES *.cpp)
 file(GLOB INC_FILES *.hpp)
-add_executable(${PROJECT_NAME} ${SRC_FILES} ${UI_HEADERS} $<TARGET_OBJECTS:opengl_lib> $<TARGET_OBJECTS:qt>)
+file(GLOB SHADER_FILES shaders/*.glsl)
+add_executable(${PROJECT_NAME} ${SRC_FILES} ${UI_HEADERS} ${SHADER_FILES} $<TARGET_OBJECTS:opengl_lib> $<TARGET_OBJECTS:qt>)
 
 target_link_libraries(${PROJECT_NAME}
     Qt5::Widgets

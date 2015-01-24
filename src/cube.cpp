@@ -92,18 +92,20 @@ void Cube::generateIndices()
 }
 
 IndexVectorPtr Triangle::getIndices() {
-    IndexVectorPtr v = make_shared<IndexVector>(initializer_list<Index>{1, 2, 0});
+    IndexVectorPtr v = make_shared<IndexVector>(initializer_list<Index>{2, 1, 0});
     return v;
 }
 
 VertexVectorPtr Triangle::getVertices() {
+
+    const Vector normal{0.0f, 0.0f, -1.0f};
     VertexVectorPtr v = make_shared<VertexVector>(initializer_list<Vertex>{
          Vertex{Position{-1.0_m, -1.0_m, 0.0_m},
-                Color{1.0f, 0.0f, 0.0f, 1.0f}},
+                Color{1.0f, 0.0f, 0.0f, 1.0f}, normal},
          Vertex{Position{0.0_m, 1.0_m, 0.0_m},
-                Color{0.0f, 1.0f, 0.0f, 1.0f}},
+                Color{0.0f, 1.0f, 0.0f, 1.0f}, normal},
          Vertex{Position{1.0_m, -1.0_m, 0.0_m},
-                Color{0.0f, 0.0f, 1.0f, 1.0f}}
+                Color{0.0f, 0.0f, 1.0f, 1.0f}, normal}
     });
     return v;
 }

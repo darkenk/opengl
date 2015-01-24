@@ -71,12 +71,11 @@ void Buffer<T>::setAttributes(const AttributeVector& attrs)
     if (stride != sizeof(T)) {
         LOGE << "Stride: " << stride << " is different than sizeof(T) " << sizeof(T);
     }
-    LOGV << " stride " << stride;
     GLsizei offset{0};
     for (auto attr : attrs) {
         glEnableVertexAttribArray(attr.mIndex);
         glVertexAttribPointer(attr.mIndex, attr.mSize, attr.mType, GL_FALSE,
-                              stride, reinterpret_cast<GLvoid*>(offset));
+                              sizeof(T), reinterpret_cast<GLvoid*>(offset));
         offset += attr.mFullSize;
     }
 
