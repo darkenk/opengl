@@ -1,6 +1,3 @@
-[submodule "demos/QDarkStyleSheet"]
-	path = demos/qt/QDarkStyleSheet
-	url = https://github.com/darkenk/QDarkStyleSheet
 [submodule "demos/qt/QDarkStyleSheet"]
 	path = demos/qt/QDarkStyleSheet
 	url = https://github.com/darkenk/QDarkStyleSheet

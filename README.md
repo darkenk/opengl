@@ -2,6 +2,7 @@
 
 Project is using [QDarkStyleSheet](https://github.com/ColinDuquesnoy/QDarkStyleSheet) stylesheet for demos. To fetch missing project type:
 ```
+git sumbodule init
 git submodule update
 ```
 
