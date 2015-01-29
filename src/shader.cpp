@@ -124,14 +124,15 @@ AttributeVectorPtr Shader::getAllAttributes()
     GLenum type; // type of attribute
     GLint t;
     GLint s;
+    GLint location;
     AttributeVectorPtr attrs{new AttributeVector};
     for (GLint i = 0; i < attrLength; i++) {
         glGetActiveAttrib(mProgramId, i, BUFF_SIZE, &length, &size, &type, name);
         glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_TYPE, &t);
         glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_SIZE, &s);
-        Attribute a{i, s, t, name, convertGLTypeToSize(type)};
+        location = glGetAttribLocation(mProgramId, name);
+        Attribute a{i, s, t, name, convertGLTypeToSize(type), location};
         attrs->push_back(a);
-        LOGV << a << " type2: " << type;
     }
     unUse();
     return attrs;

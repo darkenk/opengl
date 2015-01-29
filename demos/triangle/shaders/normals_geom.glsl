@@ -27,36 +27,23 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "trianglewidget.hpp"
-#include "colouredobject.hpp"
-#include "cube.hpp"
-#include "terrain.hpp"
-#include <vector>
-#include <utility>
+#version 330
+layout(triangles) in;
+layout(line_strip, max_vertices = 6) out;
 
-using namespace std;
+in vec4 vNormal[]; // Output from vertex shader for each vertex
 
-TriangleWidget::TriangleWidget(QWidget* parent) :
-    MyGLWidget(parent)
-{
-}
+uniform mat4 gWVP;
 
-void TriangleWidget::initScene()
-{
-    auto data = make_shared<Triangle>();
-    {
-        vector<pair<GLuint, const string>> shaders{
-            make_pair(GL_FRAGMENT_SHADER, "triangle_shaders/normals_frag.glsl"),
-            make_pair(GL_GEOMETRY_SHADER, "triangle_shaders/normals_geom.glsl"),
-            make_pair(GL_VERTEX_SHADER, "triangle_shaders/normals_vert.glsl")};
-        shared_ptr<Shader> shader = make_shared<Shader>(shaders);
-        getRenderer().addObject(make_shared<ColouredObject>(data, shader));
-    }
-    {
-        vector<pair<GLuint, const string>> shaders{
-            make_pair(GL_FRAGMENT_SHADER, "triangle_shaders/fragment.glsl"),
-            make_pair(GL_VERTEX_SHADER, "triangle_shaders/vertex.glsl")};
-        shared_ptr<Shader> shader = make_shared<Shader>(shaders);
-        getRenderer().addObject(make_shared<ColouredObject>(data, shader));
+void main() {
+    for(int i = 0; i < gl_in.length(); i++) {
+        gl_Position = gWVP * gl_in[i].gl_Position;
+        EmitVertex();
+
+        gl_Position = gWVP * (gl_in[i].gl_Position + vNormal[i]);
+        EmitVertex();
+
+        EndPrimitive();
     }
 }
+

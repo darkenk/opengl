@@ -31,4 +31,4 @@
 #include "units/vertex.hpp"
 
 template class Buffer<Vertex>;
-template class Buffer<unsigned int>;
+template class Buffer<Index>;

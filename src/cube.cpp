@@ -54,7 +54,7 @@ IndexVectorPtr Cube::getIndices() {
 vector<Vertex> Cube::generateFront()
 {
     const Color color{0.0f, 1.0f, 1.0f, 1.0f};
-    const Vector normal{0.0f, 0.0f, -1.0f};
+    const Vector normal{0.0f, 0.0f, 1.0f};
     vector<Vertex> tmp;
     Vertex v{Position{-0.5_m, -0.5_m, 0.5_m}, color, normal};
     for (int i = 0; i < 4; ++i) {
@@ -97,8 +97,7 @@ IndexVectorPtr Triangle::getIndices() {
 }
 
 VertexVectorPtr Triangle::getVertices() {
-
-    const Vector normal{0.0f, 0.0f, -1.0f};
+    const Vector normal{0.0f, 0.0f, 1.0f};
     VertexVectorPtr v = make_shared<VertexVector>(initializer_list<Vertex>{
          Vertex{Position{-1.0_m, -1.0_m, 0.0_m},
                 Color{1.0f, 0.0f, 0.0f, 1.0f}, normal},

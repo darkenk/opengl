@@ -36,6 +36,7 @@
 #include <vector>
 #include <memory>
 #include "units.hpp"
+#include <array>
 
 struct Vertex
 {
@@ -51,6 +52,8 @@ struct Vertex
     void rotateX(const Radians& angle);
     void rotateY(const Radians& angle);
     void rotateZ(const Radians& angle);
+    // This member declare offsets of members inside Vertex structure
+    static const std::array<const uint, 3> desc;
 };
 
 typedef std::vector<Vertex> VertexVector;

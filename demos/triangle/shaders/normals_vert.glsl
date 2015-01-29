@@ -27,36 +27,19 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "trianglewidget.hpp"
-#include "colouredobject.hpp"
-#include "cube.hpp"
-#include "terrain.hpp"
-#include <vector>
-#include <utility>
+#version 330
 
-using namespace std;
+// input from application
+layout(location=0) in vec4 inPosition;
+layout(location=2) in vec4 inNormal;
 
-TriangleWidget::TriangleWidget(QWidget* parent) :
-    MyGLWidget(parent)
+uniform mat4 gWVP;
+uniform mat4 gWorld;
+
+out vec4 vNormal;
+
+void main(void)
 {
-}
-
-void TriangleWidget::initScene()
-{
-    auto data = make_shared<Triangle>();
-    {
-        vector<pair<GLuint, const string>> shaders{
-            make_pair(GL_FRAGMENT_SHADER, "triangle_shaders/normals_frag.glsl"),
-            make_pair(GL_GEOMETRY_SHADER, "triangle_shaders/normals_geom.glsl"),
-            make_pair(GL_VERTEX_SHADER, "triangle_shaders/normals_vert.glsl")};
-        shared_ptr<Shader> shader = make_shared<Shader>(shaders);
-        getRenderer().addObject(make_shared<ColouredObject>(data, shader));
-    }
-    {
-        vector<pair<GLuint, const string>> shaders{
-            make_pair(GL_FRAGMENT_SHADER, "triangle_shaders/fragment.glsl"),
-            make_pair(GL_VERTEX_SHADER, "triangle_shaders/vertex.glsl")};
-        shared_ptr<Shader> shader = make_shared<Shader>(shaders);
-        getRenderer().addObject(make_shared<ColouredObject>(data, shader));
-    }
+    gl_Position = inPosition;
+    vNormal = inNormal;
 }

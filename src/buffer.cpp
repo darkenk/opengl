@@ -32,6 +32,26 @@
 
 using namespace std;
 
+template<class T, class Enable = void>
+class Offset;
+
+// TODO: quite dirty stuff, used for getting offset of member inside structure
+// is anyway to do it better? This code is needed because simple types like int or float
+// can't declare desc array, so it's needed to have two different implementations
+
+template<typename T>
+class Offset<T, typename std::enable_if<std::is_class<T>::value >::type> {
+public:
+    GLvoid* getOffset(int member) const { return reinterpret_cast<GLvoid*>(
+                    T::desc[static_cast<size_t>(member)]); }
+};
+
+template<class T>
+class Offset<T, typename std::enable_if<not std::is_class<T>::value >::type> {
+public:
+    GLvoid* getOffset(int /*member*/) const { return 0; }
+};
+
 template<typename T>
 Buffer<T>::Buffer(std::shared_ptr<std::vector<T> > data, GLenum target):
     mData{data}, mTarget{target}
@@ -71,12 +91,11 @@ void Buffer<T>::setAttributes(const AttributeVector& attrs)
     if (stride != sizeof(T)) {
         LOGE << "Stride: " << stride << " is different than sizeof(T) " << sizeof(T);
     }
-    GLsizei offset{0};
+    // TODO: this offset looks quite dirty
     for (auto attr : attrs) {
-        glEnableVertexAttribArray(attr.mIndex);
-        glVertexAttribPointer(attr.mIndex, attr.mSize, attr.mType, GL_FALSE,
-                              sizeof(T), reinterpret_cast<GLvoid*>(offset));
-        offset += attr.mFullSize;
+        glEnableVertexAttribArray(attr.mLocation);
+        glVertexAttribPointer(attr.mLocation, attr.mSize, attr.mType, GL_FALSE,
+                              sizeof(T), Offset<T>{}.getOffset(attr.mLocation));
     }
 
 }

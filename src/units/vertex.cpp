@@ -30,6 +30,13 @@
 #include "vertex.hpp"
 #include "logger.hpp"
 
+using namespace std;
+
+const array<const uint, 3> Vertex::desc{
+    offsetof(Vertex, position),
+    offsetof(Vertex, color),
+    offsetof(Vertex, normal)};
+
 void Vertex::rotateX(const Radians& angle) {
     position = Position{glm::rotateX(position, static_cast<float>(angle))};
     normal = Vector{glm::rotateX(normal, static_cast<float>(angle))};
