@@ -22,7 +22,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILER_FLAGS}")
 find_package(OpenGL REQUIRED)
 find_package(GLEW 1.10.0 REQUIRED)
 find_package(GLM 0.9.5.3 REQUIRED)
-#include(FindGLM)
+
 # cpp style checker
 find_package(vera++ QUIET)
 if(vera++_FOUND)
@@ -30,6 +30,7 @@ if(vera++_FOUND)
 endif()
 
 set(USED_LIBRARIES "${OPENGL_LIBRARIES};${GLEW_LIBRARIES};pthread")
+set(USED_INCLUDES "${GLM_INCLUDES}")
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 add_subdirectory(src)

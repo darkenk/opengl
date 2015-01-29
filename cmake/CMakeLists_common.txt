@@ -3,9 +3,10 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__FILENAME__='\"$(subst ${CMAKE_CURRENT_SOURCE_DIR}/,,$(abspath \$<))\"'")
 
 if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/shaders)
+    file(MAKE_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}_shaders)
     add_custom_target(
         ${PROJECT_NAME}copy_shaders ALL
-        COMMAND mkdir -p ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}_shaders && cp ${CMAKE_CURRENT_SOURCE_DIR}/shaders/* ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}_shaders
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/shaders/ ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}_shaders
     )
 endif()
 
@@ -19,3 +20,4 @@ if(vera++_FOUND)
 endif()
 
 include_directories(${CMAKE_SOURCE_DIR}/src/)
+include_directories(${USED_INCLUDES})
