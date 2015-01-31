@@ -1,7 +1,9 @@
 project(light_demo)
 
-# automoc generate some code which doesn't compile and thus this flag
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-undefined-reinterpret-cast")
+if(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
+    # automoc generate some code which doesn't compile and thus this flag
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-undefined-reinterpret-cast")
+endif()
 set(CMAKE_AUTOMOC ON)
 
 find_package(Qt5Widgets REQUIRED)

@@ -32,7 +32,7 @@
 
 using namespace std;
 
-const array<const uint, 3> Vertex::desc{
+const array<const uint32_t, 3> Vertex::desc{
     offsetof(Vertex, position),
     offsetof(Vertex, color),
     offsetof(Vertex, normal)};

@@ -53,7 +53,7 @@ struct Vertex
     void rotateY(const Radians& angle);
     void rotateZ(const Radians& angle);
     // This member declare offsets of members inside Vertex structure
-    static const std::array<const uint, 3> desc;
+    static const std::array<const uint32_t, 3> desc;
 };
 
 typedef std::vector<Vertex> VertexVector;

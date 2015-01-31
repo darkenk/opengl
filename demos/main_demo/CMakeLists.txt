@@ -1,5 +1,4 @@
 project(main_demo)
-find_package(GLUT REQUIRED)
 
 file(GLOB SRC_FILES *.cpp)
 file(GLOB INC_FILES *.hpp)
