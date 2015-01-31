@@ -41,10 +41,10 @@ public:
     explicit operator float() const { return mAngle; }
 
     template<typename T>
-    Radians operator/(const T v) const { return Radians{mAngle / v}; }
+    Radians operator/(const T v) const { return Radians{mAngle / static_cast<float>(v)}; }
 
     template<typename T>
-    Radians operator*(const T v) const { return Radians{mAngle * v}; }
+    Radians operator*(const T v) const { return Radians{mAngle * static_cast<float>(v)}; }
 
 private:
     float mAngle;
@@ -84,7 +84,7 @@ constexpr Meter operator"" _m(long double d) { return Meter(d); }
 class Position : public glm::vec4
 {
 public:
-    explicit Position(Meter x, Meter y, Meter z) : glm::vec4{x, y, z, 1.0f} {}
+    explicit Position(Meter _x, Meter _y, Meter _z) : glm::vec4{_x, _y, _z, 1.0f} {}
     explicit Position(glm::vec4& v) : glm::vec4{v} {}
     explicit Position(glm::vec4&& v) : glm::vec4{v} {}
     friend std::ostream& operator<<(std::ostream& o, const Position& p) {
@@ -95,7 +95,7 @@ public:
 class Color : public glm::vec4
 {
 public:
-    explicit Color(float r, float g, float b, float a) : glm::vec4{r, g, b, a} {}
+    explicit Color(float _r, float _g, float _b, float _a) : glm::vec4{_r, _g, _b, _a} {}
     friend std::ostream& operator<<(std::ostream& o, const Color& c) {
         return o << "c(" << c.x << ", " << c.y << ", " << c.z << ", " << c.w << ")";
     }
@@ -104,7 +104,7 @@ public:
 class Vector : public glm::vec4
 {
 public:
-    explicit Vector(float x, float y, float z) : glm::vec4{x, y, z, 0.0f} {}
+    explicit Vector(float _x, float _y, float _z) : glm::vec4{_x, _y, _z, 0.0f} {}
     explicit Vector(glm::vec4& v) : glm::vec4{v} {}
     explicit Vector(glm::vec4&& v) : glm::vec4{v} {}
     friend std::ostream& operator<<(std::ostream& o, const Vector& d) {

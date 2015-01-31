@@ -36,27 +36,27 @@
 
 using namespace std;
 
-TriangleWidget::TriangleWidget(QWidget* parent) :
-    MyGLWidget(parent)
+TriangleWidget::TriangleWidget(QWidget* _parent) :
+    MyGLWidget(_parent)
 {
 }
 
 void TriangleWidget::initScene()
 {
-    auto data = make_shared<Triangle>();
+    auto triangle = make_shared<Triangle>();
     {
         vector<pair<GLuint, const string>> shaders{
             make_pair(GL_FRAGMENT_SHADER, "triangle_shaders/normals_frag.glsl"),
             make_pair(GL_GEOMETRY_SHADER, "triangle_shaders/normals_geom.glsl"),
             make_pair(GL_VERTEX_SHADER, "triangle_shaders/normals_vert.glsl")};
         shared_ptr<Shader> shader = make_shared<Shader>(shaders);
-        getRenderer().addObject(make_shared<ColouredObject>(data, shader));
+        getRenderer().addObject(make_shared<ColouredObject>(triangle, shader));
     }
     {
         vector<pair<GLuint, const string>> shaders{
             make_pair(GL_FRAGMENT_SHADER, "triangle_shaders/fragment.glsl"),
             make_pair(GL_VERTEX_SHADER, "triangle_shaders/vertex.glsl")};
         shared_ptr<Shader> shader = make_shared<Shader>(shaders);
-        getRenderer().addObject(make_shared<ColouredObject>(data, shader));
+        getRenderer().addObject(make_shared<ColouredObject>(triangle, shader));
     }
 }

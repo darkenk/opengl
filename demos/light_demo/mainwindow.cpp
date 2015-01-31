@@ -30,8 +30,8 @@
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow{parent},
+MainWindow::MainWindow(QWidget *_parent) :
+    QMainWindow{_parent, Qt::Widget},
     ui{new Ui::MainWindow}
 {
     ui->setupUi(this);

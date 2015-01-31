@@ -79,7 +79,7 @@ GLuint Shader::createShader(const string& fileName, GLuint shaderType)
     unique_ptr<string> shader = loadShader(fileName);
     GLuint shaderId = glCreateShader(shaderType);
     const char* str = shader->c_str();
-    glShaderSource(shaderId, 1, &str, NULL);
+    glShaderSource(shaderId, 1, &str, nullptr);
     glCompileShader(shaderId);
     checkCompilationError(shaderId, fileName);
     return shaderId;
@@ -126,12 +126,13 @@ AttributeVectorPtr Shader::getAllAttributes()
     GLint s;
     GLint location;
     AttributeVectorPtr attrs{new AttributeVector};
-    for (GLint i = 0; i < attrLength; i++) {
+    for (GLuint i = 0; i < static_cast<GLuint>(attrLength); i++) {
         glGetActiveAttrib(mProgramId, i, BUFF_SIZE, &length, &size, &type, name);
         glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_TYPE, &t);
         glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_SIZE, &s);
         location = glGetAttribLocation(mProgramId, name);
-        Attribute a{i, s, t, name, convertGLTypeToSize(type), location};
+        Attribute a{i, s, static_cast<GLenum>(t), name, convertGLTypeToSize(type),
+                    static_cast<GLuint>(location)};
         attrs->push_back(a);
     }
     unUse();

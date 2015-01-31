@@ -32,8 +32,8 @@
 
 using namespace std;
 
-VectorSetter::VectorSetter(QWidget *parent) :
-    QWidget(parent),
+VectorSetter::VectorSetter(QWidget *_parent) :
+    QWidget(_parent, Qt::Widget),
     ui(new Ui::VectorSetter)
 {
     ui->setupUi(this);

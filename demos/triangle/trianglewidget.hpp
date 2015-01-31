@@ -36,7 +36,7 @@ class TriangleWidget : public MyGLWidget
 {
     Q_OBJECT
 public:
-    TriangleWidget(QWidget* parent = 0);
+    TriangleWidget(QWidget* _parent = nullptr);
 
 protected:
     virtual void initScene();

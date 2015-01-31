@@ -36,7 +36,7 @@ class LightSceneWidget : public MyGLWidget
 {
     Q_OBJECT
 public:
-    LightSceneWidget(QWidget* parent = 0);
+    LightSceneWidget(QWidget* _parent = nullptr);
 
 protected:
     virtual void initScene();

@@ -39,16 +39,16 @@
 class Attribute
 {
 public:
-    Attribute(GLint index, GLint size, GLint type, GLchar* name, GLint fullSize, GLint location):
+    Attribute(GLuint index, GLint size, GLenum type, GLchar* name, GLint fullSize, GLuint location):
         mIndex{index}, mSize{size}, mType{type}, mFullSize(fullSize), mName{name},
         mLocation{location} {}
 
-    GLint mIndex;
+    GLuint mIndex;
     GLint mSize;
-    GLint mType;
+    GLenum mType;
     GLint mFullSize;
     std::string mName;
-    GLint mLocation;
+    GLuint mLocation;
 
     friend std::ostream& operator<<(std::ostream& of, const Attribute& attr) {
         return of << "Attrib: " << attr.mName << " idx: " << attr.mIndex << std::hex

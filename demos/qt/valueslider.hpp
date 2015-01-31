@@ -40,7 +40,7 @@ class ValueSlider : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ValueSlider(QWidget *parent = 0);
+    explicit ValueSlider(QWidget *_parent = nullptr);
     ~ValueSlider();
     void setName(const QString& name);
     void setRange(float min, float max);

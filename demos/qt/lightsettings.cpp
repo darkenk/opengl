@@ -32,8 +32,8 @@
 
 using namespace std;
 
-LightSettings::LightSettings(QWidget *parent) :
-    QWidget(parent),
+LightSettings::LightSettings(QWidget *_parent) :
+    QWidget(_parent, Qt::Widget),
     ui(new Ui::LightSettings)
 {
     ui->setupUi(this);

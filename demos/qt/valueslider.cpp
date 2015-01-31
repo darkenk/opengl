@@ -30,12 +30,12 @@
 #include "valueslider.hpp"
 #include "ui_valueslider.h"
 
-ValueSlider::ValueSlider(QWidget *parent) :
-    QWidget(parent),
+ValueSlider::ValueSlider(QWidget *_parent) :
+    QWidget(_parent, Qt::Widget),
     ui(new Ui::ValueSlider)
 {
     ui->setupUi(this);
-    mMaxValue = ui->horizontalSlider->maximum();
+    mMaxValue = static_cast<float>(ui->horizontalSlider->maximum());
 }
 
 ValueSlider::~ValueSlider()
@@ -61,7 +61,7 @@ void ValueSlider::setValue(float value)
 
 void ValueSlider::on_horizontalSlider_valueChanged(int value)
 {
-    float v = value/mMaxValue;
+    float v = static_cast<float>(value) / mMaxValue;
     ui->value->setValue(v);
     emit valueChanged(v);
 }

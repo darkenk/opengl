@@ -1,9 +1,9 @@
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # show only file name instead of absolute path
-if(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang|GNU")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__FILENAME__='\"$(subst ${CMAKE_CURRENT_SOURCE_DIR}/,,$(abspath \$<))\"'")
+if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang|GNU")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D\"__FILENAME__=\\\"$(subst ${CMAKE_CURRENT_SOURCE_DIR}/,,$(abspath \$<))\\\"\"")
 elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D__FILENAME__='\"$(subst ${CMAKE_CURRENT_SOURCE_DIR}/,,$(abspath \$<))\"'")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D__FILENAME__=\"$(subst ${CMAKE_CURRENT_SOURCE_DIR}/,,$(abspath \$<))\"")
 endif()
 
 if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/shaders)
@@ -24,4 +24,4 @@ if(vera++_FOUND)
 endif()
 
 include_directories(${CMAKE_SOURCE_DIR}/src/)
-include_directories(${USED_INCLUDES})
+include_directories(SYSTEM ${USED_INCLUDES})

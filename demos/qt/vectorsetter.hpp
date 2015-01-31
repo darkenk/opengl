@@ -44,7 +44,7 @@ class VectorSetter : public QWidget
     Q_OBJECT
 
 public:
-    explicit VectorSetter(QWidget *parent = 0);
+    explicit VectorSetter(QWidget *parent = nullptr);
     ~VectorSetter();
     void setValue(const glm::vec4& vec);
     void setValuesNames(const std::vector<const char*>& names);

@@ -42,14 +42,14 @@ class Offset;
 template<typename T>
 class Offset<T, typename std::enable_if<std::is_class<T>::value >::type> {
 public:
-    GLvoid* getOffset(int member) const { return reinterpret_cast<GLvoid*>(
+    GLvoid* getOffset(GLuint member) const { return reinterpret_cast<GLvoid*>(
                     T::desc[static_cast<size_t>(member)]); }
 };
 
 template<class T>
 class Offset<T, typename std::enable_if<not std::is_class<T>::value >::type> {
 public:
-    GLvoid* getOffset(int /*member*/) const { return 0; }
+    GLvoid* getOffset(GLuint /*member*/) const { return nullptr; }
 };
 
 template<typename T>
@@ -58,8 +58,8 @@ Buffer<T>::Buffer(std::shared_ptr<std::vector<T> > data, GLenum target):
 {
     glGenBuffers(1, &mVertexBufferId);
     bind();
-    glBufferData(mTarget, mData->size()*sizeof(T), reinterpret_cast<GLbyte*>(mData->data()),
-                 GL_STATIC_DRAW);
+    glBufferData(mTarget, static_cast<GLsizeiptr>(mData->size() * sizeof(T)),
+                 reinterpret_cast<GLbyte*>(mData->data()), GL_STATIC_DRAW);
 }
 
 template<typename T>

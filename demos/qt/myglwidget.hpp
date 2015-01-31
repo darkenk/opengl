@@ -38,7 +38,7 @@ class MyGLWidget : public QGLWidget
 {
     Q_OBJECT
 public:
-    MyGLWidget(QWidget *parent = 0);
+    MyGLWidget(QWidget *_parent = nullptr);
     virtual ~MyGLWidget();
     Renderer& getRenderer() { return *mRenderer; }
 
@@ -48,7 +48,7 @@ signals:
 protected:
     virtual void initializeGL();
     virtual void paintGL();
-    virtual void resizeGL(int width, int height);
+    virtual void resizeGL(int _width, int _height);
     virtual void keyPressEvent(QKeyEvent* e);
     virtual void initScene() = 0;
 

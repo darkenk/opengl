@@ -10,12 +10,18 @@ set(CMAKE_MODULE_PATH ${opengl_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
     # using Clang
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -DGLM_FORCE_RADIANS")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} "-Werror -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-exit-time-destructors -Wno-implicit-fallthrough")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-missing-braces -Wno-padded")
 elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
     # using GCC
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -DGLM_FORCE_RADIANS")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wall -Wextra -Wpedantic -Wcast-align -Wcast-qual \
+        -Wconversion -Wctor-dtor-privacy -Wdisabled-optimization -Wdouble-promotion -Wfloat-equal \
+        -Wformat=2 -Winit-self -Winvalid-pch -Wlogical-op -Wmissing-declarations -Wmissing-include-dirs \
+        -Wnoexcept -Wold-style-cast -Woverloaded-virtual -Wredundant-decls -Wshadow -Wsign-conversion \
+        -Wsign-promo -Wstrict-null-sentinel -Wstrict-overflow=5 -Wtrampolines -Wundef -Wunsafe-loop-optimizations \
+        -Wvector-operation-performance -Wzero-as-null-pointer-constant")
 elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
 
 endif()

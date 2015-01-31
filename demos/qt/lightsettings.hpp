@@ -42,7 +42,7 @@ class LightSettings : public QWidget
     Q_OBJECT
 
 public:
-    explicit LightSettings(QWidget *parent = 0);
+    explicit LightSettings(QWidget *_parent = nullptr);
     ~LightSettings();
     void setLight(std::shared_ptr<Light> light);
 

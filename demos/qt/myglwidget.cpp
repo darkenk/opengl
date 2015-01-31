@@ -32,8 +32,8 @@
 
 using namespace std;
 
-MyGLWidget::MyGLWidget(QWidget* parent) :
-    QGLWidget(parent)
+MyGLWidget::MyGLWidget(QWidget* _parent) :
+    QGLWidget(_parent, nullptr, Qt::Widget)
 {
     QGLFormat glFormat;
     glFormat.setVersion(3, 3);
@@ -58,9 +58,9 @@ void MyGLWidget::paintGL()
     update();
 }
 
-void MyGLWidget::resizeGL(int width, int height)
+void MyGLWidget::resizeGL(int _width, int _height)
 {
-    mRenderer->resize(width, height);
+    mRenderer->resize(_width, _height);
 }
 
 void MyGLWidget::keyPressEvent(QKeyEvent* e)

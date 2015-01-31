@@ -12,6 +12,7 @@ find_package(Qt5OpenGL REQUIRED)
 include_directories(${CMAKE_SOURCE_DIR}/demos/qt)
 include_directories(SYSTEM ${Qt5Widgets_INCLUDE_DIRS})
 include_directories(SYSTEM ${Qt5OpenGL_INCLUDE_DIRS})
+include_directories(SYSTEM ${CMAKE_CURRENT_BINARY_DIR})
 
 file(GLOB UI_FILES *.ui)
 qt5_wrap_ui(UI_HEADERS ${UI_FILES})

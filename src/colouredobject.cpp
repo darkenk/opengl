@@ -74,7 +74,7 @@ void ColouredObject::render()
     glUniformMatrix4fv(mShader->getUniform("gWorld"), 1, GL_FALSE, glm::value_ptr(getModel()));
     glUniformMatrix4fv(mModelId, 1, GL_FALSE, glm::value_ptr(mMVP));
     glBindVertexArray(mVao);
-    glDrawElements(GL_TRIANGLES, mIndexBuffer->size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, mIndexBuffer->size(), GL_UNSIGNED_INT, nullptr);
     mShader->unUse();
 }
 

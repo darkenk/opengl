@@ -42,7 +42,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget *_parent = nullptr);
     ~MainWindow();
 
 protected slots:

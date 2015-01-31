@@ -37,8 +37,8 @@
 
 using namespace std;
 
-LightSceneWidget::LightSceneWidget(QWidget* parent) :
-    MyGLWidget(parent)
+LightSceneWidget::LightSceneWidget(QWidget* _parent) :
+    MyGLWidget(_parent)
 {
 
 }

@@ -70,7 +70,7 @@ private:
     const char* getColor();
 };
 
-#define LOG(level) Logger(level) << __FILENAME__ << ":" << __LINE__ << " "
+#define LOG(level) Logger(level) << __FILENAME__ << ':' << __LINE__ << ' '
 #define LOGV LOG(Logger::Level::Verbose)
 #define LOGD LOG(Logger::Level::Debug)
 #define LOGE LOG(Logger::Level::Error)
