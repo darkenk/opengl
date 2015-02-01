@@ -97,6 +97,6 @@ int main(int argc, char* argv[])
 
     glutMainLoop();
     delete gRenderer;
-    gRenderer = 0;
+    gRenderer = nullptr;
     return 0;
 }

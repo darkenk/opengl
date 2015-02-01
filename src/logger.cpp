@@ -38,7 +38,6 @@ const char* Logger::getColor()
         return "\033[33m";
     case Level::Error:
         return "\033[31m";
-    default:
-        return "";
     }
+    return "";
 }

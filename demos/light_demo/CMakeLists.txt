@@ -3,6 +3,8 @@ project(light_demo)
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
     # automoc generate some code which doesn't compile and thus this flag
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-undefined-reinterpret-cast")
+elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-zero-as-null-pointer-constant")
 endif()
 set(CMAKE_AUTOMOC ON)
 
