@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014, Dariusz Kluska <darkenk@gmail.com>
+ * Copyright (C) 2015, Dariusz Kluska <darkenk@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,34 +27,61 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef COLOUREDOBJECT_H
-#define COLOUREDOBJECT_H
-
-#include "irenderableobject.hpp"
+#include "simpleobject.hpp"
 #include "shader.hpp"
-#include <memory>
-#include <GL/glew.h>
-#include "iobject.hpp"
-#include "buffer.hpp"
+#include <iostream>
+#include "exceptions.hpp"
+#include <glm/gtc/matrix_transform.hpp>
+#include "logger.hpp"
+#include "make_unique.hpp"
 
-class ColouredObject : public IRenderableObject
+using namespace std;
+
+SimpleObject::SimpleObject(shared_ptr<Buffer<Vertex>> vert,
+                           shared_ptr<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>> idx,
+                           shared_ptr<Shader> shader):
+    mShader{shader}, mVertexBuffer{vert}, mIndexBuffer{idx}
 {
-public:
-    ColouredObject(std::shared_ptr<IObject> object, std::shared_ptr<Shader> shader);
-    virtual ~ColouredObject();
-    virtual void render();
-    virtual void setVpMatrix(glm::mat4& matrix);
+    glGetError();
 
-private:
-    std::shared_ptr<IObject> mObject;
-    std::shared_ptr<Shader> mShader;
-    std::unique_ptr<Buffer<Vertex>> mVertexBuffer;
-    std::unique_ptr<Buffer<unsigned int>> mIndexBuffer;
-    GLuint mVao;
-    GLint mModelId;
+    auto r = make_shared<RenderPass>(shader);
+    r->setWorldMatrix(getModel());
+    r->setBuffers(*vert, *idx);
+    mRenderPasses.push_back(r);
 
-    glm::mat4 mModel;
-    glm::mat4 mMVP;
-};
+    checkGlError(__FUNCTION__);
+}
 
-#endif // TRIANGLEOBJECT_H
+SimpleObject::~SimpleObject()
+{
+}
+
+void SimpleObject::render()
+{
+    for (auto r : mRenderPasses) {
+        r->render();
+    }
+}
+
+void SimpleObject::setVpMatrix(const glm::mat4& matrix)
+{
+    glm::mat4 wvp = matrix * getModel();
+    for (auto r : mRenderPasses) {
+        r->setWvpMatrix(wvp);
+    }
+}
+
+void SimpleObject::addRenderPass(shared_ptr<RenderPass> renderPass)
+{
+    renderPass->setBuffers(*mVertexBuffer, *mIndexBuffer);
+    renderPass->setWorldMatrix(getModel());
+    mRenderPasses.push_back(renderPass);
+}
+
+void SimpleObject::setModel(const glm::mat4& matrix)
+{
+    IRenderableObject::setModel(matrix);
+    for (auto r : mRenderPasses) {
+        r->setWorldMatrix(matrix);
+    }
+}

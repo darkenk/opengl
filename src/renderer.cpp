@@ -31,8 +31,7 @@
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 #include "renderer.hpp"
-#include "terrain.hpp"
-#include "colouredobject.hpp"
+#include "simpleobject.hpp"
 #include "cube.hpp"
 #include "logger.hpp"
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014, Dariusz Kluska <darkenk@gmail.com>
+ * Copyright (C) 2015, Dariusz Kluska <darkenk@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,58 +27,34 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "colouredobject.hpp"
+#ifndef SIMPLEOBJECT_HPP
+#define SIMPLEOBJECT_HPP
+
+#include "irenderableobject.hpp"
 #include "shader.hpp"
-#include <iostream>
-#include "exceptions.hpp"
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include "logger.hpp"
-#include "make_unique.hpp"
+#include <memory>
+#include <GL/glew.h>
+#include "iobject.hpp"
+#include "buffer.hpp"
+#include "renderpass.hpp"
 
-using namespace std;
-
-ColouredObject::ColouredObject(shared_ptr<IObject> object, std::shared_ptr<Shader> shader):
-    mObject{object}, mShader{shader}
+class SimpleObject : public IRenderableObject
 {
-    glGetError();
+public:
+    SimpleObject(std::shared_ptr<Buffer<Vertex>> vert,
+                 std::shared_ptr<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>> idx,
+                 std::shared_ptr<Shader> shader);
+    virtual ~SimpleObject();
+    virtual void render();
+    virtual void setVpMatrix(const glm::mat4& matrix);
+    virtual void addRenderPass(std::shared_ptr<RenderPass> renderPass);
+    virtual void setModel(const glm::mat4& matrix);
 
-    //vao
-    glGenVertexArrays(1, &mVao);
-    glBindVertexArray(mVao);
+private:
+    std::shared_ptr<Shader> mShader;
+    std::vector<std::shared_ptr<RenderPass>> mRenderPasses;
+    std::shared_ptr<Buffer<Vertex>> mVertexBuffer;
+    std::shared_ptr<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>> mIndexBuffer;
+};
 
-    //vertices
-    mVertexBuffer = make_unique<Buffer<Vertex>>(object->getVertices());
-    mVertexBuffer->setAttributes(*mShader->getAllAttributes());
-
-    //indices;
-    mIndexBuffer = make_unique<Buffer<Index>>(object->getIndices(),
-                                              static_cast<GLenum>(GL_ELEMENT_ARRAY_BUFFER));
-
-    mShader->use();
-    //projection matrix
-    mModelId = mShader->getUniform("gWVP");
-
-    checkGlError(__FUNCTION__);
-}
-
-ColouredObject::~ColouredObject()
-{
-    glDeleteVertexArrays(1, &mVao);
-}
-
-void ColouredObject::render()
-{
-    mShader->use();
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    glUniformMatrix4fv(mShader->getUniform("gWorld"), 1, GL_FALSE, glm::value_ptr(getModel()));
-    glUniformMatrix4fv(mModelId, 1, GL_FALSE, glm::value_ptr(mMVP));
-    glBindVertexArray(mVao);
-    glDrawElements(GL_TRIANGLES, mIndexBuffer->size(), GL_UNSIGNED_INT, nullptr);
-    mShader->unUse();
-}
-
-void ColouredObject::setVpMatrix(glm::mat4& matrix)
-{
-    mMVP = matrix * getModel();
-}
+#endif // SIMPLEOBJECT_HPP

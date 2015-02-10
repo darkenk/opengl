@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014, Dariusz Kluska <darkenk@gmail.com>
+ * Copyright (C) 2015, Dariusz Kluska <darkenk@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,8 +27,41 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "buffer.cpp"
-#include "units/vertex.hpp"
+#ifndef RENDERPASS_HPP
+#define RENDERPASS_HPP
 
-template class Buffer<Vertex>;
-template class Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>;
+#include "shader.hpp"
+#include <glm/glm.hpp>
+#include <memory>
+
+class RenderPass
+{
+public:
+    RenderPass(std::shared_ptr<Shader> shader);
+    ~RenderPass();
+    virtual void render();
+
+    template<typename V, typename I>
+    void setBuffers(const Buffer<V>& vertexBuffer,
+                    const Buffer<I, GL_ELEMENT_ARRAY_BUFFER>& indexBuffer) {
+        glBindVertexArray(mVao);
+
+        vertexBuffer.setAttributes(*mShader->getAllAttributes());
+        vertexBuffer.bind();
+        indexBuffer.bind();
+        glBindVertexArray(0);
+        mNumberOfIndices = indexBuffer.size();
+    }
+
+    void setWorldMatrix(const glm::mat4& world);
+    void setWvpMatrix(const glm::mat4& mvp);
+
+private:
+    std::shared_ptr<Shader> mShader;
+    GLuint mVao;
+    GLsizei mNumberOfIndices;
+    glm::mat4 mWorld;
+    glm::mat4 mWVP;
+};
+
+#endif // RENDERPASS_HPP

@@ -60,21 +60,27 @@ public:
 typedef std::vector<Attribute> AttributeVector;
 typedef std::shared_ptr<AttributeVector> AttributeVectorPtr;
 
-template<typename T>
+template<typename V, GLenum T = GL_ARRAY_BUFFER>
 class Buffer
 {
 public:
-    Buffer(std::shared_ptr<std::vector<T>> data, GLenum target = GL_ARRAY_BUFFER);
+    Buffer(std::shared_ptr<std::vector<V>> data);
     ~Buffer();
-    void bind();
-    void unBind();
-    void setAttributes(const AttributeVector& attrs);
-    GLsizei size();
+    void bind() const {
+        glBindBuffer(getTarget(), mVertexBufferId);
+    }
+    void unBind() const {
+        glBindBuffer(getTarget(), 0);
+    }
+    void setAttributes(const AttributeVector& attrs) const;
+    GLsizei size() const {
+        return static_cast<GLsizei>(mData->size());
+    }
+    constexpr GLenum getTarget() { return T; }
 
 private:
     GLuint mVertexBufferId;
-    std::shared_ptr<std::vector<T>> mData;
-    GLenum mTarget;
+    std::shared_ptr<std::vector<V>> mData;
 };
 
 #endif // BUFFER_HPP

@@ -29,10 +29,10 @@
  */
 #include "irenderableobject.hpp"
 
-void IRenderableObject::setModel(glm::mat4& matrix) {
+void IRenderableObject::setModel(const glm::mat4& matrix) {
     mModel = matrix;
 }
 
-glm::mat4& IRenderableObject::getModel() {
+const glm::mat4& IRenderableObject::getModel() const {
     return mModel;
 }

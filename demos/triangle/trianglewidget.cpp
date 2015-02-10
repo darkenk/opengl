@@ -28,11 +28,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "trianglewidget.hpp"
-#include "colouredobject.hpp"
+#include "simpleobject.hpp"
 #include "cube.hpp"
 #include "terrain.hpp"
 #include <vector>
 #include <utility>
+#include "make_unique.hpp"
 
 using namespace std;
 
@@ -43,20 +44,22 @@ TriangleWidget::TriangleWidget(QWidget* _parent) :
 
 void TriangleWidget::initScene()
 {
-    auto triangle = make_shared<Triangle>();
-    {
-        vector<pair<GLuint, const string>> shaders{
-            make_pair(GL_FRAGMENT_SHADER, "triangle_shaders/normals_frag.glsl"),
-            make_pair(GL_GEOMETRY_SHADER, "triangle_shaders/normals_geom.glsl"),
-            make_pair(GL_VERTEX_SHADER, "triangle_shaders/normals_vert.glsl")};
-        shared_ptr<Shader> shader = make_shared<Shader>(shaders);
-        getRenderer().addObject(make_shared<ColouredObject>(triangle, shader));
-    }
-    {
-        vector<pair<GLuint, const string>> shaders{
-            make_pair(GL_FRAGMENT_SHADER, "triangle_shaders/fragment.glsl"),
-            make_pair(GL_VERTEX_SHADER, "triangle_shaders/vertex.glsl")};
-        shared_ptr<Shader> shader = make_shared<Shader>(shaders);
-        getRenderer().addObject(make_shared<ColouredObject>(triangle, shader));
-    }
+    vector<pair<GLuint, const string>> shaders{
+        make_pair(GL_FRAGMENT_SHADER, "triangle_shaders/fragment.glsl"),
+        make_pair(GL_VERTEX_SHADER, "triangle_shaders/vertex.glsl")};
+    auto shader = make_shared<Shader>(shaders);
+
+    auto triangle = make_unique<Triangle>();
+    auto triangleVert = make_shared<Buffer<Vertex>>(triangle->getVertices());
+    auto triangleIdx = make_shared<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>>(triangle->getIndices());
+
+    auto triangleObject = make_shared<SimpleObject>(triangleVert, triangleIdx, shader);
+
+    vector<pair<GLuint, const string>> normalShaders{
+        make_pair(GL_FRAGMENT_SHADER, "triangle_shaders/normals_frag.glsl"),
+        make_pair(GL_GEOMETRY_SHADER, "triangle_shaders/normals_geom.glsl"),
+        make_pair(GL_VERTEX_SHADER, "triangle_shaders/normals_vert.glsl")};
+    auto normalPass = make_shared<RenderPass>(make_shared<Shader>(normalShaders));
+    triangleObject->addRenderPass(normalPass);
+    getRenderer().addObject(triangleObject);
 }

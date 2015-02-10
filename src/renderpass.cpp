@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014, Dariusz Kluska <darkenk@gmail.com>
+ * Copyright (C) 2015, Dariusz Kluska <darkenk@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,8 +27,37 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "buffer.cpp"
-#include "units/vertex.hpp"
+#include "renderpass.hpp"
+#include <glm/gtc/type_ptr.hpp>
 
-template class Buffer<Vertex>;
-template class Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>;
+RenderPass::RenderPass(std::shared_ptr<Shader> shader) :
+    mShader{shader}
+{
+    glGenVertexArrays(1, &mVao);
+}
+
+RenderPass::~RenderPass()
+{
+    glDeleteVertexArrays(1, &mVao);
+}
+
+void RenderPass::render()
+{
+    mShader->use();
+    glUniformMatrix4fv(mShader->getUniform("gWorld"), 1, GL_FALSE, glm::value_ptr(mWorld));
+    glUniformMatrix4fv(mShader->getUniform("gWVP"), 1, GL_FALSE, glm::value_ptr(mWVP));
+    glBindVertexArray(mVao);
+    glDrawElements(GL_TRIANGLES, mNumberOfIndices, GL_UNSIGNED_INT, nullptr);
+    glBindVertexArray(0);
+    mShader->unUse();
+}
+
+void RenderPass::setWorldMatrix(const glm::mat4& world)
+{
+    mWorld = world;
+}
+
+void RenderPass::setWvpMatrix(const glm::mat4& wvp)
+{
+    mWVP = wvp;
+}

@@ -32,8 +32,9 @@
 #include <utility>
 #include "shader.hpp"
 #include "terrain.hpp"
-#include "colouredobject.hpp"
+#include "simpleobject.hpp"
 #include "cube.hpp"
+#include "make_unique.hpp"
 
 using namespace std;
 
@@ -50,8 +51,15 @@ void LightSceneWidget::initScene()
         pair<GLuint, const string>(GL_VERTEX_SHADER, "opengl_shaders/vertex.glsl")};
     shared_ptr<Shader> shader = make_shared<Shader>(shaders);
     getRenderer().getLight()->addShader(shader);
-    getRenderer().addObject(make_shared<ColouredObject>(make_shared<Cube>(), shader));
-    auto object = make_shared<ColouredObject>(make_shared<Terrain>(1024, 1024), shader);
+    auto cube = make_unique<Cube>();
+    auto cubeVert = make_shared<Buffer<Vertex>>(cube->getVertices());
+    auto cubeIdx = make_shared<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>>(cube->getIndices());
+    getRenderer().addObject(make_shared<SimpleObject>(cubeVert, cubeIdx, shader));
+
+    auto terrain = make_unique<Terrain>(1024u, 1024u);
+    auto terrainVert = make_shared<Buffer<Vertex>>(terrain->getVertices());
+    auto terrainIdx = make_shared<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>>(terrain->getIndices());
+    auto object = make_shared<SimpleObject>(terrainVert, terrainIdx, shader);
     glm::mat4 m = glm::translate(glm::mat4(), glm::vec3(-12.0f, -3.0f, -24.0f));
     object->setModel(m);
     getRenderer().addObject(object);

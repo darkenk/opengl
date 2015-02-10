@@ -52,56 +52,39 @@ public:
     GLvoid* getOffset(GLuint /*member*/) const { return nullptr; }
 };
 
-template<typename T>
-Buffer<T>::Buffer(std::shared_ptr<std::vector<T> > data, GLenum target):
-    mData{data}, mTarget{target}
+template<typename V, GLenum T>
+Buffer<V, T>::Buffer(std::shared_ptr<std::vector<V>> data):
+    mData{data}
 {
     glGenBuffers(1, &mVertexBufferId);
     bind();
-    glBufferData(mTarget, static_cast<GLsizeiptr>(mData->size() * sizeof(T)),
+    glBufferData(getTarget(), static_cast<GLsizeiptr>(mData->size() * sizeof(V)),
                  reinterpret_cast<GLbyte*>(mData->data()), GL_STATIC_DRAW);
+    unBind();
 }
 
-template<typename T>
-Buffer<T>::~Buffer()
+template<typename V, GLenum T>
+Buffer<V, T>::~Buffer()
 {
     glDeleteBuffers(1, &mVertexBufferId);
 }
 
-template<typename T>
-void Buffer<T>::bind()
-{
-    glBindBuffer(mTarget, mVertexBufferId);
-}
-
-template<typename T>
-void Buffer<T>::unBind()
-{
-    glBindBuffer(mTarget, 0);
-}
-
-template<typename T>
-void Buffer<T>::setAttributes(const AttributeVector& attrs)
+template<typename V, GLenum T>
+void Buffer<V, T>::setAttributes(const AttributeVector& attrs) const
 {
     bind();
     GLsizei stride{0};
     for (auto attr : attrs) {
         stride += attr.mFullSize;
     }
-    if (stride != sizeof(T)) {
-        LOGE << "Stride: " << stride << " is different than sizeof(T) " << sizeof(T);
+    if (stride != sizeof(V)) {
+        LOGE << "Stride: " << stride << " is different than sizeof(V) " << sizeof(V);
     }
     // TODO: this offset looks quite dirty
     for (auto attr : attrs) {
         glEnableVertexAttribArray(attr.mLocation);
         glVertexAttribPointer(attr.mLocation, attr.mSize, attr.mType, GL_FALSE,
-                              sizeof(T), Offset<T>{}.getOffset(attr.mLocation));
+                              sizeof(V), Offset<V>{}.getOffset(attr.mLocation));
     }
-
-}
-
-template<typename T>
-GLsizei Buffer<T>::size()
-{
-    return static_cast<GLsizei>(mData->size());
+    unBind();
 }

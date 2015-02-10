@@ -41,9 +41,9 @@ class IRenderableObject
 public:
     virtual ~IRenderableObject() {}
     virtual void render() = 0;
-    virtual void setVpMatrix(glm::mat4& /*matrix*/) {}
-    virtual void setModel(glm::mat4& matrix);
-    virtual glm::mat4& getModel();
+    virtual void setVpMatrix(const glm::mat4& /*matrix*/) {}
+    virtual void setModel(const glm::mat4& matrix);
+    virtual const glm::mat4& getModel() const;
 
 private:
     glm::mat4 mModel;
