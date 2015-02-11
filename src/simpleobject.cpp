@@ -34,6 +34,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "logger.hpp"
 #include "make_unique.hpp"
+#include <algorithm>
 
 using namespace std;
 
@@ -76,6 +77,17 @@ void SimpleObject::addRenderPass(shared_ptr<RenderPass> renderPass)
     renderPass->setBuffers(*mVertexBuffer, *mIndexBuffer);
     renderPass->setWorldMatrix(getModel());
     mRenderPasses.push_back(renderPass);
+}
+
+void SimpleObject::removeRenderPass(std::shared_ptr<RenderPass> renderPass)
+{
+    auto pos = find_if(mRenderPasses.begin(), mRenderPasses.end(),
+                     [&](shared_ptr<RenderPass> const& r) { return r.get() == renderPass.get(); });
+    if (pos != mRenderPasses.end()) {
+        mRenderPasses.erase(pos);
+    } else {
+        LOGE << "Trying remove nonexisted render pass";
+    }
 }
 
 void SimpleObject::setModel(const glm::mat4& matrix)

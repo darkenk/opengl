@@ -56,7 +56,7 @@ void LightSceneWidget::initScene()
     auto cubeIdx = make_shared<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>>(cube->getIndices());
     getRenderer().addObject(make_shared<SimpleObject>(cubeVert, cubeIdx, shader));
 
-    auto terrain = make_unique<Terrain>(1024u, 1024u);
+    auto terrain = make_unique<Terrain>(48u, 48u);
     auto terrainVert = make_shared<Buffer<Vertex>>(terrain->getVertices());
     auto terrainIdx = make_shared<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>>(terrain->getIndices());
     auto object = make_shared<SimpleObject>(terrainVert, terrainIdx, shader);

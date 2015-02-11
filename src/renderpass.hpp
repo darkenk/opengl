@@ -45,7 +45,6 @@ public:
     void setBuffers(const Buffer<V>& vertexBuffer,
                     const Buffer<I, GL_ELEMENT_ARRAY_BUFFER>& indexBuffer) {
         glBindVertexArray(mVao);
-
         vertexBuffer.setAttributes(*mShader->getAllAttributes());
         vertexBuffer.bind();
         indexBuffer.bind();
