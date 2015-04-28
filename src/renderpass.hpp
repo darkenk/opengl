@@ -37,7 +37,11 @@
 class RenderPass
 {
 public:
-    RenderPass(std::shared_ptr<Shader> shader);
+    typedef int Type;
+    const static Type SHOW_NORMALS;
+    const static Type USER;
+
+    RenderPass(std::shared_ptr<Shader> shader, Type type);
     ~RenderPass();
     virtual void render();
 
@@ -54,9 +58,11 @@ public:
 
     void setWorldMatrix(const glm::mat4& world);
     void setWvpMatrix(const glm::mat4& mvp);
+    Type getType() const { return mType; }
 
 private:
     std::shared_ptr<Shader> mShader;
+    Type mType;
     GLuint mVao;
     GLsizei mNumberOfIndices;
     glm::mat4 mWorld;

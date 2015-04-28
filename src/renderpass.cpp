@@ -30,8 +30,11 @@
 #include "renderpass.hpp"
 #include <glm/gtc/type_ptr.hpp>
 
-RenderPass::RenderPass(std::shared_ptr<Shader> shader) :
-    mShader{shader}
+const RenderPass::Type RenderPass::SHOW_NORMALS = 0;
+const RenderPass::Type RenderPass::USER = 100;
+
+RenderPass::RenderPass(std::shared_ptr<Shader> shader, Type type) :
+    mShader{shader}, mType{type}
 {
     glGenVertexArrays(1, &mVao);
 }

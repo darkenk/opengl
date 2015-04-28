@@ -48,7 +48,7 @@ public:
     virtual void render();
     virtual void setVpMatrix(const glm::mat4& matrix);
     virtual void addRenderPass(std::shared_ptr<RenderPass> renderPass);
-    virtual void removeRenderPass(std::shared_ptr<RenderPass> renderPass);
+    virtual void removeRenderPass(RenderPass::Type t);
     virtual void setModel(const glm::mat4& matrix);
 
 private:

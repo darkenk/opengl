@@ -35,7 +35,6 @@
 #include "camera.hpp"
 #include "simpleobject.hpp"
 #include "light.hpp"
-#include "renderpass.hpp"
 
 class Renderer
 {
@@ -55,10 +54,10 @@ private:
     std::vector<std::shared_ptr<SimpleObject>> mObjects;
     glm::mat4 mProjection;
     std::shared_ptr<Light> mLight;
-    std::shared_ptr<RenderPass> mNormalRenderPass;
+    std::shared_ptr<Shader> mNormalShader;
     bool mShowNormals;
 
-    void initNormalRenderPass();
+    void initNormalShader();
 };
 
 #endif // RENDERER_H

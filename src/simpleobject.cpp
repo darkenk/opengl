@@ -45,7 +45,7 @@ SimpleObject::SimpleObject(shared_ptr<Buffer<Vertex>> vert,
 {
     glGetError();
 
-    auto r = make_shared<RenderPass>(shader);
+    auto r = make_shared<RenderPass>(shader, RenderPass::USER);
     r->setWorldMatrix(getModel());
     r->setBuffers(*vert, *idx);
     mRenderPasses.push_back(r);
@@ -79,10 +79,10 @@ void SimpleObject::addRenderPass(shared_ptr<RenderPass> renderPass)
     mRenderPasses.push_back(renderPass);
 }
 
-void SimpleObject::removeRenderPass(std::shared_ptr<RenderPass> renderPass)
+void SimpleObject::removeRenderPass(RenderPass::Type t)
 {
     auto pos = find_if(mRenderPasses.begin(), mRenderPasses.end(),
-                     [&](shared_ptr<RenderPass> const& r) { return r.get() == renderPass.get(); });
+                     [&](shared_ptr<RenderPass> const& r) { return r->getType() == t; });
     if (pos != mRenderPasses.end()) {
         mRenderPasses.erase(pos);
     } else {

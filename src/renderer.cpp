@@ -49,7 +49,7 @@ Renderer::Renderer() :
     glEnable(GL_CULL_FACE);
     mLight = make_shared<Light>();
     mCamera = make_shared<Camera>(glm::vec3{0.0f, 0.0f, 12.0f});
-    initNormalRenderPass();
+    initNormalShader();
 }
 
 Renderer::~Renderer()
@@ -77,7 +77,7 @@ void Renderer::resize(int width, int height)
 void Renderer::addObject(shared_ptr<SimpleObject> object)
 {
     if (mShowNormals) {
-        object->addRenderPass(mNormalRenderPass);
+        object->addRenderPass(make_shared<RenderPass>(mNormalShader, RenderPass::SHOW_NORMALS));
     }
     mObjects.push_back(object);
 }
@@ -126,22 +126,22 @@ void Renderer::showNormals(bool show)
     mShowNormals = show;
     if (show) {
         for (auto object : mObjects) {
-            object->addRenderPass(mNormalRenderPass);
+            object->addRenderPass(make_shared<RenderPass>(mNormalShader, RenderPass::SHOW_NORMALS));
         }
     } else {
         for (auto object : mObjects) {
-            object->removeRenderPass(mNormalRenderPass);
+            object->removeRenderPass(RenderPass::SHOW_NORMALS);
         }
     }
 }
 
-void Renderer::initNormalRenderPass()
+void Renderer::initNormalShader()
 {
     vector<pair<GLuint, const string>> normalShaders{
         make_pair(GL_FRAGMENT_SHADER, "triangle_shaders/normals_frag.glsl"),
         make_pair(GL_GEOMETRY_SHADER, "triangle_shaders/normals_geom.glsl"),
         make_pair(GL_VERTEX_SHADER, "triangle_shaders/normals_vert.glsl")};
-    mNormalRenderPass = make_shared<RenderPass>(make_shared<Shader>(normalShaders));
+    mNormalShader = make_shared<Shader>(normalShaders);
 }
 
 void Renderer::cleanup()
