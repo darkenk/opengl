@@ -42,7 +42,7 @@ public:
     const static Type USER;
 
     RenderPass(std::shared_ptr<Shader> shader, Type type);
-    ~RenderPass();
+    virtual ~RenderPass();
     virtual void render();
 
     template<typename V, typename I>

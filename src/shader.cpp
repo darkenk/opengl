@@ -46,6 +46,7 @@ Shader::Shader(const std::vector<std::pair<GLuint, const string>>& shaders) :
         mShaderIds.push_back(createShader(shader.second, shader.first));
     }
     createProgram();
+    initUniforms();
 }
 
 Shader::~Shader()
@@ -114,6 +115,7 @@ AttributeVectorPtr Shader::getAllAttributes()
 {
     // TODO: ugly function, needs refactor
     use();
+    mAttributes.clear();
     GLint attrLength;
     glGetProgramiv(mProgramId, GL_ACTIVE_ATTRIBUTES, &attrLength);
     LOGV << "AttrLength " << attrLength;
@@ -134,9 +136,30 @@ AttributeVectorPtr Shader::getAllAttributes()
         Attribute a{i, s, static_cast<GLenum>(t), name, convertGLTypeToSize(type),
                     static_cast<GLuint>(location)};
         attrs->push_back(a);
+        mAttributes.insert(make_pair(string{name}, location));
     }
     unUse();
     return attrs;
+}
+
+void Shader::initUniforms()
+{
+    use();
+    GLint uniformsLength;
+    glGetProgramiv(mProgramId, GL_ACTIVE_UNIFORMS, &uniformsLength);
+    constexpr GLsizei BUFF_SIZE = 256;
+    GLchar name[BUFF_SIZE];
+    GLsizei length;
+    GLint size;
+    GLenum type;
+    GLint location;
+    for (GLuint i = 0; i < static_cast<GLuint>(uniformsLength); i++) {
+        glGetActiveUniform(mProgramId, i, BUFF_SIZE, &length, &size, &type, name);
+        location = glGetUniformLocation(mProgramId, name);
+        LOGV << "Uniform " << location << " " << type << " " << name;
+        mUniforms.insert(make_pair(string{name}, location));
+    }
+    unUse();
 }
 
 void Shader::use() {
@@ -149,12 +172,15 @@ void Shader::unUse() {
 
 GLint Shader::getUniform(const string& name)
 {
-    // TODO: made cache for uniform
-    return glGetUniformLocation(mProgramId, name.c_str());
+    try {
+        return static_cast<GLint>(mUniforms.at(name));
+    } catch (std::out_of_range& ) {
+        // TODO: this is just a backward compatibility
+        return -1;
+    }
 }
 
 GLint Shader::getAttribute(const string& name)
 {
-    // TODO: made cache for attribute
-    return glGetAttribLocation(mProgramId, name.c_str());
+    return static_cast<GLint>(mAttributes.at(name));
 }

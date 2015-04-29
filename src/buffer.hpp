@@ -76,7 +76,7 @@ public:
     GLsizei size() const {
         return static_cast<GLsizei>(mData->size());
     }
-    constexpr GLenum getTarget() { return T; }
+    constexpr GLenum getTarget() const { return T; }
 
 private:
     GLuint mVertexBufferId;

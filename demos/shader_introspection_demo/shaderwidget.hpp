@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014, Dariusz Kluska <darkenk@gmail.com>
+ * Copyright (C) 2015, Dariusz Kluska <darkenk@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,37 +27,19 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef SHADERLOADER_H
-#define SHADERLOADER_H
+#ifndef SHADERWIDGET_HPP
+#define SHADERWIDGET_HPP
 
-#include <string>
-#include <vector>
-#include <GL/glew.h>
-#include <memory>
-#include "buffer.hpp"
-#include <map>
+#include "myglwidget.hpp"
 
-class Shader
+class ShaderWidget : public MyGLWidget
 {
+    Q_OBJECT
 public:
-    Shader(const std::vector<std::pair<GLuint, const std::string>>& shaders);
-    ~Shader();
-    void use();
-    void unUse();
-    GLint getUniform(const std::string& name);
-    GLint getAttribute(const std::string& name);
-    AttributeVectorPtr getAllAttributes();
+    ShaderWidget(QWidget* _parent = nullptr);
 
-private:
-    std::unique_ptr<std::string> loadShader(const std::string& fileName);
-    GLuint createShader(const std::string& fileName, GLuint shaderType);
-    void checkCompilationError(GLuint shaderId, const std::string& fileName);
-    void initUniforms();
-    void createProgram();
-    GLuint mProgramId;
-    std::vector<GLuint> mShaderIds;
-    std::map<std::string, GLuint> mUniforms;
-    std::map<std::string, GLuint> mAttributes;
+protected:
+    virtual void initScene();
 };
 
-#endif // SHADERLOADER_H
+#endif // SHADERWIDGET_HPP

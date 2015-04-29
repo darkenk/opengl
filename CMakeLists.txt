@@ -30,11 +30,15 @@ endif()
 
 # Common lib dependencies
 find_package(OpenGL REQUIRED)
-if (UNIX)
+option(INTERNAL_LIBS "use glm and glew from source" OFF)
+if (WIN32)
+    set(INTERNAL_LIBS 1)
+endif()
+if (INTERNAL_LIBS)
+    include(${CMAKE_SOURCE_DIR}/external/CMakeLists.txt)
+elseif (UNIX)
     find_package(GLEW 1.10.0 REQUIRED)
     find_package(GLM 0.9.5.3 REQUIRED)
-elseif(WIN32)
-    include(${CMAKE_SOURCE_DIR}/external/CMakeLists.txt)
 endif()
 
 # cpp style checker
