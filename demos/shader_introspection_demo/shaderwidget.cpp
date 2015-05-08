@@ -30,8 +30,8 @@
 #include "shaderwidget.hpp"
 #include <vector>
 #include <utility>
-#include "cube.hpp"
-#include "terrain.hpp"
+#include "models/cube.hpp"
+#include "models/terrain.hpp"
 #include "make_unique.hpp"
 
 using namespace std;

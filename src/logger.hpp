@@ -70,12 +70,13 @@ private:
     const char* getColor();
 };
 
-#define LOG(level) Logger(level) << __FILENAME__ << ':' << __LINE__ << ' '
+#define LOG(level) Logger(level) << __BASE_FILE__ << ':' << __LINE__ << ' '
 #define LOGV LOG(Logger::Level::Verbose)
 #define LOGD LOG(Logger::Level::Debug)
 #define LOGE LOG(Logger::Level::Error)
 
-#define LOGP(color, fmt, ...) printf(color "%s:%d " fmt "\n", __FILENAME__, __LINE__, ##__VA_ARGS__)
+#define LOGP(color, fmt, ...) printf(color "%s:%d " fmt "\n", __BASE_FILE__, __LINE__, \
+                                        ##__VA_ARGS__)
 #define LOGVP(fmt, ...) LOGP("\033[32m", fmt, ##__VA_ARGS__)
 #define LOGVD(fmt, ...) LOGP("\033[33m", fmt, ##__VA_ARGS__)
 #define LOGVE(fmt, ...) LOGP("\033[31m", fmt, ##__VA_ARGS__)

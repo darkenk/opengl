@@ -31,9 +31,9 @@
 #include <vector>
 #include <utility>
 #include "shader.hpp"
-#include "terrain.hpp"
+#include "models/terrain.hpp"
 #include "simpleobject.hpp"
-#include "cube.hpp"
+#include "models/cube.hpp"
 #include "make_unique.hpp"
 
 using namespace std;

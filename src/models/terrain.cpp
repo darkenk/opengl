@@ -53,15 +53,20 @@ IndexVectorPtr Terrain::getIndices()
 
 void Terrain::generate()
 {
-    // TODO: ugly function, made a refactor
     for (unsigned int y = 0; y < mHeight; y++) {
         for (unsigned int x = 0; x < mWidth; x++) {
             mVertices->push_back(Vertex{Position{static_cast<Meter>(x), 0.0_m,
-                                                  static_cast<Meter>(y)},
+                                                 static_cast<Meter>(y)},
                                         Color{1.0f, 1.0f, 0.2f, 1.0f},
                                         Vector{0.0f, 1.0f, 0.0f}});
         }
     }
+    generateIndices();
+
+}
+
+void Terrain::generateIndices()
+{
     unsigned int upperLine;
     unsigned int lowerLine;
     for (GLuint y = 1; y < mHeight; y++) {
@@ -77,5 +82,4 @@ void Terrain::generate()
             mIndices->push_back(upperLine + x - 1);
         }
     }
-
 }

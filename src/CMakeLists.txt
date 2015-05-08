@@ -1,7 +1,7 @@
 include_directories(SYSTEM ${OPENGL_INCLUDE_DIRS})
 
-file(GLOB SRC_FILES *.cpp units/*.cpp)
-file(GLOB INC_FILES *.hpp units/*.hpp)
+file(GLOB SRC_FILES *.cpp units/*.cpp models/*.cpp)
+file(GLOB INC_FILES *.hpp units/*.hpp models/*.hpp)
 file(GLOB SHADER_FILES shaders/*.glsl)
 
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")

@@ -29,8 +29,8 @@
  */
 #include "trianglewidget.hpp"
 #include "simpleobject.hpp"
-#include "cube.hpp"
-#include "terrain.hpp"
+#include "models/cube.hpp"
+#include "models/terrain.hpp"
 #include <vector>
 #include <utility>
 #include "make_unique.hpp"

@@ -32,7 +32,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "renderer.hpp"
 #include "simpleobject.hpp"
-#include "cube.hpp"
+#include "models/cube.hpp"
 #include "logger.hpp"
 
 using namespace std;

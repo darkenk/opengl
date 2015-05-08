@@ -43,6 +43,7 @@ public:
 
 private:
     void generate();
+    void generateIndices();
     VertexVectorPtr mVertices;
     IndexVectorPtr mIndices;
     unsigned int mWidth;
