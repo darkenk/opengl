@@ -48,7 +48,7 @@ if(vera++_FOUND)
 endif()
 
 set(USED_LIBRARIES "${OPENGL_LIBRARIES};${GLEW_LIBRARIES};pthread")
-set(USED_INCLUDES "${GLM_INCLUDES};${GLEW_INCLUDE_DIRS}")
+set(USED_INCLUDES "${GLM_INCLUDE_DIRS};${GLEW_INCLUDE_DIRS}")
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 add_subdirectory(src)
@@ -58,7 +58,7 @@ if(ENABLE_DEMOS)
     add_subdirectory(demos)
 endif()
 
-option(ENABLE_DEMOS "enable tests" OFF)
+option(ENABLE_TESTS "enable tests" OFF)
 if(ENABLE_TESTS)
     set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin_tests)
     add_subdirectory(tests)

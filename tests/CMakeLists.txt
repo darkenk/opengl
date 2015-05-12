@@ -1,31 +1,12 @@
 enable_testing()
+set(CMAKE_LIBRARY_PATH "${CMAKE_BINARY_DIR}/external/gtest/")
+message(STATUS "${CMAKE_BINARY_DIR}/external/gtest/")
+find_package(GTest)
+set(CMAKE_CXX_FLAGS "-std=c++11")
+include_directories(${CMAKE_SOURCE_DIR}/src/)
+include_directories(SYSTEM ${GTEST_INCLUDE_DIRS})
+include_directories(SYSTEM ${GLM_INCLUDE_DIRS})
 
-include(PCH)
-
-include_directories(${CMAKE_SOURCE_DIR}/../glmock)
-link_directories(${CMAKE_SOURCE_DIR}/../glmock)
-add_definitions(-D__FILENAME__=__FILE__)
-
-add_pch(test_pch test_pch.hpp test_pch.cpp)
-
-function(compile_test test_source additional_sources additional_libs)
-    set(file_postfix "_test")
-    string(REPLACE "${file_postfix}.cpp" "" test_name ${test_source})
-    set(test_name "${test_name}_test")
-    string(REPLACE ${file_postfix} "" source_file ${test_source})
-    add_executable(${test_name} ${test_source} ../src/${source_file} ${additional_sources})
-    use_pch(${test_name} test_pch)
-    target_link_libraries(${test_name} gtest ${additional_libs} pthread)
-    add_test(NAME ${test_name} COMMAND ${test_name})
-    set(target "run_${test_name}")
-    add_custom_target(${target}
-        COMMAND ${test_name}
-        COMMENT "Run with ${CMAKE_BUILD_TYPE} configuration"
-    )
-endfunction()
-
-compile_test(camera_test.cpp "" "gtest_main")
-compile_test(shaderloader_test.cpp "../src/exceptions.cpp" "gmock;gmock_main;glmock")
-compile_test(simpleobject_test.cpp "mockshaderloader.cpp;../src/exceptions.cpp" "gmock;gmock_main;glmock")
-compile_test(terrain_test.cpp "" "gtest_main")
-compile_test(cube_test.cpp "" "gtest_main")
+add_executable(terrain_test terrain_test.cpp ../src/models/terrain.cpp ../src/iobject.cpp)
+target_link_libraries(terrain_test ${GTEST_BOTH_LIBRARIES} pthread)
+add_test(AllTests terrain_test)

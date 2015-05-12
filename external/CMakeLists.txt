@@ -12,4 +12,12 @@ else()
 endif()
 
 # GLM
-set(GLM_INCLUDES ${CMAKE_SOURCE_DIR}/external/glm/)
+set(GLM_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/external/glm/)
+
+# GTest
+add_subdirectory(${CMAKE_SOURCE_DIR}/external/gtest)
+set(GTEST_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/external/gtest/include)
+set(GTEST_LIBRARIES libgtest.a)
+set(GTEST_MAIN_LIBRARIES libgtest_main.a)
+set(GTEST_BOTH_LIBRARIES ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
+link_directories(${CMAKE_BINARY_DIR}/external/gtest/)
