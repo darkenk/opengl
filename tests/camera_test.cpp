@@ -34,9 +34,9 @@
 using namespace std;
 
 //TODO: write implementation for camera, when gLookAt is in different position
-glm::vec3 gPosition(4.0f,3.0f,3.0f);
-glm::vec3 gLookAt(4.0f,3.0f,2.0f);
-glm::vec3 gUp(0.0f,1.0f,0.0f);
+const glm::vec3 gPosition(4.0f,3.0f,3.0f);
+const glm::vec3 gLookAt(4.0f,3.0f,2.0f);
+const glm::vec3 gUp(0.0f,1.0f,0.0f);
 
 ostream& operator<< (ostream &out, const glm::mat4& matrix)
 {

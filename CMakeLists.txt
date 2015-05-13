@@ -2,6 +2,9 @@ project(opengl)
 
 cmake_minimum_required(VERSION 2.8.11)
 
+# set build type to debug as it is in development phase
+option(CMAKE_BUILD_TYPE "default built type to debug" DEBUG)
+
 # Appends the cmake/modules path inside the MAKE_MODULE_PATH variable which stores the
 # directories of additional CMake modules (ie. MacroOutOfSourceBuild.cmake):
 set(CMAKE_MODULE_PATH ${opengl_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
