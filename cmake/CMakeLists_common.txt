@@ -23,3 +23,5 @@ endif()
 
 include_directories(${CMAKE_SOURCE_DIR}/src/)
 include_directories(SYSTEM ${USED_INCLUDES})
+include_directories(SYSTEM ${GTEST_INCLUDE_DIRS})
+include_directories(SYSTEM ${GMOCK_INCLUDE_DIRS})

@@ -29,16 +29,17 @@
  */
 #include "terrain.hpp"
 #include "logger.hpp"
+#include <cstdint>
 
 using namespace std;
 
-Terrain::Terrain(unsigned int width, unsigned int height) :
-    mVertices{new VertexVector}, mIndices{new IndexVector}, mWidth{width},
-    mHeight{height}
+Terrain::Terrain(const HeightMap& hm) :
+    mVertices{new VertexVector}, mIndices{new IndexVector}, mWidth{hm.width()},
+    mHeight{hm.height()}
 {
     mVertices->reserve(mWidth * mHeight);
     mIndices->reserve(3 * 2 * (mWidth -1) * (mHeight -1));
-    generate();
+    generate(hm);
 }
 
 VertexVectorPtr Terrain::getVertices()
@@ -51,18 +52,19 @@ IndexVectorPtr Terrain::getIndices()
     return mIndices;
 }
 
-void Terrain::generate()
+void Terrain::generate(const HeightMap& hm)
 {
     for (unsigned int y = 0; y < mHeight; y++) {
         for (unsigned int x = 0; x < mWidth; x++) {
-            mVertices->push_back(Vertex{Position{static_cast<Meter>(x), 0.0_m,
+            mVertices->push_back(Vertex{Position{static_cast<Meter>(x),
+                                                 static_cast<Meter>(hm[y][x]),
                                                  static_cast<Meter>(y)},
                                         Color{1.0f, 1.0f, 0.2f, 1.0f},
                                         Vector{0.0f, 1.0f, 0.0f}});
         }
     }
     generateIndices();
-
+    generateNormals();
 }
 
 void Terrain::generateIndices()
@@ -81,5 +83,27 @@ void Terrain::generateIndices()
             mIndices->push_back(lowerLine + x);
             mIndices->push_back(upperLine + x - 1);
         }
+    }
+}
+
+void Terrain::generateNormals()
+{
+    vector<glm::vec3> vertexNormals{mWidth * mHeight};
+    uint32_t i = 0;
+    while (i < mIndices->size()) {
+        auto v1 = mIndices->at(i++);
+        auto v2 = mIndices->at(i++);
+        auto v3 = mIndices->at(i++);
+        auto d = mVertices->at(v1).position;
+        auto b = mVertices->at(v2).position;
+        auto a = mVertices->at(v3).position;
+        auto f1 = glm::normalize(glm::cross(glm::vec3(a - b), glm::vec3(d - b)));
+        vertexNormals[v1] += f1;
+        vertexNormals[v2] += f1;
+        vertexNormals[v3] += f1;
+    }
+    i = 0;
+    for ( i = 0; i < vertexNormals.size(); i++) {
+        mVertices->at(i).normal = Vector{glm::normalize(vertexNormals[i])};
     }
 }

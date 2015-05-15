@@ -107,6 +107,7 @@ public:
     explicit Vector(float _x, float _y, float _z) : glm::vec4{_x, _y, _z, 0.0f} {}
     explicit Vector(glm::vec4& v) : glm::vec4{v} {}
     explicit Vector(glm::vec4&& v) : glm::vec4{v} {}
+    explicit Vector(const glm::vec3& v) : glm::vec4{v, 0.0f} {}
     friend std::ostream& operator<<(std::ostream& o, const Vector& d) {
         return o << "v(" << d.x << ", " << d.y << ", " << d.z << ", " << d.w << ")";
     }

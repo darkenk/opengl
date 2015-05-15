@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014, Dariusz Kluska <darkenk@gmail.com>
+ * Copyright (C) 2015, Dariusz Kluska <darkenk@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,30 +27,32 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-//#include <gtest/gtest.h>
-//#include "../src/models/cube.hpp"
+#ifndef HEIGHTMAP_HPP
+#define HEIGHTMAP_HPP
 
-#include <glm/common.hpp>
-#include <gtest/gtest.h>
+#include <vector>
+#include <cstdint>
 
-//using testing::ElementsAreArray;
-
-TEST(CubeTest, check_cube_indices)
+class HeightMap
 {
-    unsigned int indices[] = {  1, 0, 2,
-                                1, 2, 3,
-                                5, 4, 6,
-                                5, 6, 7,
-                                1, 5, 7,
-                                1, 7, 3,
-                                0, 4, 6,
-                                0, 6, 2,
-                                0, 4, 5,
-                                5, 1, 0,
-                                2, 6, 7,
-                                2, 7, 3};
-    int icount = sizeof(indices)/sizeof(*indices);
-    Cube cube;
-    ASSERT_EQ(icount, cube.getIndices()->size());
-    //EXPECT_THAT(*cube.getIndices(), ElementsAreArray(indices));
-}
+public:
+    HeightMap(uint32_t w, uint32_t h);
+    virtual ~HeightMap();
+
+    uint32_t width() const {
+        return static_cast<uint32_t>(mHeightMap[0].size());
+    }
+
+    uint32_t height() const {
+        return static_cast<uint32_t>(mHeightMap.size());
+    }
+
+    std::vector<float> operator[](uint32_t p) const {
+        return mHeightMap[p];
+    }
+
+protected:
+    std::vector<std::vector<float>> mHeightMap;
+};
+
+#endif // HEIGHTMAP_HPP

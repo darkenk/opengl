@@ -33,17 +33,19 @@
 #include <vector>
 #include <memory>
 #include "iobject.hpp"
+#include "heightmap.hpp"
 
 class Terrain : public IObject
 {
 public:
-    Terrain(unsigned int width, unsigned int height);
+    Terrain(const HeightMap& hm);
     virtual VertexVectorPtr getVertices();
     virtual IndexVectorPtr getIndices();
 
 private:
-    void generate();
+    void generate(const HeightMap& hm);
     void generateIndices();
+    void generateNormals();
     VertexVectorPtr mVertices;
     IndexVectorPtr mIndices;
     unsigned int mWidth;

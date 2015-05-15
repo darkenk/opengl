@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014, Dariusz Kluska <darkenk@gmail.com>
+ * Copyright (C) 2015, Dariusz Kluska <darkenk@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,30 +27,20 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-//#include <gtest/gtest.h>
-//#include "../src/models/cube.hpp"
+#include "heightmap.hpp"
 
-#include <glm/common.hpp>
-#include <gtest/gtest.h>
+#include <cassert>
+#include "logger.hpp"
 
-//using testing::ElementsAreArray;
+using namespace std;
 
-TEST(CubeTest, check_cube_indices)
+HeightMap::HeightMap(uint w, uint h) :
+    mHeightMap{h, vector<float>(w, 0.f)}
 {
-    unsigned int indices[] = {  1, 0, 2,
-                                1, 2, 3,
-                                5, 4, 6,
-                                5, 6, 7,
-                                1, 5, 7,
-                                1, 7, 3,
-                                0, 4, 6,
-                                0, 6, 2,
-                                0, 4, 5,
-                                5, 1, 0,
-                                2, 6, 7,
-                                2, 7, 3};
-    int icount = sizeof(indices)/sizeof(*indices);
-    Cube cube;
-    ASSERT_EQ(icount, cube.getIndices()->size());
-    //EXPECT_THAT(*cube.getIndices(), ElementsAreArray(indices));
+    assert(w != 0);
+    assert(h != 0);
+}
+
+HeightMap::~HeightMap()
+{
 }
