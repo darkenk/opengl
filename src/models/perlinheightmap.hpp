@@ -27,41 +27,21 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "lightscenewidget.hpp"
-#include <vector>
-#include <utility>
-#include "shader.hpp"
-#include "models/terrain.hpp"
-#include "simpleobject.hpp"
-#include "models/cube.hpp"
-#include "make_unique.hpp"
-#include "models/perlinheightmap.hpp"
+#ifndef PERLINHEIGHTMAP_HPP
+#define PERLINHEIGHTMAP_HPP
 
-using namespace std;
+#include "heightmap.hpp"
 
-LightSceneWidget::LightSceneWidget(QWidget* _parent) :
-    MyGLWidget(_parent)
+class PerlinHeightMap : public HeightMap
 {
+public:
+    PerlinHeightMap(uint32_t w, uint32_t h);
+    virtual ~PerlinHeightMap();
 
-}
+private:
+    void generate();
+    float octave(float x, float y);
+    uint32_t mOctaves;
+};
 
-void LightSceneWidget::initScene()
-{
-    vector<pair<GLuint, const string>> shaders{
-        pair<GLuint, const string>(GL_FRAGMENT_SHADER, "opengl_shaders/fragment.glsl"),
-        pair<GLuint, const string>(GL_VERTEX_SHADER, "opengl_shaders/vertex.glsl")};
-    shared_ptr<Shader> shader = make_shared<Shader>(shaders);
-    getRenderer().getLight()->addShader(shader);
-    auto cube = make_unique<Cube>();
-    auto cubeVert = make_shared<Buffer<Vertex>>(cube->getVertices());
-    auto cubeIdx = make_shared<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>>(cube->getIndices());
-    getRenderer().addObject(make_shared<SimpleObject>(cubeVert, cubeIdx, shader));
-
-    auto terrain = make_unique<Terrain>(PerlinHeightMap{48u, 48u});
-    auto terrainVert = make_shared<Buffer<Vertex>>(terrain->getVertices());
-    auto terrainIdx = make_shared<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>>(terrain->getIndices());
-    auto object = make_shared<SimpleObject>(terrainVert, terrainIdx, shader);
-    glm::mat4 m = glm::translate(glm::mat4(), glm::vec3(-12.0f, -3.0f, -24.0f));
-    object->setModel(m);
-    getRenderer().addObject(object);
-}
+#endif // PERLINHEIGHTMAP_HPP

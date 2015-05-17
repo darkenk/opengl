@@ -27,41 +27,44 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "lightscenewidget.hpp"
-#include <vector>
-#include <utility>
-#include "shader.hpp"
-#include "models/terrain.hpp"
-#include "simpleobject.hpp"
-#include "models/cube.hpp"
-#include "make_unique.hpp"
-#include "models/perlinheightmap.hpp"
+#include "perlinheightmap.hpp"
+#include <glm/gtc/noise.hpp>
+#include <cinttypes>
 
 using namespace std;
 
-LightSceneWidget::LightSceneWidget(QWidget* _parent) :
-    MyGLWidget(_parent)
+PerlinHeightMap::PerlinHeightMap(uint32_t w, uint32_t h):
+    HeightMap(w, h),
+    mOctaves{7}
 {
-
+    generate();
 }
 
-void LightSceneWidget::initScene()
+PerlinHeightMap::~PerlinHeightMap()
 {
-    vector<pair<GLuint, const string>> shaders{
-        pair<GLuint, const string>(GL_FRAGMENT_SHADER, "opengl_shaders/fragment.glsl"),
-        pair<GLuint, const string>(GL_VERTEX_SHADER, "opengl_shaders/vertex.glsl")};
-    shared_ptr<Shader> shader = make_shared<Shader>(shaders);
-    getRenderer().getLight()->addShader(shader);
-    auto cube = make_unique<Cube>();
-    auto cubeVert = make_shared<Buffer<Vertex>>(cube->getVertices());
-    auto cubeIdx = make_shared<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>>(cube->getIndices());
-    getRenderer().addObject(make_shared<SimpleObject>(cubeVert, cubeIdx, shader));
+}
 
-    auto terrain = make_unique<Terrain>(PerlinHeightMap{48u, 48u});
-    auto terrainVert = make_shared<Buffer<Vertex>>(terrain->getVertices());
-    auto terrainIdx = make_shared<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>>(terrain->getIndices());
-    auto object = make_shared<SimpleObject>(terrainVert, terrainIdx, shader);
-    glm::mat4 m = glm::translate(glm::mat4(), glm::vec3(-12.0f, -3.0f, -24.0f));
-    object->setModel(m);
-    getRenderer().addObject(object);
+void PerlinHeightMap::generate()
+{
+    float w = width();
+    float h = height();
+    for (uint32_t y = 0; y < height(); y++) {
+        for (uint32_t x = 0; x < width(); x++) {
+            mHeightMap[y][x] = octave(x/w, y/h);
+        }
+    }
+}
+
+float PerlinHeightMap::octave(float x, float y)
+{
+    float total = 0;
+    float frequency = 1;
+    float amplitude = 1;
+    float persistence = 0.9f;
+    for (uint32_t i = 0;i < mOctaves; i++) {
+        total += glm::perlin(glm::vec2(x * frequency, y * frequency)) * amplitude;
+        amplitude *= persistence;
+        frequency *= 2;
+    }
+    return total;
 }
