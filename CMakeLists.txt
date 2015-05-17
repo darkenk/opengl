@@ -3,44 +3,32 @@ project(opengl)
 cmake_minimum_required(VERSION 2.8.11)
 
 # set build type to debug as it is in development phase
-option(CMAKE_BUILD_TYPE "default built type to debug" DEBUG)
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE DEBUG CACHE STRING
+      "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE)
+endif()
+
+# enable verbose building
+if (NOT CMAKE_VERBOSE_MAKEFILE)
+    set(CMAKE_VERBOSE_MAKEFILE ON CACHE STRING "Enable compile verbose mode by default" FORCE)
+endif()
 
 # Appends the cmake/modules path inside the MAKE_MODULE_PATH variable which stores the
 # directories of additional CMake modules (ie. MacroOutOfSourceBuild.cmake):
 set(CMAKE_MODULE_PATH ${opengl_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
-# determine which compiler is used
-if(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
-    # using Clang
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -DGLM_FORCE_RADIANS -D__cplusplus=201103L")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-exit-time-destructors -Wno-implicit-fallthrough")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-missing-braces -Wno-padded")
-elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
-    # using GCC
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -DGLM_FORCE_RADIANS")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wall -Wextra -Wpedantic -Wcast-align -Wcast-qual")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wconversion -Wctor-dtor-privacy -Wdisabled-optimization")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wdouble-promotion -Wfloat-equal -Wformat=2 -Winit-self")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Winvalid-pch -Wlogical-op -Wmissing-declarations -Wmissing-include-dirs")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnoexcept -Wold-style-cast -Woverloaded-virtual -Wredundant-decls")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wshadow -Wsign-conversion -Wsign-promo -Wstrict-null-sentinel")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wstrict-overflow=5 -Wtrampolines -Wundef -Wunsafe-loop-optimizations")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wvector-operation-performance -Wzero-as-null-pointer-constant")
-elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
-
-endif()
-
 # Common lib dependencies
 find_package(OpenGL REQUIRED)
-option(INTERNAL_LIBS "use glm and glew from source" OFF)
+option(INTERNAL_LIBS "use glm and glew from external folder" OFF)
 if (WIN32)
     set(INTERNAL_LIBS 1)
 endif()
-if (INTERNAL_LIBS)
-    include(${CMAKE_SOURCE_DIR}/external/CMakeLists.txt)
-elseif (UNIX)
+
+include(${CMAKE_SOURCE_DIR}/external/CMakeLists.txt)
+if (NOT GLEW_FOUND)
     find_package(GLEW 1.10.0 REQUIRED)
+endif()
+if (NOT GLM_FOUND)
     find_package(GLM 0.9.5.3 REQUIRED)
 endif()
 

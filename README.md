@@ -2,7 +2,7 @@
 
 Project is using [QDarkStyleSheet](https://github.com/ColinDuquesnoy/QDarkStyleSheet) stylesheet for demos. To fetch missing project type:
 ```
-git sumbodule init qt/demos/QDarkStyleSheet
+git sumbodule init demos/qt/QDarkStyleSheet
 git submodule update
 ```
 
@@ -24,11 +24,12 @@ cmake ../ -DCMAKE_CXX_COMIPLER=clang++ -DCMAKE_BUILD_TYPE=Debug
 cmake ../ -DCMAKE_CXX_COMPILER=clang++ -DENABLE_DEMOS=FALSE
 ```
 
-# To run only one test, eg.
-Tests for now will not compile.
+# Tests
+To build tests you need GTest, GMock and GLMock
 ```
-make run_shaderloader_test -DENABLE_TESTS
+cmake ../ -DCMAKE_CXX_COMPILER=clang++ -DENABLE_TESTS
 ```
+Tests are available in bin_tests
 
 # For MS Windows
 It is needed to download dependencies via:
@@ -48,7 +49,11 @@ After that import project into QtCreator and built normally
 * **external** - contains projects dependencies (used for windows)
   * **glew** - OpenGL Extension Wrangler
   * **glm** - math library
+  * **glmock** - OpenGL mock
+  * **gmock** - Google mock
+  * **gtest** - Google test
 * **src** - core/common part of all demos
+  * **models** - contains geometric models (cube, terrain, sphere, etc.)
   * **shaders** - shaders used for common part
   * **units** - contains units like meters/seconds/radians/vertices etc.
 * **tests** - unit tests (currently abandoned)
