@@ -59,6 +59,9 @@ public:
     void setWorldMatrix(const glm::mat4& world);
     void setWvpMatrix(const glm::mat4& mvp);
     Type getType() const { return mType; }
+    void enablePoints(bool enable) {
+        mDrawPoints = enable;
+    }
 
 private:
     std::shared_ptr<Shader> mShader;
@@ -67,6 +70,7 @@ private:
     GLsizei mNumberOfIndices;
     glm::mat4 mWorld;
     glm::mat4 mWVP;
+    bool mDrawPoints;
 };
 
 #endif // RENDERPASS_HPP

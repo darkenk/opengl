@@ -87,6 +87,7 @@ public:
     explicit Position(Meter _x, Meter _y, Meter _z) : glm::vec4{_x, _y, _z, 1.0f} {}
     explicit Position(glm::vec4& v) : glm::vec4{v} {}
     explicit Position(glm::vec4&& v) : glm::vec4{v} {}
+    explicit Position(glm::vec3 v) : glm::vec4{v.x, v.y, v.z, 1.0f} {}
     friend std::ostream& operator<<(std::ostream& o, const Position& p) {
         return o << "p(" << p.x << ", " << p.y << ", " << p.z << ", " << p.w << ")";
     }

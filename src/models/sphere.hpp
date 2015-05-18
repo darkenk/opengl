@@ -27,45 +27,30 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "renderpass.hpp"
-#include <glm/gtc/type_ptr.hpp>
+#ifndef SPHERE_HPP
+#define SPHERE_HPP
 
-const RenderPass::Type RenderPass::SHOW_NORMALS = 0;
-const RenderPass::Type RenderPass::USER = 100;
+#include "../iobject.hpp"
 
-RenderPass::RenderPass(std::shared_ptr<Shader> shader, Type type) :
-    mShader{shader}, mType{type}, mDrawPoints{false}
+class Sphere : public IObject
 {
-    glGenVertexArrays(1, &mVao);
-}
+public:
+    Sphere(uint32_t level = 5, Color color = Color{1.0f, 0.0f, 0.0f, 0.0f});
 
-RenderPass::~RenderPass()
-{
-    glDeleteVertexArrays(1, &mVao);
-}
+    VertexVectorPtr getVertices();
+    IndexVectorPtr getIndices();
 
-void RenderPass::render()
-{
-    mShader->use();
-    glUniformMatrix4fv(mShader->getUniform("gWorld"), 1, GL_FALSE, glm::value_ptr(mWorld));
-    glUniformMatrix4fv(mShader->getUniform("gWVP"), 1, GL_FALSE, glm::value_ptr(mWVP));
-    glBindVertexArray(mVao);
-    if (mDrawPoints) {
-        glPointSize(4.0f);
-        glDrawArrays(GL_POINTS, 0, mNumberOfIndices/3);
-    } else {
-        glDrawElements(GL_TRIANGLES, mNumberOfIndices, GL_UNSIGNED_INT, nullptr);
-    }
-    glBindVertexArray(0);
-    mShader->unUse();
-}
+private:
+    void generateVertices();
+    void generateIndices();
+    void increaseLevelOfDetail();
+    void computeNormals();
+    void addTriangleIdx(Index v1, Index v2, Index v3);
+    uint32_t getMiddlePoint(uint32_t p1, uint32_t p2);
+    std::shared_ptr<std::vector<Vertex>> mVertices;
+    std::shared_ptr<std::vector<Index>> mIndices;
+    uint32_t mLevel;
+    Color mColor;
+};
 
-void RenderPass::setWorldMatrix(const glm::mat4& world)
-{
-    mWorld = world;
-}
-
-void RenderPass::setWvpMatrix(const glm::mat4& wvp)
-{
-    mWVP = wvp;
-}
+#endif // SPHERE_HPP
