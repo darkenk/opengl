@@ -33,12 +33,13 @@
 #include "renderer.hpp"
 #include <QGLWidget>
 #include <memory>
+#include<functional>
 
 class MyGLWidget : public QGLWidget
 {
     Q_OBJECT
 public:
-    MyGLWidget(QWidget *_parent = nullptr);
+    MyGLWidget(QWidget *_parent = nullptr, std::function<void(Renderer&)> initFunction = nullptr);
     virtual ~MyGLWidget();
     Renderer& getRenderer() { return *mRenderer; }
 
@@ -50,10 +51,11 @@ protected:
     virtual void paintGL();
     virtual void resizeGL(int _width, int _height);
     virtual void keyPressEvent(QKeyEvent* e);
-    virtual void initScene() = 0;
+    virtual void initScene();
 
 private:
     std::shared_ptr<Renderer> mRenderer;
+    std::function<void(Renderer&)> mInitFunction;
 };
 
 #endif // MYGLWIDGET_HPP

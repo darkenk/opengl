@@ -30,9 +30,25 @@
 #include <QApplication>
 #include <string>
 #include "utils.hpp"
-#include "trianglewidget.hpp"
+#include "myglwidget.hpp"
+#include "make_unique.hpp"
+#include "simpleobject.hpp"
+#include "models/cube.hpp"
+#include "models/terrain.hpp"
 
 using namespace std;
+
+void initScene(Renderer& renderer) {
+    vector<pair<GLuint, const string>> shaders{
+        make_pair(GL_FRAGMENT_SHADER, "triangle_shaders/fragment.glsl"),
+        make_pair(GL_VERTEX_SHADER, "triangle_shaders/vertex.glsl")};
+    auto shader = make_shared<Shader>(shaders);
+    auto triangle = make_unique<Triangle>();
+    auto triangleVert = make_shared<Buffer<Vertex>>(triangle->getVertices());
+    auto triangleIdx = make_shared<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>>(triangle->getIndices());
+    auto triangleObject = make_shared<SimpleObject>(triangleVert, triangleIdx, shader);
+    renderer.addObject(triangleObject);
+}
 
 int main(int argc, char *argv[])
 {
@@ -42,7 +58,7 @@ int main(int argc, char *argv[])
         setBasePath(s);
     }
     QApplication app(argc, argv);
-    TriangleWidget widget;
+    MyGLWidget widget(nullptr, initScene);
     widget.show();
     return app.exec();
 }

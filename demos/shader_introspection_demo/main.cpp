@@ -28,15 +28,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include <QApplication>
-#include <QDesktopWidget>
-#include <QFile>
-#include <QTextStream>
-#include <string>
 #include "utils.hpp"
 
-#include "shaderwidget.hpp"
+#include "myglwidget.hpp"
 
 using namespace std;
+
+void initScene(Renderer& /*renderer*/) {
+    vector<pair<GLuint, const string>> shaders{
+        pair<GLuint, const string>(GL_FRAGMENT_SHADER, "opengl_shaders/fragment.glsl"),
+        pair<GLuint, const string>(GL_VERTEX_SHADER, "opengl_shaders/vertex.glsl")};
+    shared_ptr<Shader> shader = make_shared<Shader>(shaders);
+}
 
 int main(int argc, char *argv[])
 {
@@ -46,7 +49,7 @@ int main(int argc, char *argv[])
         setBasePath(s);
     }
     QApplication app(argc, argv);
-    ShaderWidget window;
+    MyGLWidget window(nullptr, initScene);
     window.setWindowTitle("OpenGL with Qt");
     window.show();
     return app.exec();

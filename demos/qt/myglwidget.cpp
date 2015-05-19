@@ -32,8 +32,8 @@
 
 using namespace std;
 
-MyGLWidget::MyGLWidget(QWidget* _parent) :
-    QGLWidget(_parent, nullptr, Qt::Widget)
+MyGLWidget::MyGLWidget(QWidget* _parent, function<void(Renderer&)> initFunction) :
+    QGLWidget(_parent, nullptr, Qt::Widget), mInitFunction{initFunction}
 {
     QGLFormat glFormat;
     glFormat.setVersion(3, 3);
@@ -68,4 +68,11 @@ void MyGLWidget::keyPressEvent(QKeyEvent* e)
     mRenderer->handleKey(static_cast<int>(e->nativeVirtualKey()));
     e->accept();
     QWidget::keyPressEvent(e);
+}
+
+void MyGLWidget::initScene()
+{
+    if (mInitFunction != nullptr) {
+        mInitFunction(*mRenderer);
+    }
 }
