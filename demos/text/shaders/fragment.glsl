@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015, Dariusz Kluska <darkenk@gmail.com>
+ * Copyright (C) 2014, Dariusz Kluska <darkenk@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,56 +27,13 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include <QApplication>
-#include <string>
-#include "utils.hpp"
-#include "myglwidget.hpp"
-#include "make_unique.hpp"
-#include "simpleobject.hpp"
-#include "models/cube.hpp"
-#include "models/terrain.hpp"
+#version 330
 
-using namespace std;
+in vec2 vColor;
 
-class A
+uniform sampler2D gTextSampler;
+
+void main(void)
 {
-public:
-    virtual void f() = 0;
-};
-
-class B : public A
-{
-public:
-    virtual void f() {}
-};
-
-void f(A& b){
-    b.f();
-}
-
-void initScene(Renderer& renderer) {
-    vector<pair<GLuint, const string>> shaders{
-        make_pair(GL_FRAGMENT_SHADER, "triangle_shaders/fragment.glsl"),
-        make_pair(GL_VERTEX_SHADER, "triangle_shaders/vertex.glsl")};
-    auto shader = make_shared<Shader>(shaders);
-    auto triangle = make_unique<Triangle>();
-    auto triangleVert = make_shared<Buffer<Vertex3>>(triangle->getVertices());
-    auto triangleIdx = make_shared<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>>(triangle->getIndices());
-    auto triangleObject = make_shared<SimpleObject>(triangleVert, triangleIdx, shader);
-    renderer.addObject(triangleObject);
-}
-
-int main(int argc, char *argv[])
-{
-    {
-        string s(argv[0]);
-        s.erase(s.find_last_of("/")+1);
-        setBasePath(s);
-    }
-    B a;
-    f(a);
-    QApplication app(argc, argv);
-    MyGLWidget widget(nullptr, initScene);
-    widget.show();
-    return app.exec();
+    gl_FragColor = texture2D(gTextSampler, vColor);
 }

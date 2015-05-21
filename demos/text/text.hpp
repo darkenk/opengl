@@ -27,56 +27,65 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include <QApplication>
-#include <string>
-#include "utils.hpp"
-#include "myglwidget.hpp"
-#include "make_unique.hpp"
-#include "simpleobject.hpp"
-#include "models/cube.hpp"
-#include "models/terrain.hpp"
+#ifndef TEXT_HPP
+#define TEXT_HPP
 
-using namespace std;
+#include "stb_truetype.h"
+#include "renderer.hpp"
+#include "renderpass.hpp"
+#include "units/vertex.hpp"
+#include <ImageMagick/Magick++.h>
 
-class A
+class Position2D : public glm::vec2
 {
 public:
-    virtual void f() = 0;
+    explicit Position2D(Meter _x = 0.0_m, Meter _y = 0.0_m) : glm::vec2{_x, _y} {}
+    //explicit Position2D(glm::vec4& v) : glm::vec4{v} {}
+    //explicit Position2D(glm::vec4&& v) : glm::vec4{v} {}
+    //explicit Position2D(glm::vec3 v) : glm::vec4{v.x, v.y, v.z, 1.0f} {}
+//    friend std::ostream& operator<<(std::ostream& o, const Position2D& p) {
+//        return o << "p(" << p.x << ", " << p.y << ", " << p.z << ", " << p.w << ")";
+//    }
+    static constexpr GLenum Type = GL_FLOAT;
+    static constexpr GLint Size = 2;
 };
 
-class B : public A
+using VertexPosition = Vertex<Position2D>;
+
+class Font 
 {
 public:
-    virtual void f() {}
-};
-
-void f(A& b){
-    b.f();
-}
-
-void initScene(Renderer& renderer) {
-    vector<pair<GLuint, const string>> shaders{
-        make_pair(GL_FRAGMENT_SHADER, "triangle_shaders/fragment.glsl"),
-        make_pair(GL_VERTEX_SHADER, "triangle_shaders/vertex.glsl")};
-    auto shader = make_shared<Shader>(shaders);
-    auto triangle = make_unique<Triangle>();
-    auto triangleVert = make_shared<Buffer<Vertex3>>(triangle->getVertices());
-    auto triangleIdx = make_shared<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>>(triangle->getIndices());
-    auto triangleObject = make_shared<SimpleObject>(triangleVert, triangleIdx, shader);
-    renderer.addObject(triangleObject);
-}
-
-int main(int argc, char *argv[])
-{
-    {
-        string s(argv[0]);
-        s.erase(s.find_last_of("/")+1);
-        setBasePath(s);
+    Font() {
+        m_image.read("ExportedFont.bmp");
+        m_image.write(&m_blob, "RGBA");
     }
-    B a;
-    f(a);
-    QApplication app(argc, argv);
-    MyGLWidget widget(nullptr, initScene);
-    widget.show();
-    return app.exec();
-}
+    GLsizei bitmapWidth() {
+        return static_cast<GLsizei>(m_image.columns());
+    }
+    GLsizei bitmapHeight() {
+        return static_cast<GLsizei>(m_image.rows());
+    }
+    const GLvoid* bitmap() {
+        return m_blob.data();
+    }
+
+private:
+    Magick::Image m_image;
+    Magick::Blob m_blob;
+};
+
+class Text : public IRenderableObject
+{
+public:
+    Text();
+    virtual void render();
+
+private:
+    Font mFont;
+    void init();
+    GLuint mFontTex;
+    std::shared_ptr<Shader> mShader;
+    std::shared_ptr<Buffer<VertexPosition>> mVertexBuffer;
+    GLuint mVao;
+};
+#endif // TEXT_HPP

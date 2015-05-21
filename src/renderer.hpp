@@ -33,7 +33,7 @@
 #include <memory>
 #include <vector>
 #include "camera.hpp"
-#include "simpleobject.hpp"
+#include "irenderableobject.hpp"
 #include "light.hpp"
 
 class Renderer
@@ -44,14 +44,14 @@ public:
     virtual void render();
     virtual void cleanup();
     virtual void resize(int width, int height);
-    void addObject(std::shared_ptr<SimpleObject> object);
+    void addObject(std::shared_ptr<IRenderableObject> object);
     void handleKey(int key);
     std::shared_ptr<Light> getLight();
     void showNormals(bool show);
 
 private:
     std::shared_ptr<Camera> mCamera;
-    std::vector<std::shared_ptr<SimpleObject>> mObjects;
+    std::vector<std::shared_ptr<IRenderableObject>> mObjects;
     glm::mat4 mProjection;
     std::shared_ptr<Light> mLight;
     std::shared_ptr<Shader> mNormalShader;

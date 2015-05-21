@@ -35,6 +35,7 @@
 #include <GL/glew.h>
 #include "exceptions.hpp"
 #include <iostream>
+#include <renderpass.hpp>
 
 class IRenderableObject
 {
@@ -44,6 +45,8 @@ public:
     virtual void setVpMatrix(const glm::mat4& /*matrix*/) {}
     virtual void setModel(const glm::mat4& matrix);
     virtual const glm::mat4& getModel() const;
+    virtual void addRenderPass(std::shared_ptr<RenderPass> renderPass);
+    virtual void removeRenderPass(RenderPass::Type t);
 
 private:
     glm::mat4 mModel;

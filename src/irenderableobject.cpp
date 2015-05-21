@@ -29,10 +29,21 @@
  */
 #include "irenderableobject.hpp"
 
+using namespace std;
+
 void IRenderableObject::setModel(const glm::mat4& matrix) {
     mModel = matrix;
 }
 
 const glm::mat4& IRenderableObject::getModel() const {
     return mModel;
+}
+
+void IRenderableObject::addRenderPass(shared_ptr<RenderPass> /*renderPass*/)
+{
+}
+
+void IRenderableObject::removeRenderPass(RenderPass::Type /*t*/)
+{
+    
 }

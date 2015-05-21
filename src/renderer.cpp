@@ -74,7 +74,7 @@ void Renderer::resize(int width, int height)
     glViewport(0, 0, width, height);
 }
 
-void Renderer::addObject(shared_ptr<SimpleObject> object)
+void Renderer::addObject(shared_ptr<IRenderableObject> object)
 {
     if (mShowNormals) {
         object->addRenderPass(make_shared<RenderPass>(mNormalShader, RenderPass::SHOW_NORMALS));

@@ -35,46 +35,24 @@
 #include "simpleobject.hpp"
 #include "models/cube.hpp"
 #include "models/terrain.hpp"
+#include "text.hpp"
+#include <ImageMagick/Magick++.h>
 
 using namespace std;
 
-class A
-{
-public:
-    virtual void f() = 0;
-};
-
-class B : public A
-{
-public:
-    virtual void f() {}
-};
-
-void f(A& b){
-    b.f();
-}
-
 void initScene(Renderer& renderer) {
-    vector<pair<GLuint, const string>> shaders{
-        make_pair(GL_FRAGMENT_SHADER, "triangle_shaders/fragment.glsl"),
-        make_pair(GL_VERTEX_SHADER, "triangle_shaders/vertex.glsl")};
-    auto shader = make_shared<Shader>(shaders);
-    auto triangle = make_unique<Triangle>();
-    auto triangleVert = make_shared<Buffer<Vertex3>>(triangle->getVertices());
-    auto triangleIdx = make_shared<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>>(triangle->getIndices());
-    auto triangleObject = make_shared<SimpleObject>(triangleVert, triangleIdx, shader);
-    renderer.addObject(triangleObject);
+    auto t = make_shared<Text>();
+    renderer.addObject(t);
 }
 
 int main(int argc, char *argv[])
 {
+    Magick::InitializeMagick(*argv);
     {
         string s(argv[0]);
         s.erase(s.find_last_of("/")+1);
         setBasePath(s);
     }
-    B a;
-    f(a);
     QApplication app(argc, argv);
     MyGLWidget widget(nullptr, initScene);
     widget.show();
