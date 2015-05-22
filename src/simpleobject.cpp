@@ -38,7 +38,7 @@
 
 using namespace std;
 
-SimpleObject::SimpleObject(shared_ptr<Buffer<Vertex>> vert,
+SimpleObject::SimpleObject(shared_ptr<Buffer<Vertex3>> vert,
                            shared_ptr<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>> idx,
                            shared_ptr<Shader> shader):
     mShader{shader}, mVertexBuffer{vert}, mIndexBuffer{idx}

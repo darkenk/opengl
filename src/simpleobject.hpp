@@ -30,18 +30,19 @@
 #ifndef SIMPLEOBJECT_HPP
 #define SIMPLEOBJECT_HPP
 
-#include "irenderableobject.hpp"
-#include "shader.hpp"
 #include <memory>
 #include <GL/glew.h>
+#include "irenderableobject.hpp"
+#include "shader.hpp"
 #include "iobject.hpp"
 #include "buffer.hpp"
 #include "renderpass.hpp"
+#include "units/vertex.hpp"
 
 class SimpleObject : public IRenderableObject
 {
 public:
-    SimpleObject(std::shared_ptr<Buffer<Vertex>> vert,
+    SimpleObject(std::shared_ptr<Buffer<Vertex3>> vert,
                  std::shared_ptr<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>> idx,
                  std::shared_ptr<Shader> shader);
     virtual ~SimpleObject();
@@ -54,7 +55,7 @@ public:
 private:
     std::shared_ptr<Shader> mShader;
     std::vector<std::shared_ptr<RenderPass>> mRenderPasses;
-    std::shared_ptr<Buffer<Vertex>> mVertexBuffer;
+    std::shared_ptr<Buffer<Vertex3>> mVertexBuffer;
     std::shared_ptr<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>> mIndexBuffer;
 };
 

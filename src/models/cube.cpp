@@ -30,14 +30,15 @@
 #include "cube.hpp"
 
 #include <vector>
-#include <glm/gtc/constants.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 #include <algorithm>
 
 using namespace std;
 
 Cube::Cube()
 {
-    mVertices = make_shared<vector<Vertex>>();
+    mVertices = make_shared<vector<Vertex3>>();
     mIndices = make_shared<vector<Index>>();
     generateVertices();
     generateIndices();
@@ -51,30 +52,41 @@ IndexVectorPtr Cube::getIndices() {
     return mIndices;
 }
 
-vector<Vertex> Cube::generateFront()
+vector<Vertex3> Cube::generateFront()
 {
-    const Color color{0.0f, 1.0f, 1.0f, 1.0f};
-    const Vector normal{0.0f, 0.0f, 1.0f};
-    vector<Vertex> tmp;
-    Vertex v{Position{-0.5_m, -0.5_m, 0.5_m}, color, normal};
+    Color color{0.0f, 1.0f, 1.0f, 1.0f};
+    Vector normal{0.0f, 0.0f, 1.0f};
+    Position position{-0.5_m, -0.5_m, 0.5_m};
+    vector<Vertex3> tmp;
+    Vertex3 v{position, color, normal};
     for (int i = 0; i < 4; ++i) {
         tmp.push_back(v);
-        v.rotateZ(PI/2);
+        v.v0 = Position{glm::rotateZ(v.v0, glm::pi<float>()/2.0f)};
+        v.v2 = Vector{glm::rotateZ(v.v2, glm::pi<float>()/2.0f)};
     }
     return tmp;
 }
 
 void Cube::generateVertices()
 {
-    vector<Vertex> tmp{generateFront()};
+    vector<Vertex3> tmp{generateFront()};
     int i = 4;
     while (i--) {
         mVertices->insert(mVertices->end(), tmp.begin(), tmp.end());
-        for_each(tmp.begin(), tmp.end(), [](Vertex& v) { v.rotateY(PI/2); });
+        for_each(tmp.begin(), tmp.end(), [](Vertex3& v) {
+            v.v0 = Position{glm::rotateY(v.v0, glm::pi<float>()/2.0f)};
+            v.v2 = Vector{glm::rotateY(v.v2, glm::pi<float>()/2.0f)};
+        });
     }
-    for_each(tmp.begin(), tmp.end(), [](Vertex& v) { v.rotateX(PI/2); });
+    for_each(tmp.begin(), tmp.end(), [](Vertex3& v) {
+        v.v0 = Position{glm::rotateX(v.v0, glm::pi<float>()/2.0f)};
+        v.v2 = Vector{glm::rotateX(v.v2, glm::pi<float>()/2.0f)};
+    });
     mVertices->insert(mVertices->end(), tmp.begin(), tmp.end());
-    for_each(tmp.begin(), tmp.end(), [](Vertex& v) { v.rotateX(PI); });
+    for_each(tmp.begin(), tmp.end(), [](Vertex3& v) {
+        v.v0 = Position{glm::rotateX(v.v0, glm::pi<float>())};
+        v.v2 = Vector{glm::rotateX(v.v2, glm::pi<float>())};
+    });
     mVertices->insert(mVertices->end(), tmp.begin(), tmp.end());
 }
 
@@ -98,12 +110,12 @@ IndexVectorPtr Triangle::getIndices() {
 
 VertexVectorPtr Triangle::getVertices() {
     const Vector normal{0.0f, 0.0f, 1.0f};
-    VertexVectorPtr v = make_shared<VertexVector>(initializer_list<Vertex>{
-         Vertex{Position{-1.0_m, -1.0_m, 0.0_m},
+    VertexVectorPtr v = make_shared<VertexVector>(initializer_list<Vertex3>{
+         Vertex3{Position{-1.0_m, -1.0_m, 0.0_m},
                 Color{1.0f, 0.0f, 0.0f, 1.0f}, normal},
-         Vertex{Position{0.0_m, 1.0_m, 0.0_m},
+         Vertex3{Position{0.0_m, 1.0_m, 0.0_m},
                 Color{0.0f, 1.0f, 0.0f, 1.0f}, normal},
-         Vertex{Position{1.0_m, -1.0_m, 0.0_m},
+         Vertex3{Position{1.0_m, -1.0_m, 0.0_m},
                 Color{0.0f, 0.0f, 1.0f, 1.0f}, normal}
     });
     return v;

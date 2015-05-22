@@ -33,6 +33,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/constants.hpp>
 #include <ostream>
+#include <GL/glew.h>
 
 class Radians
 {
@@ -84,34 +85,42 @@ constexpr Meter operator"" _m(long double d) { return Meter(d); }
 class Position : public glm::vec4
 {
 public:
-    explicit Position(Meter _x, Meter _y, Meter _z) : glm::vec4{_x, _y, _z, 1.0f} {}
+    explicit Position(Meter _x = 0.0_m, Meter _y = 0.0_m, Meter _z = 0.0_m) :
+        glm::vec4{_x, _y, _z, 1.0f} {}
     explicit Position(glm::vec4& v) : glm::vec4{v} {}
     explicit Position(glm::vec4&& v) : glm::vec4{v} {}
     explicit Position(glm::vec3 v) : glm::vec4{v.x, v.y, v.z, 1.0f} {}
     friend std::ostream& operator<<(std::ostream& o, const Position& p) {
         return o << "p(" << p.x << ", " << p.y << ", " << p.z << ", " << p.w << ")";
     }
+    static constexpr GLenum Type = GL_FLOAT;
+    static constexpr GLint Size = 4;
 };
 
 class Color : public glm::vec4
 {
 public:
-    explicit Color(float _r, float _g, float _b, float _a) : glm::vec4{_r, _g, _b, _a} {}
+    explicit Color(float _r = 1.0f, float _g = 1.0f, float _b = 1.0f, float _a = 1.0f) :
+        glm::vec4{_r, _g, _b, _a} {}
     friend std::ostream& operator<<(std::ostream& o, const Color& c) {
         return o << "c(" << c.x << ", " << c.y << ", " << c.z << ", " << c.w << ")";
     }
+    static constexpr GLenum Type = GL_FLOAT;
+    static constexpr GLint Size = 4;
 };
 
 class Vector : public glm::vec4
 {
 public:
-    explicit Vector(float _x, float _y, float _z) : glm::vec4{_x, _y, _z, 0.0f} {}
+    explicit Vector(float _x = 1.0f, float _y = 0.0f, float _z = 0.0f) : glm::vec4{_x, _y, _z, 0.0f} {}
     explicit Vector(glm::vec4& v) : glm::vec4{v} {}
     explicit Vector(glm::vec4&& v) : glm::vec4{v} {}
     explicit Vector(const glm::vec3& v) : glm::vec4{v, 0.0f} {}
     friend std::ostream& operator<<(std::ostream& o, const Vector& d) {
         return o << "v(" << d.x << ", " << d.y << ", " << d.z << ", " << d.w << ")";
     }
+    static constexpr GLenum Type = GL_FLOAT;
+    static constexpr GLint Size = 4;
 };
 
 #endif // UNITS_HPP

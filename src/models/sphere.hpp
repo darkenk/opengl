@@ -47,7 +47,7 @@ private:
     void computeNormals();
     void addTriangleIdx(Index v1, Index v2, Index v3);
     uint32_t getMiddlePoint(uint32_t p1, uint32_t p2);
-    std::shared_ptr<std::vector<Vertex>> mVertices;
+    std::shared_ptr<std::vector<Vertex3>> mVertices;
     std::shared_ptr<std::vector<Index>> mIndices;
     uint32_t mLevel;
     Color mColor;

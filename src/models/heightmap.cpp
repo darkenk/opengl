@@ -34,7 +34,7 @@
 
 using namespace std;
 
-HeightMap::HeightMap(uint w, uint h) :
+HeightMap::HeightMap(uint32_t w, uint32_t h) :
     mHeightMap{h, vector<float>(w, 0.f)}
 {
     assert(w != 0);

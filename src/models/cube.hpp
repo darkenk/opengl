@@ -41,10 +41,10 @@ public:
     IndexVectorPtr getIndices();
 
 private:
-    inline std::vector<Vertex> generateFront();
+    inline std::vector<Vertex3> generateFront();
     inline void generateVertices();
     inline void generateIndices();
-    std::shared_ptr<std::vector<Vertex>> mVertices;
+    std::shared_ptr<std::vector<Vertex3>> mVertices;
     std::shared_ptr<std::vector<Index>> mIndices;
 };
 

@@ -118,23 +118,17 @@ AttributeVectorPtr Shader::getAllAttributes()
     mAttributes.clear();
     GLint attrLength;
     glGetProgramiv(mProgramId, GL_ACTIVE_ATTRIBUTES, &attrLength);
-    LOGV << "AttrLength " << attrLength;
     constexpr GLsizei BUFF_SIZE = 256;
     GLchar name[BUFF_SIZE]; // name of attribute
     GLsizei length; // length of string written by gl
     GLint size; // size of attribute
     GLenum type; // type of attribute
-    GLint t;
-    GLint s;
     GLint location;
     AttributeVectorPtr attrs{new AttributeVector};
     for (GLuint i = 0; i < static_cast<GLuint>(attrLength); i++) {
         glGetActiveAttrib(mProgramId, i, BUFF_SIZE, &length, &size, &type, name);
-        glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_TYPE, &t);
-        glGetVertexAttribiv(i, GL_VERTEX_ATTRIB_ARRAY_SIZE, &s);
         location = glGetAttribLocation(mProgramId, name);
-        Attribute a{i, s, static_cast<GLenum>(t), name, convertGLTypeToSize(type),
-                    static_cast<GLuint>(location)};
+        Attribute a{i, name, convertGLTypeToSize(type), static_cast<GLuint>(location)};
         attrs->push_back(a);
         mAttributes.insert(make_pair(string{name}, location));
     }

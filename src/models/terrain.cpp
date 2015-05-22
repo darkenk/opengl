@@ -56,7 +56,7 @@ void Terrain::generate(const HeightMap& hm)
 {
     for (unsigned int y = 0; y < mHeight; y++) {
         for (unsigned int x = 0; x < mWidth; x++) {
-            mVertices->push_back(Vertex{Position{static_cast<Meter>(x),
+            mVertices->push_back(Vertex3{Position{static_cast<Meter>(x),
                                                  static_cast<Meter>(hm[y][x]),
                                                  static_cast<Meter>(y)},
                                         Color{1.0f, 1.0f, 0.2f, 1.0f},
@@ -94,9 +94,9 @@ void Terrain::generateNormals()
         auto v1 = mIndices->at(i++);
         auto v2 = mIndices->at(i++);
         auto v3 = mIndices->at(i++);
-        auto d = mVertices->at(v1).position;
-        auto b = mVertices->at(v2).position;
-        auto a = mVertices->at(v3).position;
+        auto d = mVertices->at(v1).v0;
+        auto b = mVertices->at(v2).v0;
+        auto a = mVertices->at(v3).v0;
         auto f1 = glm::normalize(glm::cross(glm::vec3(a - b), glm::vec3(d - b)));
         vertexNormals[v1] += f1;
         vertexNormals[v2] += f1;
@@ -104,6 +104,6 @@ void Terrain::generateNormals()
     }
     i = 0;
     for ( i = 0; i < vertexNormals.size(); i++) {
-        mVertices->at(i).normal = Vector{glm::normalize(vertexNormals[i])};
+        mVertices->at(i).v2 = Vector{glm::normalize(vertexNormals[i])};
     }
 }

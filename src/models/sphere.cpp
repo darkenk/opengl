@@ -37,7 +37,7 @@ using namespace std;
 Sphere::Sphere(uint32_t level, Color color):
     mLevel{level}, mColor{color}
 {
-    mVertices = make_shared<vector<Vertex>>();
+    mVertices = make_shared<vector<Vertex3>>();
     mIndices = make_shared<vector<Index>>();
     generateVertices();
     generateIndices();
@@ -55,20 +55,20 @@ IndexVectorPtr Sphere::getIndices() {
 
 void Sphere::generateVertices()
 {
-    mVertices->push_back(Vertex{Position{glm::normalize(glm::vec3(0.0_m, 1.0_m, 1.0_m))}, mColor});
-    mVertices->push_back(Vertex{Position{glm::normalize(glm::vec3(0.0_m, 1.0_m, -1.0_m))}, mColor});
-    mVertices->push_back(Vertex{Position{glm::normalize(glm::vec3(0.0_m, -1.0_m, 1.0_m))}, mColor});
-    mVertices->push_back(Vertex{Position{glm::normalize(glm::vec3(0.0_m, -1.0_m, -1.0_m))}, mColor});
+    mVertices->push_back(Vertex3{Position{glm::normalize(glm::vec3(0.0_m, 1.0_m, 1.0_m))}, mColor});
+    mVertices->push_back(Vertex3{Position{glm::normalize(glm::vec3(0.0_m, 1.0_m, -1.0_m))}, mColor});
+    mVertices->push_back(Vertex3{Position{glm::normalize(glm::vec3(0.0_m, -1.0_m, 1.0_m))}, mColor});
+    mVertices->push_back(Vertex3{Position{glm::normalize(glm::vec3(0.0_m, -1.0_m, -1.0_m))}, mColor});
 
-    mVertices->push_back(Vertex{Position{glm::normalize(glm::vec3(1.0_m, -1.0_m, 0.0_m))}, mColor});
-    mVertices->push_back(Vertex{Position{glm::normalize(glm::vec3(1.0_m, 1.0_m, 0.0_m))}, mColor});
-    mVertices->push_back(Vertex{Position{glm::normalize(glm::vec3(-1.0_m, -1.0_m, 0.0_m))}, mColor});
-    mVertices->push_back(Vertex{Position{glm::normalize(glm::vec3(-1.0_m, 1.0_m, 0.0_m))}, mColor});
+    mVertices->push_back(Vertex3{Position{glm::normalize(glm::vec3(1.0_m, -1.0_m, 0.0_m))}, mColor});
+    mVertices->push_back(Vertex3{Position{glm::normalize(glm::vec3(1.0_m, 1.0_m, 0.0_m))}, mColor});
+    mVertices->push_back(Vertex3{Position{glm::normalize(glm::vec3(-1.0_m, -1.0_m, 0.0_m))}, mColor});
+    mVertices->push_back(Vertex3{Position{glm::normalize(glm::vec3(-1.0_m, 1.0_m, 0.0_m))}, mColor});
 
-    mVertices->push_back(Vertex{Position{glm::normalize(glm::vec3(-1.0_m, 0.0_m, -1.0_m))}, mColor});
-    mVertices->push_back(Vertex{Position{glm::normalize(glm::vec3(1.0_m, 0.0_m, -1.0_m))}, mColor});
-    mVertices->push_back(Vertex{Position{glm::normalize(glm::vec3(-1.0_m, 0.0_m, 1.0_m))}, mColor});
-    mVertices->push_back(Vertex{Position{glm::normalize(glm::vec3(1.0_m, 0.0_m, 1.0_m))}, mColor});
+    mVertices->push_back(Vertex3{Position{glm::normalize(glm::vec3(-1.0_m, 0.0_m, -1.0_m))}, mColor});
+    mVertices->push_back(Vertex3{Position{glm::normalize(glm::vec3(1.0_m, 0.0_m, -1.0_m))}, mColor});
+    mVertices->push_back(Vertex3{Position{glm::normalize(glm::vec3(-1.0_m, 0.0_m, 1.0_m))}, mColor});
+    mVertices->push_back(Vertex3{Position{glm::normalize(glm::vec3(1.0_m, 0.0_m, 1.0_m))}, mColor});
 }
 
 void Sphere::increaseLevelOfDetail()
@@ -98,16 +98,16 @@ void Sphere::computeNormals()
         auto v1 = mIndices->at(i++);
         auto v2 = mIndices->at(i++);
         auto v3 = mIndices->at(i++);
-        auto a = mVertices->at(v1).position;
-        auto b = mVertices->at(v2).position;
-        auto c = mVertices->at(v3).position;
+        auto a = mVertices->at(v1).v0;
+        auto b = mVertices->at(v2).v0;
+        auto c = mVertices->at(v3).v0;
         auto f1 = glm::normalize(glm::cross(glm::vec3(b - c), glm::vec3(b - a)));
         vertexNormals->at(v1) += f1;
         vertexNormals->at(v2) += f1;
         vertexNormals->at(v3) += f1;
     }
     for (uint32_t i = 0; i < mVertices->size(); i++) {
-        mVertices->at(i).normal = Vector{glm::normalize(vertexNormals->at(i))};
+        mVertices->at(i).v2 = Vector{glm::normalize(vertexNormals->at(i))};
     }
 }
 
@@ -153,7 +153,7 @@ uint32_t Sphere::getMiddlePoint(uint32_t p1, uint32_t p2)
 {
     auto v1 = mVertices->at(p1);
     auto v2 = mVertices->at(p2);
-    auto v3 = glm::normalize(glm::vec3(v1.position) + glm::vec3(v2.position));
-    mVertices->push_back(Vertex{Position{v3}, mColor});
+    auto v3 = glm::normalize(glm::vec3(v1.v0) + glm::vec3(v2.v0));
+    mVertices->push_back(Vertex3{Position{v3}, mColor});
     return static_cast<uint32_t>(mVertices->size() - 1);
 }

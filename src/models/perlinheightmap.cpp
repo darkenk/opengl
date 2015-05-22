@@ -46,11 +46,11 @@ PerlinHeightMap::~PerlinHeightMap()
 
 void PerlinHeightMap::generate()
 {
-    float w = width();
-    float h = height();
+    float w = static_cast<float>(width());
+    float h = static_cast<float>(height());
     for (uint32_t y = 0; y < height(); y++) {
         for (uint32_t x = 0; x < width(); x++) {
-            mHeightMap[y][x] = octave(x/w, y/h);
+            mHeightMap[y][x] = octave(static_cast<float>(x)/w, static_cast<float>(y)/h);
         }
     }
 }

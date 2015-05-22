@@ -44,7 +44,7 @@ void initScene(Renderer& renderer) {
         make_pair(GL_VERTEX_SHADER, "triangle_shaders/vertex.glsl")};
     auto shader = make_shared<Shader>(shaders);
     auto triangle = make_unique<Triangle>();
-    auto triangleVert = make_shared<Buffer<Vertex>>(triangle->getVertices());
+    auto triangleVert = make_shared<Buffer<Vertex3>>(triangle->getVertices());
     auto triangleIdx = make_shared<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>>(triangle->getIndices());
     auto triangleObject = make_shared<SimpleObject>(triangleVert, triangleIdx, shader);
     renderer.addObject(triangleObject);

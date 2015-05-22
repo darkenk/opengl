@@ -35,24 +35,21 @@
 #include <ostream>
 #include <vector>
 #include <memory>
+#include "logger.hpp"
 
 class Attribute
 {
 public:
-    Attribute(GLuint index, GLint size, GLenum type, GLchar* name, GLint fullSize, GLuint location):
-        mIndex{index}, mSize{size}, mType{type}, mFullSize(fullSize), mName{name},
-        mLocation{location} {}
+    Attribute(GLuint index, GLchar* name, GLint fullSize, GLuint location):
+        mIndex{index}, mFullSize(fullSize), mName{name}, mLocation{location} {}
 
     GLuint mIndex;
-    GLint mSize;
-    GLenum mType;
     GLint mFullSize;
     std::string mName;
     GLuint mLocation;
 
     friend std::ostream& operator<<(std::ostream& of, const Attribute& attr) {
-        return of << "Attrib: " << attr.mName << " idx: " << attr.mIndex << std::hex
-                  << " type: " << attr.mType << " size: " << attr.mSize << std::dec
+        return of << "Attrib: " << attr.mName << " idx: " << attr.mIndex
                   << " fullSize: " << attr.mFullSize << " location: " << attr.mLocation;
     }
 };
@@ -64,15 +61,41 @@ template<typename V, GLenum T = GL_ARRAY_BUFFER>
 class Buffer
 {
 public:
-    Buffer(std::shared_ptr<std::vector<V>> data);
-    ~Buffer();
+    Buffer(std::shared_ptr<std::vector<V>> data): mData{data} {
+        glGenBuffers(1, &mVertexBufferId);
+        bind();
+        glBufferData(getTarget(), static_cast<GLsizeiptr>(mData->size() * sizeof(V)),
+                     reinterpret_cast<GLbyte*>(mData->data()), GL_STATIC_DRAW);
+        unBind();
+    }
+
+    ~Buffer() {
+        glDeleteBuffers(1, &mVertexBufferId);
+    }
+
     void bind() const {
         glBindBuffer(getTarget(), mVertexBufferId);
     }
     void unBind() const {
         glBindBuffer(getTarget(), 0);
     }
-    void setAttributes(const AttributeVector& attrs) const;
+    void setAttributes(const AttributeVector& attrs) const {
+        bind();
+        GLsizei stride{0};
+        for (auto attr : attrs) {
+            stride += attr.mFullSize;
+        }
+        if (stride != sizeof(V)) {
+            LOGE << "Stride: " << stride << " is different than sizeof(V) " << sizeof(V);
+        }
+        for (auto attr : attrs) {
+            glEnableVertexAttribArray(attr.mLocation);
+            glVertexAttribPointer(attr.mLocation, V::getSize(attr.mLocation),
+                                  V::getType(attr.mLocation), GL_FALSE, sizeof(V),
+                                  reinterpret_cast<void*>(V::getOffset(attr.mLocation)));
+        }
+        unBind();
+    }
     GLsizei size() const {
         return static_cast<GLsizei>(mData->size());
     }

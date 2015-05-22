@@ -39,13 +39,13 @@ using testing::ElementsAre;
 
 template<class T, size_t size>
 ::testing::AssertionResult VertexMatch(const array<T, size> expected,
-                                       const vector<Vertex> actual,
-                                       function<bool(const T&, const Vertex&)> compare)
+                                       const vector<Vertex3> actual,
+                                       function<bool(const T&, const Vertex3&)> compare)
 {
     for (size_t i(0); i < size; ++i){
         if (compare(expected[i], actual[i])) {
             return ::testing::AssertionFailure() << "array[" << i
-                << "] (" << actual[i].normal << ") != expected[" << i
+                << "] (" << actual[i].v2 << ") != expected[" << i
                 << "] (" << expected[i] << ")";
         }
     }
@@ -54,10 +54,10 @@ template<class T, size_t size>
 
 template<size_t size>
 ::testing::AssertionResult NormalsMatch(const array<Vector, size> expected,
-                                        const vector<Vertex> actual)
+                                        const vector<Vertex3> actual)
 {
-    auto normalsCompare = [](const Vector& normal, const Vertex& vertex) -> bool {
-        auto v = normal - vertex.normal;
+    auto normalsCompare = [](const Vector& normal, const Vertex3& vertex) -> bool {
+        auto v = normal - vertex.v2;
         for (int i = 0; i < 3; i++) {
             if (abs(v[i]) > 0.001f) {
                 return true;
@@ -69,10 +69,10 @@ template<size_t size>
 
 template<size_t size>
 ::testing::AssertionResult HeightMatch(const array<float, size> expected,
-                                        const vector<Vertex> actual)
+                                        const vector<Vertex3> actual)
 {
-    auto compare = [](const float& height, const Vertex& vertex) -> bool {
-        return abs(height - vertex.position.y) > 0.001f; };
+    auto compare = [](const float& height, const Vertex3& vertex) -> bool {
+        return abs(height - vertex.v0.y) > 0.001f; };
     return VertexMatch<float>(expected, actual, compare);
 }
 

@@ -37,6 +37,7 @@ if (ENABLE_TESTS)
     set(GMOCK_LIBRARIES libgmock.a)
     set(GMOCK_MAIN_LIBRARIES libgmock_main.a)
     set(GMOCK_BOTH_LIBRARIES ${GMOCK_LIBRARIES} ${GMOCK_MAIN_LIBRARIES})
+    link_directories(${CMAKE_BINARY_DIR}/external/gmock/)
 
     # GlMock
     add_subdirectory(${CMAKE_SOURCE_DIR}/external/glmock)
