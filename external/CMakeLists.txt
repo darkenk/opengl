@@ -16,6 +16,14 @@ if(INTERNAL_LIBS)
     # GLM
     set(GLM_FOUND 1)
     set(GLM_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/external/glm/)
+
+    # Assimp
+    set(ASSIMP_BUILD_TESTS OFF)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/assimp)
+    set(ASSIMP_FOUND 1)
+    set(ASSIMP_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/external/assimp/include)
+    set(ASSIMP_LIBRARIES "assimp")
+    link_directories(${CMAKE_BINARY_DIR}/external/assimp)
 endif()
 
 if (ENABLE_TESTS)

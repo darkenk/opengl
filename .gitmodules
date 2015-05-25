@@ -16,3 +16,9 @@
 [submodule "external/gmock"]
 	path = external/gmock
 	url = https://github.com/svn2github/googlemock.git
+[submodule "external/assimp"]
+	path = external/assimp
+	url = https://github.com/assimp/assimp
+[submodule "external/stb"]
+	path = external/stb
+	url = https://github.com/nothings/stb

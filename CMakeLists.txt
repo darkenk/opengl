@@ -31,15 +31,18 @@ endif()
 if (NOT GLM_FOUND)
     find_package(GLM 0.9.5.3 REQUIRED)
 endif()
+if (NOT ASSIMP_FOUND)
+    find_package(ASSIMP REQUIRED)
+endif()
+
+set(USED_LIBRARIES "${OPENGL_LIBRARIES};${GLEW_LIBRARIES};${ASSIMP_LIBRARIES};pthread")
+set(USED_INCLUDES "${GLM_INCLUDE_DIRS};${GLEW_INCLUDE_DIRS};${ASSIMP_INCLUDE_DIRS}")
 
 # cpp style checker
 find_package(vera++ QUIET)
 if(vera++_FOUND)
     include(${VERA++_USE_FILE})
 endif()
-
-set(USED_LIBRARIES "${OPENGL_LIBRARIES};${GLEW_LIBRARIES};pthread")
-set(USED_INCLUDES "${GLM_INCLUDE_DIRS};${GLEW_INCLUDE_DIRS}")
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 add_subdirectory(src)
