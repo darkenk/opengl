@@ -29,9 +29,9 @@
  */
 #include <QApplication>
 #include <string>
-#include "utils.hpp"
+#include "utils/utils.hpp"
 #include "myglwidget.hpp"
-#include "make_unique.hpp"
+#include "utils/make_unique.hpp"
 #include "simpleobject.hpp"
 #include "models/cube.hpp"
 #include "models/terrain.hpp"

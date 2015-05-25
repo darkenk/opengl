@@ -28,7 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include <QApplication>
-#include "utils.hpp"
+#include "utils/utils.hpp"
 
 #include "myglwidget.hpp"
 

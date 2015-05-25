@@ -32,7 +32,7 @@
 #include <iostream>
 #include <sstream>
 #include "camera.hpp"
-#include "logger.hpp"
+#include "utils/logger.hpp"
 
 using namespace std;
 

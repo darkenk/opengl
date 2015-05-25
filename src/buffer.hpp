@@ -35,7 +35,7 @@
 #include <ostream>
 #include <vector>
 #include <memory>
-#include "logger.hpp"
+#include "utils/logger.hpp"
 
 class Attribute
 {

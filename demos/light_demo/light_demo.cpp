@@ -32,7 +32,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <string>
-#include "utils.hpp"
+#include "utils/utils.hpp"
 
 #include "mainwindow.hpp"
 

@@ -30,7 +30,7 @@
 #ifndef IOBJECT_HPP
 #define IOBJECT_HPP
 
-#include "utils.hpp"
+#include "utils/utils.hpp"
 #include "units/vertex.hpp"
 
 class IObject

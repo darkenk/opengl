@@ -31,7 +31,7 @@
 #define VERTEX_HPP
 
 #include<type_traits>
-#include "exceptions.hpp"
+#include "utils/exceptions.hpp"
 #include "units.hpp"
 #include <GL/gl.h>
 

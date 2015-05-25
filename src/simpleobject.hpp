@@ -34,7 +34,7 @@
 #include <GL/glew.h>
 #include "irenderableobject.hpp"
 #include "shader.hpp"
-#include "iobject.hpp"
+#include "models/iobject.hpp"
 #include "buffer.hpp"
 #include "renderpass.hpp"
 #include "units/vertex.hpp"

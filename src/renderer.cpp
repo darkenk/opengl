@@ -33,7 +33,7 @@
 #include "renderer.hpp"
 #include "simpleobject.hpp"
 #include "models/cube.hpp"
-#include "logger.hpp"
+#include "utils/logger.hpp"
 
 using namespace std;
 

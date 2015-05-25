@@ -30,10 +30,10 @@
 #include "simpleobject.hpp"
 #include "shader.hpp"
 #include <iostream>
-#include "exceptions.hpp"
+#include "utils/exceptions.hpp"
 #include <glm/gtc/matrix_transform.hpp>
-#include "logger.hpp"
-#include "make_unique.hpp"
+#include "utils/logger.hpp"
+#include "utils/make_unique.hpp"
 #include <algorithm>
 
 using namespace std;

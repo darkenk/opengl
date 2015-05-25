@@ -34,7 +34,7 @@
 #include "models/terrain.hpp"
 #include "simpleobject.hpp"
 #include "models/cube.hpp"
-#include "make_unique.hpp"
+#include "utils/make_unique.hpp"
 #include "models/perlinheightmap.hpp"
 
 using namespace std;

@@ -30,7 +30,7 @@
 #ifndef SPHERE_HPP
 #define SPHERE_HPP
 
-#include "../iobject.hpp"
+#include "iobject.hpp"
 
 class Sphere : public IObject
 {

@@ -29,7 +29,7 @@
  */
 #include "sphere.hpp"
 #include <glm/common.hpp>
-#include "../logger.hpp"
+#include "../utils/logger.hpp"
 #include <algorithm>
 
 using namespace std;

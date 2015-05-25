@@ -30,7 +30,7 @@
 #include "heightmap.hpp"
 
 #include <cassert>
-#include "logger.hpp"
+#include "utils/logger.hpp"
 
 using namespace std;
 

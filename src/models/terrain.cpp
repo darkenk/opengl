@@ -28,7 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "terrain.hpp"
-#include "logger.hpp"
+#include "utils/logger.hpp"
 #include <cstdint>
 
 using namespace std;

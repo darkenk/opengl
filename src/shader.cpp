@@ -30,11 +30,11 @@
 #include "shader.hpp"
 #include <fstream>
 #include <iomanip>
-#include "exceptions.hpp"
-#include "utils.hpp"
-#include "logger.hpp"
+#include "utils/exceptions.hpp"
+#include "utils/utils.hpp"
+#include "utils/logger.hpp"
 #include "buffer.hpp"
-#include "make_unique.hpp"
+#include "utils/make_unique.hpp"
 
 using namespace std;
 

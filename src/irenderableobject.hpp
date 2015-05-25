@@ -33,7 +33,7 @@
 #include <glm/glm.hpp>
 #include <string>
 #include <GL/glew.h>
-#include "exceptions.hpp"
+#include "utils/exceptions.hpp"
 #include <iostream>
 
 class IRenderableObject
