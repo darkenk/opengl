@@ -112,7 +112,8 @@ public:
 class Vector : public glm::vec4
 {
 public:
-    explicit Vector(float _x = 1.0f, float _y = 0.0f, float _z = 0.0f) : glm::vec4{_x, _y, _z, 0.0f} {}
+    explicit Vector(float _x = 1.0f, float _y = 0.0f, float _z = 0.0f) :
+        glm::vec4{_x, _y, _z, 0.0f} {}
     explicit Vector(glm::vec4& v) : glm::vec4{v} {}
     explicit Vector(glm::vec4&& v) : glm::vec4{v} {}
     explicit Vector(const glm::vec3& v) : glm::vec4{v, 0.0f} {}
@@ -121,6 +122,14 @@ public:
     }
     static constexpr GLenum Type = GL_FLOAT;
     static constexpr GLint Size = 4;
+};
+
+class UV : public glm::vec2
+{
+public:
+    explicit UV(float _x = 1.0f, float _y = 0.0f) : glm::vec2{_x, _y} {}
+    static constexpr GLenum Type = GL_FLOAT;
+    static constexpr GLint Size = 2;
 };
 
 #endif // UNITS_HPP

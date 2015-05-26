@@ -27,35 +27,23 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef SIMPLEOBJECT_HPP
-#define SIMPLEOBJECT_HPP
+#version 330
+layout(triangles) in;
+layout(line_strip, max_vertices = 6) out;
 
-#include <memory>
-#include <GL/glew.h>
-#include "irenderableobject.hpp"
-#include "shader.hpp"
-#include "models/iobject.hpp"
-#include "buffer.hpp"
-#include "renderpass.hpp"
-#include "units/vertex.hpp"
+in vec4 vNormal[]; // Output from vertex shader for each vertex
 
-class SimpleObject : public IRenderableObject
-{
-public:
-    SimpleObject(std::shared_ptr<IBuffer> vert,
-                 std::shared_ptr<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>> idx,
-                 std::shared_ptr<RenderPass> renderPass);
-    virtual ~SimpleObject();
-    virtual void render();
-    virtual void setVpMatrix(const glm::mat4& matrix);
-    virtual void addRenderPass(std::shared_ptr<RenderPass> renderPass);
-    virtual void removeRenderPass(RenderPass::Type t);
-    virtual void setModel(const glm::mat4& matrix);
+uniform mat4 gWVP;
 
-private:
-    std::vector<std::shared_ptr<RenderPass>> mRenderPasses;
-    std::shared_ptr<IBuffer> mVertexBuffer;
-    std::shared_ptr<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>> mIndexBuffer;
-};
+void main() {
+    for(int i = 0; i < gl_in.length(); i++) {
+        gl_Position = gWVP * gl_in[i].gl_Position;
+        EmitVertex();
 
-#endif // SIMPLEOBJECT_HPP
+        gl_Position = gWVP * (gl_in[i].gl_Position + vNormal[i]);
+        EmitVertex();
+
+        EndPrimitive();
+    }
+}
+

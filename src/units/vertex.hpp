@@ -126,7 +126,7 @@ public:
     }
 
     static GLenum getType(uint32_t i) {
-        switch(i) {
+        switch (i) {
         case 0: return getType_internal<V0>();
         case 1: return getType_internal<V1>();
         case 2: return getType_internal<V2>();
@@ -143,7 +143,7 @@ public:
     }
 
     static GLint getSize(uint32_t i) {
-        switch(i) {
+        switch (i) {
         case 0: return getSize_internal<V0>();
         case 1: return getSize_internal<V1>();
         case 2: return getSize_internal<V2>();
@@ -160,7 +160,7 @@ public:
     }
 
     static uint32_t getOffset(uint32_t i) {
-        switch(i) {
+        switch (i) {
         case 0: return 0;
         case 1: return getOffset_internal<V1, 1>();
         case 2: return getOffset_internal<V2, 2>();
@@ -311,4 +311,3 @@ typedef std::vector<Index> IndexVector;
 typedef std::shared_ptr<IndexVector> IndexVectorPtr;
 
 #endif // VERTEX_HPP
-

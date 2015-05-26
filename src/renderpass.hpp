@@ -45,8 +45,8 @@ public:
     virtual ~RenderPass();
     virtual void render();
 
-    template<typename V, typename I>
-    void setBuffers(const Buffer<V>& vertexBuffer,
+    template<typename I>
+    void setBuffers(const IBuffer& vertexBuffer,
                     const Buffer<I, GL_ELEMENT_ARRAY_BUFFER>& indexBuffer) {
         glBindVertexArray(mVao);
         vertexBuffer.setAttributes(*mShader->getAllAttributes());

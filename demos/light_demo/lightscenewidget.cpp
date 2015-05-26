@@ -57,14 +57,15 @@ void LightSceneWidget::initScene()
     auto cubeVert = make_shared<Buffer<Vertex3>>(cube->verticesData(), cube->verticesSize());
     auto cubeIdx = make_shared<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>>(cube->indicesData(),
                                                                        cube->indicesSize());
-    getRenderer().addObject(make_shared<SimpleObject>(cubeVert, cubeIdx, shader));
+    auto r = make_shared<RenderPass>(shader, RenderPass::USER);
+    getRenderer().addObject(make_shared<SimpleObject>(cubeVert, cubeIdx, r));
 
     auto terrain = make_unique<Terrain>(PerlinHeightMap{48u, 48u});
     auto terrainVert = make_shared<Buffer<Vertex3>>(terrain->verticesData(),
                                                     terrain->verticesSize());
     auto terrainIdx = make_shared<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>>(terrain->indicesData(),
                                                                           terrain->indicesSize());
-    auto object = make_shared<SimpleObject>(terrainVert, terrainIdx, shader);
+    auto object = make_shared<SimpleObject>(terrainVert, terrainIdx, r);
     glm::mat4 m = glm::translate(glm::mat4(), glm::vec3(-12.0f, -3.0f, -24.0f));
     object->setModel(m);
     getRenderer().addObject(object);

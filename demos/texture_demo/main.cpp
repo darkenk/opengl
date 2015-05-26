@@ -35,22 +35,58 @@
 #include "simpleobject.hpp"
 #include "models/cube.hpp"
 #include "models/terrain.hpp"
+#include "texture.hpp"
+#include "texturerenderpass.hpp"
 
 using namespace std;
 
+using VertexTexture = Vertex<Position, UV>;
+
+class Quad : public IObject {
+public:
+    Quad() { generate(); }
+    virtual ~Quad();
+    const GLbyte* verticesData() const {
+        return reinterpret_cast<GLbyte*>(mVertices->data());
+    }
+    GLsizeiptr verticesSize() const {
+        return static_cast<GLsizeiptr>(mVertices->size()*sizeof(VertexTexture));
+    }
+    const GLbyte* indicesData() const {
+        return reinterpret_cast<GLbyte*>(mIndices->data());
+    }
+    GLsizeiptr indicesSize() const {
+        return static_cast<GLsizeiptr>(mIndices->size()*sizeof(Index));
+    }
+
+private:
+    void generate() {
+        mIndices = make_shared<IndexVector>(initializer_list<Index>{2, 1, 0});
+        mVertices = make_shared<std::vector<VertexTexture>>(initializer_list<VertexTexture>{
+             VertexTexture{Position{-1.0_m, -1.0_m, 0.0_m},
+                           UV{1.0f, 0.0f}},
+             VertexTexture{Position{0.0_m, 1.0_m, 0.0_m},
+                           UV{0.0f, 1.0f}},
+             VertexTexture{Position{1.0_m, -1.0_m, 0.0_m},
+                           UV{0.0f, 0.0f}}});
+    }
+    std::shared_ptr<std::vector<VertexTexture>> mVertices;
+    std::shared_ptr<std::vector<Index>> mIndices;
+};
+
 void initScene(Renderer& renderer) {
     vector<pair<GLuint, const string>> shaders{
-        make_pair(GL_FRAGMENT_SHADER, "triangle_shaders/fragment.glsl"),
-        make_pair(GL_VERTEX_SHADER, "triangle_shaders/vertex.glsl")};
+        make_pair(GL_FRAGMENT_SHADER, "texture_demo_shaders/fragment.glsl"),
+        make_pair(GL_VERTEX_SHADER, "texture_demo_shaders/vertex.glsl")};
     auto shader = make_shared<Shader>(shaders);
-    auto triangle = make_unique<Triangle>();
-    auto triangleVert = make_shared<Buffer<Vertex3>>(triangle->verticesData(),
-                                                     triangle->verticesSize());
-    auto triangleIdx = make_shared<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>>(triangle->indicesData(),
-                                                                           triangle->indicesSize());
-    auto renderPass = make_shared<RenderPass>(shader, RenderPass::USER);
-    auto triangleObject = make_shared<SimpleObject>(triangleVert, triangleIdx, renderPass);
-    renderer.addObject(triangleObject);
+    auto quad = make_unique<Quad>();
+    auto bVert = make_shared<Buffer<VertexTexture>>(quad->verticesData(), quad->verticesSize());
+    auto bIdx = make_shared<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>>(quad->indicesData(),
+                                                                    quad->indicesSize());
+    auto t = make_shared<Texture>(GL_TEXTURE_2D, "../../opengl/demos/texture_demo/box_0.jpg");
+    auto renderPass = make_shared<TextureRenderPass>(shader, t);
+    auto object = make_shared<SimpleObject>(bVert, bIdx, renderPass);
+    renderer.addObject(object);
 }
 
 int main(int argc, char *argv[])
@@ -64,4 +100,8 @@ int main(int argc, char *argv[])
     MyGLWidget widget(nullptr, initScene);
     widget.show();
     return app.exec();
+}
+
+Quad::~Quad()
+{
 }

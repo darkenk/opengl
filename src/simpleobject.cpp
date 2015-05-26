@@ -38,17 +38,16 @@
 
 using namespace std;
 
-SimpleObject::SimpleObject(shared_ptr<Buffer<Vertex3>> vert,
+SimpleObject::SimpleObject(std::shared_ptr<IBuffer> vert,
                            shared_ptr<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>> idx,
-                           shared_ptr<Shader> shader):
-    mShader{shader}, mVertexBuffer{vert}, mIndexBuffer{idx}
+                           shared_ptr<RenderPass> renderPass):
+    mVertexBuffer{vert}, mIndexBuffer{idx}
 {
     glGetError();
 
-    auto r = make_shared<RenderPass>(shader, RenderPass::USER);
-    r->setWorldMatrix(getModel());
-    r->setBuffers(*vert, *idx);
-    mRenderPasses.push_back(r);
+    renderPass->setWorldMatrix(getModel());
+    renderPass->setBuffers(*vert, *idx);
+    mRenderPasses.push_back(renderPass);
 
     checkGlError(__FUNCTION__);
 }

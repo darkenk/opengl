@@ -36,29 +36,10 @@
 #include <vector>
 #include <memory>
 #include "utils/logger.hpp"
+#include "ibuffer.hpp"
 
-class Attribute
-{
-public:
-    Attribute(GLuint index, GLchar* name, GLint fullSize, GLuint location):
-        mIndex{index}, mFullSize(fullSize), mName{name}, mLocation{location} {}
-
-    GLuint mIndex;
-    GLint mFullSize;
-    std::string mName;
-    GLuint mLocation;
-
-    friend std::ostream& operator<<(std::ostream& of, const Attribute& attr) {
-        return of << "Attrib: " << attr.mName << " idx: " << attr.mIndex
-                  << " fullSize: " << attr.mFullSize << " location: " << attr.mLocation;
-    }
-};
-
-typedef std::vector<Attribute> AttributeVector;
-typedef std::shared_ptr<AttributeVector> AttributeVectorPtr;
-
-template<typename V, GLenum T = GL_ARRAY_BUFFER>
-class Buffer
+template<class V, GLenum T = GL_ARRAY_BUFFER>
+class Buffer : public IBuffer
 {
 public:
     Buffer(const GLbyte* data, GLsizeiptr dataSize) {
@@ -69,17 +50,31 @@ public:
         unBind();
     }
 
-    ~Buffer() {
+    virtual ~Buffer() {
         glDeleteBuffers(1, &mVertexBufferId);
     }
 
-    void bind() const {
+    virtual void bind() const {
+        LOGV << "bind from buffer";
         glBindBuffer(getTarget(), mVertexBufferId);
     }
-    void unBind() const {
+    virtual void unBind() const {
         glBindBuffer(getTarget(), 0);
     }
-    void setAttributes(const AttributeVector& attrs) const {
+    virtual void setAttributes(const AttributeVector& attrs) const {
+        setAttributesInternal<V>(attrs);
+    }
+    GLsizei size() const {
+        return mNumberOfElements;
+    }
+    constexpr GLenum getTarget() const { return T; }
+
+private:
+    template<class C, typename std::enable_if<not std::is_class<C>::value>::type* = nullptr>
+    void setAttributesInternal(const AttributeVector& /*attrs*/) const {}
+
+    template<class C, typename std::enable_if<std::is_class<C>::value>::type* = nullptr>
+    void setAttributesInternal(const AttributeVector& attrs) const {
         bind();
         GLsizei stride{0};
         for (auto attr : attrs) {
@@ -96,12 +91,7 @@ public:
         }
         unBind();
     }
-    GLsizei size() const {
-        return mNumberOfElements;
-    }
-    constexpr GLenum getTarget() const { return T; }
 
-private:
     GLuint mVertexBufferId;
     GLsizei mNumberOfElements;
 };

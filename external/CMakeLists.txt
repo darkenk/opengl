@@ -50,3 +50,7 @@ if (ENABLE_TESTS)
     # GlMock
     add_subdirectory(${CMAKE_SOURCE_DIR}/external/glmock)
 endif()
+
+# STB
+set(STB_FOUND 1)
+set(STB_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/external/stb/)

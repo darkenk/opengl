@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015, Dariusz Kluska <darkenk@gmail.com>
+ * Copyright (C) 2014, Dariusz Kluska <darkenk@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,35 +27,15 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef SIMPLEOBJECT_HPP
-#define SIMPLEOBJECT_HPP
+#version 330
 
-#include <memory>
-#include <GL/glew.h>
-#include "irenderableobject.hpp"
-#include "shader.hpp"
-#include "models/iobject.hpp"
-#include "buffer.hpp"
-#include "renderpass.hpp"
-#include "units/vertex.hpp"
+in vec2 texCoord;
 
-class SimpleObject : public IRenderableObject
+out vec4 outColor;
+
+uniform sampler2D gSampler;
+
+void main(void)
 {
-public:
-    SimpleObject(std::shared_ptr<IBuffer> vert,
-                 std::shared_ptr<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>> idx,
-                 std::shared_ptr<RenderPass> renderPass);
-    virtual ~SimpleObject();
-    virtual void render();
-    virtual void setVpMatrix(const glm::mat4& matrix);
-    virtual void addRenderPass(std::shared_ptr<RenderPass> renderPass);
-    virtual void removeRenderPass(RenderPass::Type t);
-    virtual void setModel(const glm::mat4& matrix);
-
-private:
-    std::vector<std::shared_ptr<RenderPass>> mRenderPasses;
-    std::shared_ptr<IBuffer> mVertexBuffer;
-    std::shared_ptr<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>> mIndexBuffer;
-};
-
-#endif // SIMPLEOBJECT_HPP
+    outColor = texture2D(gSampler, texCoord);
+}
