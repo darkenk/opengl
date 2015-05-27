@@ -45,12 +45,8 @@ Sphere::Sphere(uint32_t level, Color color):
     computeNormals();
 }
 
-VertexVectorPtr Sphere::getVertices() {
-    return mVertices;
-}
-
-IndexVectorPtr Sphere::getIndices() {
-    return mIndices;
+Sphere::~Sphere()
+{
 }
 
 void Sphere::generateVertices()

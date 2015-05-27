@@ -44,12 +44,8 @@ Cube::Cube()
     generateIndices();
 }
 
-VertexVectorPtr Cube::getVertices() {
-    return mVertices;
-}
-
-IndexVectorPtr Cube::getIndices() {
-    return mIndices;
+Cube::~Cube()
+{
 }
 
 vector<Vertex3> Cube::generateFront()
@@ -103,14 +99,15 @@ void Cube::generateIndices()
     }
 }
 
-IndexVectorPtr Triangle::getIndices() {
-    IndexVectorPtr v = make_shared<IndexVector>(initializer_list<Index>{2, 1, 0});
-    return v;
+Triangle::~Triangle()
+{
 }
 
-VertexVectorPtr Triangle::getVertices() {
+void Triangle::generate()
+{
+    mIndices = make_shared<IndexVector>(initializer_list<Index>{2, 1, 0});
     const Vector normal{0.0f, 0.0f, 1.0f};
-    VertexVectorPtr v = make_shared<VertexVector>(initializer_list<Vertex3>{
+    mVertices = make_shared<VertexVector>(initializer_list<Vertex3>{
          Vertex3{Position{-1.0_m, -1.0_m, 0.0_m},
                 Color{1.0f, 0.0f, 0.0f, 1.0f}, normal},
          Vertex3{Position{0.0_m, 1.0_m, 0.0_m},
@@ -118,5 +115,4 @@ VertexVectorPtr Triangle::getVertices() {
          Vertex3{Position{1.0_m, -1.0_m, 0.0_m},
                 Color{0.0f, 0.0f, 1.0f, 1.0f}, normal}
     });
-    return v;
 }

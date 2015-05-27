@@ -37,8 +37,20 @@
 class Cube : public IObject {
 public:
     Cube();
-    VertexVectorPtr getVertices();
-    IndexVectorPtr getIndices();
+    virtual ~Cube();
+
+    const GLbyte* verticesData() const {
+        return reinterpret_cast<GLbyte*>(mVertices->data());
+    }
+    GLsizeiptr verticesSize() const {
+        return static_cast<GLsizeiptr>(mVertices->size()*sizeof(Vertex3));
+    }
+    const GLbyte* indicesData() const {
+        return reinterpret_cast<GLbyte*>(mIndices->data());
+    }
+    GLsizeiptr indicesSize() const {
+        return static_cast<GLsizeiptr>(mIndices->size()*sizeof(Index));
+    }
 
 private:
     inline std::vector<Vertex3> generateFront();
@@ -46,14 +58,30 @@ private:
     inline void generateIndices();
     std::shared_ptr<std::vector<Vertex3>> mVertices;
     std::shared_ptr<std::vector<Index>> mIndices;
+
 };
 
 class Triangle : public IObject {
 public:
-    Triangle() {}
-    VertexVectorPtr getVertices();
-    IndexVectorPtr getIndices();
+    Triangle() { generate(); }
+    virtual ~Triangle();
+    const GLbyte* verticesData() const {
+        return reinterpret_cast<GLbyte*>(mVertices->data());
+    }
+    GLsizeiptr verticesSize() const {
+        return static_cast<GLsizeiptr>(mVertices->size()*sizeof(Vertex3));
+    }
+    const GLbyte* indicesData() const {
+        return reinterpret_cast<GLbyte*>(mIndices->data());
+    }
+    GLsizeiptr indicesSize() const {
+        return static_cast<GLsizeiptr>(mIndices->size()*sizeof(Index));
+    }
 
+private:
+    void generate();
+    std::shared_ptr<std::vector<Vertex3>> mVertices;
+    std::shared_ptr<std::vector<Index>> mIndices;
 };
 
 #endif // CUBE_HPP

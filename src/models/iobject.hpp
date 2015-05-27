@@ -37,8 +37,10 @@ class IObject
 {
 public:
     virtual ~IObject();
-    virtual VertexVectorPtr getVertices() = 0;
-    virtual IndexVectorPtr getIndices() = 0;
+    virtual const GLbyte* verticesData() const = 0;
+    virtual GLsizeiptr verticesSize() const = 0;
+    virtual const GLbyte* indicesData() const = 0;
+    virtual GLsizeiptr indicesSize() const = 0;
 };
 
 #endif // IOBJECT_HPP

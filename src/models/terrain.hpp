@@ -39,8 +39,26 @@ class Terrain : public IObject
 {
 public:
     Terrain(const HeightMap& hm);
-    virtual VertexVectorPtr getVertices();
-    virtual IndexVectorPtr getIndices();
+    virtual ~Terrain();
+    VertexVectorPtr getVertices() {
+        return mVertices;
+    }
+    IndexVectorPtr getIndices() {
+        return mIndices;
+    }
+
+    const GLbyte* verticesData() const {
+        return reinterpret_cast<GLbyte*>(mVertices->data());
+    }
+    GLsizeiptr verticesSize() const {
+        return static_cast<GLsizeiptr>(mVertices->size()*sizeof(Vertex3));
+    }
+    const GLbyte* indicesData() const {
+        return reinterpret_cast<GLbyte*>(mIndices->data());
+    }
+    GLsizeiptr indicesSize() const {
+        return static_cast<GLsizeiptr>(mIndices->size()*sizeof(Index));
+    }
 
 private:
     void generate(const HeightMap& hm);

@@ -42,14 +42,8 @@ Terrain::Terrain(const HeightMap& hm) :
     generate(hm);
 }
 
-VertexVectorPtr Terrain::getVertices()
+Terrain::~Terrain()
 {
-    return mVertices;
-}
-
-IndexVectorPtr Terrain::getIndices()
-{
-    return mIndices;
 }
 
 void Terrain::generate(const HeightMap& hm)

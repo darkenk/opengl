@@ -54,13 +54,16 @@ void LightSceneWidget::initScene()
     getRenderer().getLight()->setDiffuseDirection(lightDirection);
     getRenderer().getLight()->addShader(shader);
     auto cube = make_unique<Cube>();
-    auto cubeVert = make_shared<Buffer<Vertex3>>(cube->getVertices());
-    auto cubeIdx = make_shared<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>>(cube->getIndices());
+    auto cubeVert = make_shared<Buffer<Vertex3>>(cube->verticesData(), cube->verticesSize());
+    auto cubeIdx = make_shared<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>>(cube->indicesData(),
+                                                                       cube->indicesSize());
     getRenderer().addObject(make_shared<SimpleObject>(cubeVert, cubeIdx, shader));
 
     auto terrain = make_unique<Terrain>(PerlinHeightMap{48u, 48u});
-    auto terrainVert = make_shared<Buffer<Vertex3>>(terrain->getVertices());
-    auto terrainIdx = make_shared<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>>(terrain->getIndices());
+    auto terrainVert = make_shared<Buffer<Vertex3>>(terrain->verticesData(),
+                                                    terrain->verticesSize());
+    auto terrainIdx = make_shared<Buffer<Index, GL_ELEMENT_ARRAY_BUFFER>>(terrain->indicesData(),
+                                                                          terrain->indicesSize());
     auto object = make_shared<SimpleObject>(terrainVert, terrainIdx, shader);
     glm::mat4 m = glm::translate(glm::mat4(), glm::vec3(-12.0f, -3.0f, -24.0f));
     object->setModel(m);

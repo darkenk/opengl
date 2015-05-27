@@ -36,9 +36,20 @@ class Sphere : public IObject
 {
 public:
     Sphere(uint32_t level = 5, Color color = Color{1.0f, 0.0f, 0.0f, 0.0f});
+    virtual ~Sphere();
 
-    VertexVectorPtr getVertices();
-    IndexVectorPtr getIndices();
+    const GLbyte* verticesData() const {
+        return reinterpret_cast<GLbyte*>(mVertices->data());
+    }
+    GLsizeiptr verticesSize() const {
+        return static_cast<GLsizeiptr>(mVertices->size()*sizeof(Vertex3));
+    }
+    const GLbyte* indicesData() const {
+        return reinterpret_cast<GLbyte*>(mIndices->data());
+    }
+    GLsizeiptr indicesSize() const {
+        return static_cast<GLsizeiptr>(mIndices->size()*sizeof(Index));
+    }
 
 private:
     void generateVertices();

@@ -61,11 +61,11 @@ template<typename V, GLenum T = GL_ARRAY_BUFFER>
 class Buffer
 {
 public:
-    Buffer(std::shared_ptr<std::vector<V>> data): mData{data} {
+    Buffer(const GLbyte* data, GLsizeiptr dataSize) {
+        mNumberOfElements = static_cast<GLsizei>(static_cast<unsigned long>(dataSize)/sizeof(V));
         glGenBuffers(1, &mVertexBufferId);
         bind();
-        glBufferData(getTarget(), static_cast<GLsizeiptr>(mData->size() * sizeof(V)),
-                     reinterpret_cast<GLbyte*>(mData->data()), GL_STATIC_DRAW);
+        glBufferData(getTarget(), dataSize, data, GL_STATIC_DRAW);
         unBind();
     }
 
@@ -97,13 +97,13 @@ public:
         unBind();
     }
     GLsizei size() const {
-        return static_cast<GLsizei>(mData->size());
+        return mNumberOfElements;
     }
     constexpr GLenum getTarget() const { return T; }
 
 private:
     GLuint mVertexBufferId;
-    std::shared_ptr<std::vector<V>> mData;
+    GLsizei mNumberOfElements;
 };
 
 #endif // BUFFER_HPP
