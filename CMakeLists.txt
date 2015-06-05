@@ -1,6 +1,6 @@
 project(opengl)
 
-cmake_minimum_required(VERSION 2.8.11)
+cmake_minimum_required(VERSION 3.2.1)
 
 # set build type to debug as it is in development phase
 if(NOT CMAKE_BUILD_TYPE)
