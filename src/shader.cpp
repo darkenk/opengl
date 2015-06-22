@@ -51,8 +51,7 @@ Shader::Shader(const std::vector<std::pair<GLuint, const string>>& shaders) :
 
 Shader::~Shader()
 {
-    auto iter = mShaderIds.begin();
-    for ( ; iter != mShaderIds.end(); iter++) {
+    for (auto iter = mShaderIds.begin(); iter != mShaderIds.end(); iter++) {
         glDetachShader(mProgramId, *iter);
         glDeleteShader(*iter);
     }
