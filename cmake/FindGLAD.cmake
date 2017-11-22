@@ -1,0 +1,6 @@
+set(GLAD_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/external/glad/include)
+if (NOT TARGET glad)
+    add_library(glad STATIC ${CMAKE_SOURCE_DIR}/external/glad/src/glad.c)
+    target_include_directories(glad SYSTEM PRIVATE ${GLAD_INCLUDE_DIR})
+endif()
+set(GLAD_LIBRARY glad ${CMAKE_DL_LIBS})

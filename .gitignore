@@ -1,0 +1,11 @@
+build
+*.config
+*.files
+*.includes
+*.creator*
+*.autosave
+*.settings
+*.cproject
+*.project
+/Default
+*.user
