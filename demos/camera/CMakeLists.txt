@@ -3,7 +3,7 @@ find_package(Qt5OpenGL REQUIRED)
 find_package(GLAD REQUIRED)
 
 aux_source_directory(. SRC)
-set(EXEC_NAME geom)
+set(EXEC_NAME camera)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)

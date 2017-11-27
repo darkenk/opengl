@@ -30,9 +30,7 @@ void ShaderProgram::checkCompilationError(GLuint shaderId)
     throw new GLException(msg);
 }
 
-void ShaderProgram::initUniforms()
-{
-    activate();
+void ShaderProgram::initUniforms() {
     GLint uniformsLength;
     glGetProgramiv(mProgramId, GL_ACTIVE_UNIFORMS, &uniformsLength);
     constexpr GLsizei BUFF_SIZE = 256;
@@ -44,10 +42,8 @@ void ShaderProgram::initUniforms()
     for (GLuint i = 0; i < static_cast<GLuint>(uniformsLength); i++) {
         glGetActiveUniform(mProgramId, i, BUFF_SIZE, &length, &size, &type, name);
         location = glGetUniformLocation(mProgramId, name);
-//        LOGV << "Uniform " << location << " " << type << " " << name;
         mUniforms.insert(make_pair(string{name}, location));
     }
-    deactivate();
 }
 
 void ShaderProgram::activate() {
@@ -56,19 +52,4 @@ void ShaderProgram::activate() {
 
 void ShaderProgram::deactivate() {
     glUseProgram(0);
-}
-
-GLint ShaderProgram::getUniform(const string& name)
-{
-    try {
-        return static_cast<GLint>(mUniforms.at(name));
-    } catch (std::out_of_range& ) {
-        // TODO: this is just a backward compatibility
-        return -1;
-    }
-}
-
-GLint ShaderProgram::getAttribute(const string& name)
-{
-    return static_cast<GLint>(mAttributes.at(name));
 }

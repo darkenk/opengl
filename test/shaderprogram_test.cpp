@@ -3,6 +3,7 @@
 #include "eglfixture.hpp"
 #include <shaderprogram.hpp>
 #include <units/vertex.hpp>
+#include <uniform.hpp>
 
 class ShaderTest : public EGLFixture {
 public:
@@ -23,6 +24,17 @@ public:
             "void main(void) {\n"
             "   out_Color = 9vec4(1.0f, 1.0f, 1.0f, 1.0f);\n"
             "}\n";
+
+    const std::string uniform = R"(
+#version 330
+
+out vec4 out_Color;
+in vec4 inColor;
+uniform mat4 mvp;
+
+void main(void) {
+    out_Color = mvp * vec4(1.0f, 1.0f, 1.0f, 1.0f);
+})";
 };
 
 
@@ -44,4 +56,16 @@ TEST_F(ShaderTest, attribute_has_correct_location) {
 TEST_F(ShaderTest, exception_is_thrown_in_case_of_wrong_shader) {
     ShaderProgram sh;
     EXPECT_ANY_THROW(sh.init<Color>(FragmentShader(badfrag)));
+}
+
+TEST_F(ShaderTest, set_mvp_uniform) {
+    ShaderProgram sh;
+    FragmentShader fs(uniform);
+    sh.init<Color>(fs);
+    UniformMVP mvp;
+    sh.set(mvp);
+    auto location =  glGetUniformLocation(sh.get(), "mvp");
+    glm::mat4 ret(5);
+    glGetUniformfv(sh.get(), location, glm::value_ptr(ret));
+    EXPECT_EQ(ret, glm::mat4(mvp));
 }

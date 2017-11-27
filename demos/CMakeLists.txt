@@ -1,3 +1,5 @@
 add_subdirectory(glwidget)
 add_subdirectory(triangle)
-add_subdirectory(cubes)
+add_subdirectory(geometry)
+add_subdirectory(camera)
+add_subdirectory(cube)

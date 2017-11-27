@@ -39,7 +39,7 @@ class Radians
 {
 public:
     explicit constexpr Radians(const float radians) : mAngle(radians) {}
-    explicit operator float() const { return mAngle; }
+    operator float() const { return mAngle; }
 
     template<typename T>
     Radians operator/(const T v) const { return Radians{mAngle / static_cast<float>(v)}; }

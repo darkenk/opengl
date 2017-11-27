@@ -29,14 +29,15 @@ class ShaderProgram
 public:
     ShaderProgram() { mProgramId = 0; }
     ShaderProgram(const ShaderProgram&) = delete;
-    ShaderProgram(const std::vector<std::pair<GLuint, const std::string>>& /*shaders*/) {
-    }
+    ShaderProgram(const std::vector<std::pair<GLuint, const std::string>>& /*shaders*/) {}
+    ~ShaderProgram();
 
     template<typename... Attributes, typename... Shaders>
     void init(Shaders... shaders) {
         glGetError();
         createShaders(shaders...);
         createProgram<Attributes...>();
+        activate();
         initUniforms();
     }
 
@@ -54,12 +55,28 @@ public:
         ShaderProgram s;
         return std::move(ShaderProgram());
     }
-    ~ShaderProgram();
     void activate();
     void deactivate();
-    GLint getUniform(const std::string& name);
-    GLint getAttribute(const std::string& name);
-//    AttributeVectorPtr getAllAttributes();
+
+    template<typename Uniform>
+    void set(const Uniform& uniform) {
+        // in future (make a queue and execute once)
+        try {
+            auto location = mUniforms.at(uniform.name());
+            uniform.setGL(location);
+        } catch (std::out_of_range&) {
+            std::cerr << "No such uniform " << uniform.name() << std::endl;
+            std::cerr << "Available uniforms: " << std::endl;
+            for (auto u : mUniforms) {
+                std::cerr << "Name: " << u.first << " Location: " << u.second << std::endl;
+            }
+            std::abort();
+        }
+    }
+
+    GLuint get() {
+        return mProgramId;
+    }
 
 private:
     GLuint createShader(const std::string& shader, GLuint shaderType) {
@@ -81,8 +98,6 @@ private:
             glAttachShader(mProgramId, shaderId);
         }
         glLinkProgram(mProgramId);
-//        checkGlError(__FUNCTION__);
-
     }
 
     // TODO: how to do this better?
@@ -113,7 +128,6 @@ private:
     GLuint mProgramId;
     std::vector<GLuint> mShaderIds;
     std::map<std::string, GLuint> mUniforms;
-    std::map<std::string, GLuint> mAttributes;
 };
 
 #endif // SHADERLOADER_H

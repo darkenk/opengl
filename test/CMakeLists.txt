@@ -12,5 +12,6 @@ include_directories(
 set(GL_LIBS ${GLAD_LIBRARY} ${EGL_LIBRARIES} ${OPENGL_LIBRARIES})
 
 add_gtest(shaderprogram_test SRC ../src/shaderprogram.cpp ../src/utils/exceptions.cpp LIBS ${GL_LIBS})
-add_gtest(buffer_test SRC "" LIBS ${GL_LIBS})
+add_gtest(buffer_test LIBS ${GL_LIBS})
 add_gtest(vertex_test)
+add_gtest(camera_test SRC ../src/camera.cpp)
