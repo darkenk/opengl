@@ -67,6 +67,7 @@ struct Value
     constexpr explicit Value(float d) : val(d) {}
     constexpr explicit Value(long double d) : val(static_cast<float>(d)) {}
     constexpr explicit Value(unsigned int d) : val(static_cast<float>(d)) {}
+    constexpr explicit Value(unsigned long d) : val(static_cast<float>(d)) {}
     explicit operator float() const { return val; }
     Value operator-() { val = -val; return *this; }
 };

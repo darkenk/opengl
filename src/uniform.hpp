@@ -63,7 +63,7 @@ public:
     }
 
     std::string name() const {
-        static constexpr const char* n = "cube[0]";
+        static constexpr const char* n = "cu1be[0]";
         return std::string(n);
     }
 

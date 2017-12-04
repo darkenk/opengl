@@ -12,16 +12,17 @@
 #include "camera.hpp"
 #include <QKeyEvent>
 #include "glm/ext.hpp"
+#include "cubescene.hpp"
+#include <sstream>
 
 using namespace std;
 
 static const char* vert =
 R"(#version 330 core
-    in vec4 inColor;
     in vec4 inPosition;
     out vec4 vColor;
     void main(void) {
-        vColor = inColor;
+        vColor = vec4(0.0, 1.0, 0.0, 0.0);
         gl_Position = inPosition;
     })";
 
@@ -52,16 +53,24 @@ R"(#version 330 core
         outColor = fColor;
     })";
 
-class Cube : public GLWidget {
+static const char* scene =
+R"(
+######
+## ##
+#
+###
+#)";
+
+class Cubes : public GLWidget {
 protected:
-    using Vert1 = Vertex<Color, Position>;
+    using Vert1 = Vertex<Position>;
     virtual void initializeGL() {
         GLWidget::initializeGL();
         mShaderProgram = make_unique<ShaderProgram>();
         mShaderProgram->init<Color, Position>(FragmentShader(frag), VertexShader(vert), GeometryShader(geom));
-        auto mVert = make_shared<std::vector<Vert1>>(initializer_list<Vert1>{
-             Vert1{Color{1.0, 0.0, 0.0}, Position{-0.5_m, -0.5_m, 0.0_m}}});
-        mBuffer = make_unique<Buff>(*mVert);
+        std::stringstream stream (scene);
+        mCubeScene = make_unique<CubeScene>(stream);
+        mBuffer = make_unique<Buff>(mCubeScene->getCubePositions());
         mCamera = make_unique<Camera>(glm::vec3(0.0f, 0.0f, 1.0f));
         mShaderProgram->activate();
         mShaderProgram->set(mMVP);
@@ -74,7 +83,7 @@ protected:
         glClearColor(1.0f, 0.76f, 0.79f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         mShaderProgram->set(mMVP);
-        glDrawArrays(GL_POINTS, 0, static_cast<GLsizei>(1));
+        glDrawArrays(GL_POINTS, 0, static_cast<GLsizei>(mCubeScene->getCubePositions().size()));
     }
 
     virtual void resizeGL(int _width, int _height) {
@@ -115,12 +124,13 @@ private:
     glm::mat4 mProjectionMatrix;
     UniformMVP mMVP;
     UniformCUBE mCube;
+    unique_ptr<CubeScene> mCubeScene;
 };
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    Cube widget;
+    Cubes widget;
     widget.show();
     return app.exec();
 }

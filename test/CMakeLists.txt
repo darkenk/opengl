@@ -15,3 +15,4 @@ add_gtest(shaderprogram_test SRC ../src/shaderprogram.cpp ../src/utils/exception
 add_gtest(buffer_test LIBS ${GL_LIBS})
 add_gtest(vertex_test)
 add_gtest(camera_test SRC ../src/camera.cpp)
+#add_gtest(cubescene_test SRC ../src/cubescene.cpp)
